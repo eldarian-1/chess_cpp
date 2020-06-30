@@ -1,7 +1,6 @@
 #include "LHorse.h"
 
 #include "LDesk.h"
-//#include "LChessBoard.h"
 #include "LGame.h"
 #include "LConst.h"
 
@@ -18,7 +17,7 @@ void LHorse::draw(LSquare* position, bool reverse)
 
 bool LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
-	//LChessBoard* board = LChessBoard::getInstance();
+	LGame* game = LGame::getInstance();
 	bool flag = true;
 
 	int xC = oldPosition->getHorizontal();
@@ -26,9 +25,14 @@ bool LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	int xT = newPosition->getHorizontal();
 	int yT = newPosition->getVertical();
 
-	/*LHorse* target = (LHorse*)board->getFigure(yT, xT);
+	LHorse* target = (LHorse*)game->getFigure(yT, xT);
 
-	flag = ((target == nullptr) || (target->color != this->color)) && (((abs(xT - xC) == 2) && (abs(yT - yC) == 1)) || ((abs(xT - xC) == 1) && (abs(yT - yC)) == 2));*/
+	flag = ((target == nullptr) || (target->color != this->color)) && (((abs(xT - xC) == 2) && (abs(yT - yC) == 1)) || ((abs(xT - xC) == 1) && (abs(yT - yC)) == 2));
 
 	return flag;
+}
+
+QString LHorse::getName() const
+{
+	return "Horse";
 }

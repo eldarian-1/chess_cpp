@@ -3,6 +3,7 @@
 #include <QString>
 
 #include "LConst.h"
+#include "LMainWidget.h"
 #include "LDesk.h"
 #include "LSquare.h"
 
@@ -22,7 +23,10 @@ LBiGame::LBiGame(QString n1, QString n2, int c)
 	color2((color1 == L_COLOR_WHITE)?(L_COLOR_BLACK):(L_COLOR_WHITE)),
 	isActive1(color1 == L_COLOR_WHITE),
 	squares(new LSquare**[L_CHESS_BOARD_SIZE]),
-	figures(new LFigure**[L_CHESS_BOARD_SIZE])
+	figures(new LFigure**[L_CHESS_BOARD_SIZE]),
+	activeSquare(nullptr),
+	activeFigure(nullptr),
+	focusedSquare(nullptr)
 {
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
@@ -77,6 +81,11 @@ LBiGame::LBiGame(QString n1, QString n2, int c)
 	this->setFigure(6, 7, new LPawn(color1));
 }
 
+LFigure* LBiGame::getFigure(int v, int h)
+{
+	return this->figures[v][h];
+}
+
 void LBiGame::draw()
 {
 	LDesk* desk = LDesk::getInstance();
@@ -86,6 +95,13 @@ void LBiGame::draw()
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
 			this->squares[i][j]->draw(!this->isActive1);
+		}
+	}
+
+	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
+		{
 			if (this->figures[i][j])
 			{
 				this->figures[i][j]->draw(this->squares[i][j], !this->isActive1);
@@ -94,9 +110,55 @@ void LBiGame::draw()
 	}
 }
 
+void LBiGame::mousePress(int v, int h)
+{
+	this->activeSquare = this->squares[v][h];
+	this->activeFigure = this->figures[v][h];
+	this->focusedSquare = this->squares[v][h];
+}
+
+void LBiGame::mouseRelease(int v, int h)
+{
+	if (this->activeFigure && this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]))
+	{
+		QString name = (this->isActive1) ? (this->name1) : (this->name2);
+		QString actFig = this->activeFigure->getName();
+		QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
+		this->figures[v][h] = this->activeFigure;
+		this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
+		QString node = name + ": " + actFig + " " +
+			('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
+			('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
+		LMainWidget::getInstance()->pathListAppend(node);
+		this->isActive1 = !this->isActive1;
+	}
+	this->activeSquare = nullptr;
+	this->activeFigure = nullptr;
+}
+
+void LBiGame::mouseMotionMove(int v, int h)
+{
+	//this->focusedSquare = this->squares[v][h];
+}
+
+void LBiGame::mouseMove(int v, int h)
+{
+	this->focusedSquare = this->squares[v][h];
+}
+
 void LBiGame::setFigure(int v, int h, LFigure* figure)
 {
 	this->figures[v][h] = figure;
+}
+
+void LBiGame::checked()
+{
+
+}
+
+void LBiGame::unchecked()
+{
+
 }
 
 void LBiGame::clear()

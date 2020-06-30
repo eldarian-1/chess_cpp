@@ -1,7 +1,6 @@
 #include "LKing.h"
 
 #include "LDesk.h"
-//#include "LChessBoard.h"
 #include "LGame.h"
 #include "LConst.h"
 
@@ -20,7 +19,7 @@ void LKing::draw(LSquare* position, bool reverse)
 
 bool LKing::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
-	//LChessBoard* board = LChessBoard::getInstance();
+	LGame* game = LGame::getInstance();
 	bool flag = true;
 
 	int xC = oldPosition->getHorizontal();
@@ -28,7 +27,7 @@ bool LKing::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	int xT = newPosition->getHorizontal();
 	int yT = newPosition->getVertical();
 
-	/*LKing* target = (LKing*)board->getFigure(yT, xT);
+	LKing* target = (LKing*)game->getFigure(yT, xT);
 
 	flag = ((target == nullptr) || (target->color != this->color)) && (((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT)) || (xC == xT) || (yC == yT));
 
@@ -36,22 +35,22 @@ bool LKing::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	{
 		if ((xC < xT) && (xT - xC == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC, xT);
+			LKing* temp = (LKing*)game->getFigure(yC, xT);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((xC > xT) && (xC - xT == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC, xT);
+			LKing* temp = (LKing*)game->getFigure(yC, xT);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((yC < yT) && (yT - yC == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yT, xC);
+			LKing* temp = (LKing*)game->getFigure(yT, xC);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((yC > yT) && (yC - yT == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yT, xC);
+			LKing* temp = (LKing*)game->getFigure(yT, xC);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else
@@ -63,29 +62,34 @@ bool LKing::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	{
 		if ((xC < xT) && (yC < yT) && (xT - xC == 1) && (yT - yC == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC + 1, xC + 1);
+			LKing* temp = (LKing*)game->getFigure(yC + 1, xC + 1);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((xC < xT) && (yC > yT) && (xT - xC == 1) && (yC - yT == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC - 1, xC + 1);
+			LKing* temp = (LKing*)game->getFigure(yC - 1, xC + 1);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((xC > xT) && (yC > yT) && (xC - xT == 1) && (yC - yT == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC - 1, xC - 1);
+			LKing* temp = (LKing*)game->getFigure(yC - 1, xC - 1);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else if ((xC > xT) && (yC < yT) && (yT - yC == 1) && (xC - xT == 1))
 		{
-			LKing* temp = (LKing*)board->getFigure(yC + 1, xC - 1);
+			LKing* temp = (LKing*)game->getFigure(yC + 1, xC - 1);
 			flag = temp == nullptr || temp->color != this->color;
 		}
 		else
 		{
 			flag = false;
 		}
-	}*/
+	}
 
 	return flag;
+}
+
+QString LKing::getName() const
+{
+	return "King";
 }

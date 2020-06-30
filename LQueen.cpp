@@ -1,7 +1,6 @@
 #include "LQueen.h"
 
 #include "LDesk.h"
-//#include "LChessBoard.h"
 #include "LGame.h"
 #include "LConst.h"
 
@@ -18,7 +17,7 @@ void LQueen::draw(LSquare* position, bool reverse)
 
 bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
-	//LChessBoard* board = LChessBoard::getInstance();
+	LGame* game = LGame::getInstance();
 	bool flag = true;
 
 	int xC = oldPosition->getHorizontal();
@@ -26,7 +25,7 @@ bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	int xT = newPosition->getHorizontal();
 	int yT = newPosition->getVertical();
 
-	/*LQueen* target = (LQueen*)board->getFigure(yT, xT);
+	LQueen* target = (LQueen*)game->getFigure(yT, xT);
 
 	flag = ((target == nullptr) || (target->color != this->color)) && (((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT)) || (xC == xT) || (yC == yT));
 
@@ -35,22 +34,22 @@ bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 		if (xC < xT)
 		{
 			for (int i = xC + 1; i < xT && flag; i++)
-				flag = board->getFigure(yC, i) == nullptr;
+				flag = game->getFigure(yC, i) == nullptr;
 		}
 		else if (xC > xT)
 		{
 			for (int i = xT + 1; i < xC && flag; i++)
-				flag = board->getFigure(yC, i) == nullptr;
+				flag = game->getFigure(yC, i) == nullptr;
 		}
 		else if (yC < yT)
 		{
 			for (int i = yC + 1; i < yT && flag; i++)
-				flag = board->getFigure(i, xC) == nullptr;
+				flag = game->getFigure(i, xC) == nullptr;
 		}
 		else if (yC > yT)
 		{
 			for (int i = yT + 1; i < yC && flag; i++)
-				flag = board->getFigure(i, xC) == nullptr;
+				flag = game->getFigure(i, xC) == nullptr;
 		}
 	}
 	else if ((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT))
@@ -58,24 +57,29 @@ bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 		if ((xC < xT) && (yC < yT))
 		{
 			for (int i = 1; i < (xT - xC) && flag; i++)
-				flag = board->getFigure(yC + i, xC + i) == nullptr;
+				flag = game->getFigure(yC + i, xC + i) == nullptr;
 		}
 		else if ((xC < xT) && (yC > yT))
 		{
 			for (int i = 1; i < (xT - xC) && flag; i++)
-				flag = board->getFigure(yC - i, xC + i) == nullptr;
+				flag = game->getFigure(yC - i, xC + i) == nullptr;
 		}
 		else if ((xC > xT) && (yC > yT))
 		{
 			for (int i = 1; i < (xC - xT) && flag; i++)
-				flag = board->getFigure(yC - i, xC - i) == nullptr;
+				flag = game->getFigure(yC - i, xC - i) == nullptr;
 		}
 		else if ((xC > xT) && (yC < yT))
 		{
 			for (int i = 1; i < (xC - xT) && flag; i++)
-				flag = board->getFigure(yC + i, xC - i) == nullptr;
+				flag = game->getFigure(yC + i, xC - i) == nullptr;
 		}
-	}*/
+	}
 
 	return flag;
+}
+
+QString LQueen::getName() const
+{
+	return "Queen";
 }

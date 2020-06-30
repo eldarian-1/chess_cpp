@@ -13,6 +13,8 @@ class LMainWidget :
 	Q_OBJECT
 
 private:
+	static LMainWidget* instance;
+
 	LGame* game;
 	LDesk* desk;
 
@@ -24,7 +26,9 @@ private:
 	QTextEdit* pathList;
 
 public:
-	LMainWidget(QApplication* app, QWidget* widget = nullptr);
+	static LMainWidget* getInstance(QApplication* app = nullptr, QWidget* widget = nullptr);
+
+	LMainWidget(QApplication* app, QWidget* widget);
 
 protected:
 	virtual void paintEvent(QPaintEvent* event);

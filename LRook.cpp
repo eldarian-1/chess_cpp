@@ -1,7 +1,6 @@
 #include "LRook.h"
 
 #include "LDesk.h"
-//#include "LChessBoard.h"
 #include "LGame.h"
 #include "LConst.h"
 
@@ -20,7 +19,7 @@ void LRook::draw(LSquare* position, bool reverse)
 
 bool LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
-	//LChessBoard* board = LChessBoard::getInstance();
+	LGame* game = LGame::getInstance();
 	bool flag = true;
 
 	int xC = oldPosition->getHorizontal();
@@ -28,30 +27,35 @@ bool LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	int xT = newPosition->getHorizontal();
 	int yT = newPosition->getVertical();
 
-	/*LRook* target = (LRook*)board->getFigure(yT, xT);
+	LRook* target = (LRook*)game->getFigure(yT, xT);
 
 	flag = ((target == nullptr) || (target->color != this->color)) && ((xC == xT) || (yC == yT));
 
 	if (xC < xT)
 	{
 		for (int i = xC + 1; i < xT && flag; i++)
-			flag = board->getFigure(yC, i) == nullptr;
+			flag = game->getFigure(yC, i) == nullptr;
 	}
 	else if (xC > xT)
 	{
 		for (int i = xT + 1; i < xC && flag; i++)
-			flag = board->getFigure(yC, i) == nullptr;
+			flag = game->getFigure(yC, i) == nullptr;
 	}
 	else if (yC < yT)
 	{
 		for (int i = yC + 1; i < yT && flag; i++)
-			flag = board->getFigure(i, xC) == nullptr;
+			flag = game->getFigure(i, xC) == nullptr;
 	}
 	else if (yC > yT)
 	{
 		for (int i = yT + 1; i < yC && flag; i++)
-			flag = board->getFigure(i, xC) == nullptr;
-	}*/
+			flag = game->getFigure(i, xC) == nullptr;
+	}
 
 	return flag;
+}
+
+QString LRook::getName() const
+{
+	return "Rook";
 }

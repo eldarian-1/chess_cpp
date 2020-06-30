@@ -16,6 +16,16 @@
 #include <QPushButton>
 #include <QTextEdit>
 
+LMainWidget* LMainWidget::instance = nullptr;
+
+LMainWidget* LMainWidget::getInstance(QApplication* app, QWidget* widget)
+{
+	if (!instance)
+		instance = new LMainWidget(app, widget);
+
+	return instance;
+}
+
 LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	:
 	QWidget(widget),

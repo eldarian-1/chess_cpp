@@ -9,6 +9,12 @@
 
 LGame* LGame::instance = nullptr;
 
+LGame::LGame()
+	: isChecked(false)
+{
+
+}
+
 LGame* LGame::getInstance()
 {
 	return instance;
@@ -38,5 +44,18 @@ void LGame::newGame(LNewGame* dialog)
 	case L_TYPE_NET:
 		instance = new LNetGame(color);
 		break;
+	}
+}
+
+void LGame::setChecked(bool isChecked)
+{
+	if (this->isChecked != isChecked)
+	{
+		if (isChecked)
+			this->checked();
+		else
+			this->unchecked();
+
+		this->isChecked = isChecked;
 	}
 }

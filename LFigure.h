@@ -2,6 +2,8 @@
 
 #include "LSquare.h"
 
+class QString;
+
 class LFigure
 {
 protected:
@@ -16,5 +18,6 @@ public:
 
 	int getColor() const;
 	int getType() const;
+	virtual QString getName() const = 0;
 
 };

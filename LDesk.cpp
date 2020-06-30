@@ -29,7 +29,7 @@ LDesk::LDesk(QWidget* widget)
 	QWidget(widget),
     mouseIsPressed(false)
 {
-	this->setMouseTracking(true);
+	//this->setMouseTracking(true);
 }
 
 LDesk* LDesk::getInstance(QWidget* widget)
@@ -64,30 +64,57 @@ void LDesk::resizeEvent(QResizeEvent* event)
 
 void LDesk::mousePressEvent(QMouseEvent* pe)
 {
-    this->mouseIsPressed = true;
-    LGame::getInstance()->mousePress(pe->x(), pe->y());
-    this->repaint();
+    int x = pe->x();
+    int y = pe->y();
+    LGame* game = LGame::getInstance();
+    if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
+    {
+        int vertical = (y - topMargin) / edgeSquare - 1;
+        int horizontal = (x - leftMargin) / edgeSquare - 1;
+
+        this->mouseIsPressed = true;
+        game->mousePress(vertical, horizontal);
+        this->repaint();
+    }
 }
 
 void LDesk::mouseReleaseEvent(QMouseEvent* pe)
 {
     this->mouseIsPressed = false;
-    LGame::getInstance()->mouseRelease(pe->x(), pe->y());
-    this->repaint();
+    int x = pe->x();
+    int y = pe->y();
+    LGame* game = LGame::getInstance();
+    if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
+    {
+        int vertical = (y - topMargin) / edgeSquare - 1;
+        int horizontal = (x - leftMargin) / edgeSquare - 1;
+
+        game->mouseRelease(vertical, horizontal);
+        this->repaint();
+    }
 }
 
-void LDesk::mouseMoveEvent(QMouseEvent* pe)
+/*void LDesk::mouseMoveEvent(QMouseEvent* pe)
 {
-	if (this->mouseIsPressed)
+    int x = pe->x();
+    int y = pe->y();
+    LGame* game = LGame::getInstance();
+    if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
     {
-        LGame::getInstance()->mouseMotionMove(pe->x(), pe->y());
+        int vertical = (y - topMargin) / edgeSquare - 1;
+        int horizontal = (x - leftMargin) / edgeSquare - 1;
+
+        if (this->mouseIsPressed)
+        {
+            game->mouseMotionMove(vertical, horizontal);
+        }
+        else
+        {
+            game->mouseMove(vertical, horizontal);
+        }
+        this->repaint();
     }
-    else
-    {
-        LGame::getInstance()->mouseMove(pe->x(), pe->y());
-    }
-    this->repaint();
-}
+}*/
 
 void LDesk::drawSquare(LSquare* position, bool reverse)
 {
