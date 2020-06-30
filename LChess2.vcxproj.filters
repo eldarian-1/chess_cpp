@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{e3b7f9c8-f67a-4b39-9e9c-6cc9e2472fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{9d69c2a3-184a-4983-a786-0f3c5c79916b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Dialog">
+      <UniqueIdentifier>{c5ff1cdc-9bc6-47e5-b23c-2d62dd541219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialog">
+      <UniqueIdentifier>{e76fea49-6e30-428f-ac8b-fe32ce4add9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Figure">
+      <UniqueIdentifier>{c419b100-43df-43f9-9706-369ecec91a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Figure">
+      <UniqueIdentifier>{4364afff-3207-4789-b932-e38fc62452a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="LChess2.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LMainWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LDesk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LGame.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LLoadGame.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LNewGame.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LOptions.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LSaveGame.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LBiGame.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LBotGame.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LNetGame.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LRook.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LQueen.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LPawn.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LKing.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LHorse.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LFigure.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LElephant.cpp">
+      <Filter>Source Files\Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="LSquare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LConst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LDesk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LGame.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="LLoadGame.h">
+      <Filter>Header Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LOptions.h">
+      <Filter>Header Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LSaveGame.h">
+      <Filter>Header Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LBiGame.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="LBotGame.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="LNetGame.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="LElephant.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LFigure.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LHorse.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LKing.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LPawn.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LQueen.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LRook.h">
+      <Filter>Header Files\Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="LSquare.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="LMainWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LNewGame.h">
+      <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="LBElephant.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LBHorse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LBKing.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LBPawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LBQueen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LBRook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWElephant.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWHorse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWKing.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWPawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWQueen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="LWRook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
