@@ -12,5 +12,6 @@
         <file>LBKing.png</file>
         <file>LBHorse.png</file>
         <file>LBElephant.png</file>
+        <file>PreView.png</file>
     </qresource>
 </RCC>

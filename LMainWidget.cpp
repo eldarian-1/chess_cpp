@@ -87,6 +87,17 @@ void LMainWidget::slotNewGame()
 	if (dialog->exec() == QDialog::Accepted)
 	{
 		LGame::newGame(dialog);
+
+		switch (dialog->getGameType())
+		{
+		case L_TYPE_BI:
+			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
+			break;
+		case L_TYPE_BOT:
+			break;
+		case L_TYPE_NET:
+			break;
+		}
 	}
 
 	delete dialog;

@@ -90,11 +90,13 @@ void LBiGame::draw()
 {
 	LDesk* desk = LDesk::getInstance();
 
+	bool isWhite = !(this->isActive1 && this->color1 == L_COLOR_WHITE) && !(!this->isActive1 && this->color2 == L_COLOR_WHITE);
+
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			this->squares[i][j]->draw(!this->isActive1);
+			this->squares[i][j]->draw(isWhite);
 		}
 	}
 
@@ -104,7 +106,7 @@ void LBiGame::draw()
 		{
 			if (this->figures[i][j])
 			{
-				this->figures[i][j]->draw(this->squares[i][j], !this->isActive1);
+				this->figures[i][j]->draw(this->squares[i][j], isWhite);
 			}
 		}
 	}
@@ -112,6 +114,12 @@ void LBiGame::draw()
 
 void LBiGame::mousePress(int v, int h)
 {
+	if (!this->isActive1)
+	{
+		v = L_CHESS_BOARD_SIZE - 1 - v;
+		h = L_CHESS_BOARD_SIZE - 1 - h;
+	}
+
 	this->activeSquare = this->squares[v][h];
 	this->activeFigure = this->figures[v][h];
 	this->focusedSquare = this->squares[v][h];
@@ -119,19 +127,40 @@ void LBiGame::mousePress(int v, int h)
 
 void LBiGame::mouseRelease(int v, int h)
 {
+	if (
+		(this->isActive1 && this->activeFigure->getColor() != L_COLOR_WHITE)
+		||
+		(!this->isActive1 && this->activeFigure->getColor() == L_COLOR_WHITE)
+		)
+	{
+		this->activeSquare = nullptr;
+		this->activeFigure = nullptr;
+		return;
+	}
+
+	if (!this->isActive1)
+	{
+		v = L_CHESS_BOARD_SIZE - 1 - v;
+		h = L_CHESS_BOARD_SIZE - 1 - h;
+	}
+
 	if (this->activeFigure && this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]))
 	{
 		QString name = (this->isActive1) ? (this->name1) : (this->name2);
 		QString actFig = this->activeFigure->getName();
 		QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
+
 		this->figures[v][h] = this->activeFigure;
 		this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
+
 		QString node = name + ": " + actFig + " " +
 			('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
 			('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
 		LMainWidget::getInstance()->pathListAppend(node);
+
 		this->isActive1 = !this->isActive1;
 	}
+
 	this->activeSquare = nullptr;
 	this->activeFigure = nullptr;
 }

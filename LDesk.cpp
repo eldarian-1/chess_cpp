@@ -49,10 +49,16 @@ void LDesk::paintEvent(QPaintEvent* event)
 	}
 	else
 	{
-		QPainter painter;
-		painter.begin(this);
-		painter.drawEllipse(0, 0, this->width(), this->height());
-		painter.end();
+        QString file = ":/PreView.png";
+        QImage image = QImage(file).scaled(this->width() * 0.9, this->height() * 0.9);
+        QPainter painter;
+
+        int x = (this->width() - image.width()) / 2;
+        int y = (this->height() - image.height()) / 2;
+
+        painter.begin(this);
+        painter.drawImage(x, y, image);
+        painter.end();
 	}
 }
 
