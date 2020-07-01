@@ -11,11 +11,10 @@ class LBiGame :
 	public LGame
 {
 private:
-	QString name1, name2;
-	int color1, color2;
+	QString nameWhite, nameBlack;
 	LSquare*** squares;
 	LFigure*** figures;
-	bool isActive1;
+	bool areWhiteActive;
 
 	LSquare* activeSquare;
 	LFigure* activeFigure;

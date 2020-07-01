@@ -34,12 +34,12 @@ protected:
 	//virtual void mouseMoveEvent(QMouseEvent* event);
 
 public:
-	void drawSquare(LSquare* position, bool reverse);
-	void drawKing(int color, LSquare* position, bool reverse);
-	void drawQueen(int color, LSquare* position, bool reverse);
-	void drawElephant(int color, LSquare* position, bool reverse);
-	void drawHorse(int color, LSquare* position, bool reverse);
-	void drawRook(int color, LSquare* position, bool reverse);
-	void drawPawn(int color, LSquare* position, bool reverse);
+	void drawSquare(LSquare* position, bool areWhiteActive);
+	void drawKing(int color, LSquare* position, bool areWhiteActive);
+	void drawQueen(int color, LSquare* position, bool areWhiteActive);
+	void drawElephant(int color, LSquare* position, bool areWhiteActive);
+	void drawHorse(int color, LSquare* position, bool areWhiteActive);
+	void drawRook(int color, LSquare* position, bool areWhiteActive);
+	void drawPawn(int color, LSquare* position, bool areWhiteActive);
 
 };

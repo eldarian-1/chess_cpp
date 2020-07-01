@@ -122,12 +122,12 @@ void LDesk::mouseReleaseEvent(QMouseEvent* pe)
     }
 }*/
 
-void LDesk::drawSquare(LSquare* position, bool reverse)
+void LDesk::drawSquare(LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -200,12 +200,12 @@ void LDesk::drawSquare(LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawKing(int color, LSquare* position, bool reverse)
+void LDesk::drawKing(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -225,12 +225,12 @@ void LDesk::drawKing(int color, LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawQueen(int color, LSquare* position, bool reverse)
+void LDesk::drawQueen(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -250,12 +250,12 @@ void LDesk::drawQueen(int color, LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawElephant(int color, LSquare* position, bool reverse)
+void LDesk::drawElephant(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -275,12 +275,12 @@ void LDesk::drawElephant(int color, LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawHorse(int color, LSquare* position, bool reverse)
+void LDesk::drawHorse(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -300,12 +300,12 @@ void LDesk::drawHorse(int color, LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawRook(int color, LSquare* position, bool reverse)
+void LDesk::drawRook(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
@@ -325,12 +325,12 @@ void LDesk::drawRook(int color, LSquare* position, bool reverse)
     painter.end();
 }
 
-void LDesk::drawPawn(int color, LSquare* position, bool reverse)
+void LDesk::drawPawn(int color, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
 
-    if (reverse)
+    if (!areWhiteActive)
     {
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
