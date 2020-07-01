@@ -6,13 +6,13 @@ class LKing final
 	: public LFigure
 {
 private:
-	bool isWalked;
+	bool _isCastled;
 
 public:
 	LKing(int color);
 
 	void draw(LSquare* position, bool reverse) override;
-	bool isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) override;
+	int isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) override;
 	QString getName() const override;
 
 };

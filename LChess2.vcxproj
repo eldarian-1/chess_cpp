@@ -105,6 +105,7 @@
     <ClCompile Include="LRook.cpp" />
     <ClCompile Include="LSaveGame.cpp" />
     <ClCompile Include="LSquare.cpp" />
+    <ClCompile Include="LTransformation.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +124,7 @@
     <ClInclude Include="LQueen.h" />
     <ClInclude Include="LRook.h" />
     <ClInclude Include="LSquare.h" />
+    <ClInclude Include="LTransformation.h" />
     <QtMoc Include="LNewGame.h" />
     <ClInclude Include="LOptions.h" />
     <ClInclude Include="LSaveGame.h" />

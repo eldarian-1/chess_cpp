@@ -7,7 +7,7 @@
 LRook::LRook(int color)
 	:
 	LFigure(color),
-	isWalked(false)
+	_isWalked(false)
 {
 	this->type = L_FIGURE_ROOK;
 }
@@ -17,10 +17,10 @@ void LRook::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawRook(this->color, position, reverse);
 }
 
-bool LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
 	LGame* game = LGame::getInstance();
-	bool flag = true;
+	int flag = L_PATH_TRUE;
 
 	int xC = oldPosition->getHorizontal();
 	int yC = oldPosition->getVertical();
@@ -29,28 +29,32 @@ bool LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 
 	LRook* target = (LRook*)game->getFigure(yT, xT);
 
-	flag = ((target == nullptr) || (target->color != this->color)) && ((xC == xT) || (yC == yT));
+	flag = (((target == nullptr) || (target->color != this->color)) && ((xC == xT) || (yC == yT)))
+		? (L_PATH_TRUE) : (L_PATH_FALSE);
 
 	if (xC < xT)
 	{
 		for (int i = xC + 1; i < xT && flag; i++)
-			flag = game->getFigure(yC, i) == nullptr;
+			flag = (game->getFigure(yC, i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if (xC > xT)
 	{
 		for (int i = xT + 1; i < xC && flag; i++)
-			flag = game->getFigure(yC, i) == nullptr;
+			flag = (game->getFigure(yC, i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if (yC < yT)
 	{
 		for (int i = yC + 1; i < yT && flag; i++)
-			flag = game->getFigure(i, xC) == nullptr;
+			flag = (game->getFigure(i, xC) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if (yC > yT)
 	{
 		for (int i = yT + 1; i < yC && flag; i++)
-			flag = game->getFigure(i, xC) == nullptr;
+			flag = (game->getFigure(i, xC) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
+
+	if (flag && !this->_isWalked)
+		this->_isWalked = true;
 
 	return flag;
 }
@@ -58,4 +62,9 @@ bool LRook::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 QString LRook::getName() const
 {
 	return "Rook";
+}
+
+bool LRook::isWalked() const
+{
+	return this->_isWalked;
 }

@@ -6,13 +6,14 @@ class LRook final
 	: public LFigure
 {
 private:
-	bool isWalked;
+	bool _isWalked;
 
 public:
 	LRook(int color);
 
 	void draw(LSquare* position, bool reverse) override;
-	bool isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) override;
+	int isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) override;
 	QString getName() const override;
+	bool isWalked() const;
 
 };

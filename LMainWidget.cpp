@@ -98,11 +98,11 @@ void LMainWidget::slotNewGame()
 		case L_TYPE_NET:
 			break;
 		}
+
+		this->saveGame->setVisible(true);
 	}
 
 	delete dialog;
-
-	this->saveGame->setVisible(true);
 }
 
 void LMainWidget::slotSaveGame()

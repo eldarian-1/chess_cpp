@@ -22,4 +22,3 @@ public:
 	void draw(bool reverse);
 
 };
-

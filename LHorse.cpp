@@ -15,10 +15,10 @@ void LHorse::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawHorse(this->color, position, reverse);
 }
 
-bool LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
 	LGame* game = LGame::getInstance();
-	bool flag = true;
+	int flag = L_PATH_TRUE;
 
 	int xC = oldPosition->getHorizontal();
 	int yC = oldPosition->getVertical();
@@ -27,7 +27,8 @@ bool LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 
 	LHorse* target = (LHorse*)game->getFigure(yT, xT);
 
-	flag = ((target == nullptr) || (target->color != this->color)) && (((abs(xT - xC) == 2) && (abs(yT - yC) == 1)) || ((abs(xT - xC) == 1) && (abs(yT - yC)) == 2));
+	flag = (((target == nullptr) || (target->color != this->color)) && (((abs(xT - xC) == 2) && (abs(yT - yC) == 1)) || ((abs(xT - xC) == 1) && (abs(yT - yC)) == 2)))
+		? (L_PATH_TRUE) : (L_PATH_FALSE);
 
 	return flag;
 }

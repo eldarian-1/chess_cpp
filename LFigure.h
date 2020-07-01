@@ -14,7 +14,7 @@ protected:
 
 public:
 	virtual void draw(LSquare* position, bool reverse) = 0;
-	virtual bool isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) = 0;
+	virtual int isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) = 0;
 
 	int getColor() const;
 	int getType() const;

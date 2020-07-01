@@ -4,6 +4,7 @@
 
 #include "LConst.h"
 #include "LMainWidget.h"
+#include "LTransformation.h"
 #include "LDesk.h"
 #include "LSquare.h"
 
@@ -78,6 +79,9 @@ LBiGame::LBiGame(QString n1, QString n2, int c)
 
 LFigure* LBiGame::getFigure(int v, int h)
 {
+	if (v < 0 || v >= L_CHESS_BOARD_SIZE || h < 0 || h >= L_CHESS_BOARD_SIZE)
+		return nullptr;
+
 	return this->figures[v][h];
 }
 
@@ -137,21 +141,111 @@ void LBiGame::mouseRelease(int v, int h)
 		h = L_CHESS_BOARD_SIZE - 1 - h;
 	}
 
-	if (this->activeFigure && this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]))
+	if (this->activeFigure)
 	{
-		QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
-		QString actFig = this->activeFigure->getName();
-		QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
+		int response = this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]);
 
-		this->figures[v][h] = this->activeFigure;
-		this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
+		if (response & L_PATH_TRUE)
+		{
+			QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+			QString actFig = this->activeFigure->getName();
+			QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
 
-		QString node = name + ": " + actFig + " " +
-			('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
-			('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
-		LMainWidget::getInstance()->pathListAppend(node);
+			this->figures[v][h] = this->activeFigure;
+			this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
 
-		this->areWhiteActive = !this->areWhiteActive;
+			QString node = name + ": " + actFig + " " +
+				('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
+				('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
+			LMainWidget::getInstance()->pathListAppend(node);
+		}
+
+		if (response & L_PATH_CASTLING)
+		{
+			QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+			LGame* game = LGame::getInstance();
+			int _h = this->activeSquare->getHorizontal();
+
+			if (h - _h == 2)
+			{
+				LRook* rook = (LRook*)this->figures[v][h + 1];
+
+				if (!rook)
+				{
+					rook = (LRook*)this->figures[v][h + 2];
+					this->figures[v][h + 2] = nullptr;
+				}
+				else
+				{
+					this->figures[v][h + 1] = nullptr;
+				}
+
+				this->figures[v][h - 1] = rook;
+			}
+			else
+			{
+				LRook* rook = (LRook*)this->figures[v][h - 1];
+
+				if (!rook)
+				{
+					rook = (LRook*)this->figures[v][h - 2];
+					this->figures[v][h - 2] = nullptr;
+				}
+				else
+				{
+					this->figures[v][h - 1] = nullptr;
+				}
+
+				this->figures[v][h + 1] = rook;
+			}
+
+			LMainWidget::getInstance()->pathListAppend(name + ": Castling");
+		}
+
+		if (response & L_PATH_TRANSFORMATION)
+		{
+			LTransformation* dialog = new LTransformation;
+
+			if (dialog->exec() == QDialog::Accepted)
+			{
+				QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+				QString newFigure;
+
+				LFigure* temp = this->figures[v][h];
+
+				switch (dialog->getFigure())
+				{
+				case L_FIGURE_QUEEN:
+					newFigure = "Queen";
+					this->figures[v][h] = new LQueen(this->figures[v][h]->getColor());
+					break;
+				case L_FIGURE_ELEPHANT:
+					newFigure = "Elephant";
+					this->figures[v][h] = new LElephant(this->figures[v][h]->getColor());
+					break;
+				case L_FIGURE_HORSE:
+					newFigure = "Horse";
+					this->figures[v][h] = new LHorse(this->figures[v][h]->getColor());
+					break;
+				case L_FIGURE_ROOK:
+					newFigure = "Rook";
+					this->figures[v][h] = new LRook(this->figures[v][h]->getColor());
+					break;
+				}
+
+				QString node = name + ": Pawn to " + newFigure;
+				LMainWidget::getInstance()->pathListAppend(node);
+
+				delete temp;
+			}
+
+			delete dialog;
+		}
+
+		if (response & L_PATH_TRUE)
+		{
+			this->areWhiteActive = !this->areWhiteActive;
+		}
 	}
 
 	this->activeSquare = nullptr;

@@ -15,10 +15,10 @@ void LElephant::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawElephant(this->color, position, reverse);
 }
 
-bool LElephant::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LElephant::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
 	LGame* game = LGame::getInstance();
-	bool flag = true;
+	int flag = L_PATH_TRUE;
 
 	int xC = oldPosition->getHorizontal();
 	int yC = oldPosition->getVertical();
@@ -31,23 +31,23 @@ bool LElephant::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 
 	if ((xC < xT) && (yC < yT))
 	{
-		for (int i = 1; i < (xT - xC) && flag; i++)
-			flag = game->getFigure(yC + i, xC + i) == nullptr;
+		for (int i = 1; i < (xT - xC) && flag != L_PATH_FALSE; i++)
+			flag = (game->getFigure(yC + i, xC + i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if ((xC < xT) && (yC > yT))
 	{
-		for (int i = 1; i < (xT - xC) && flag; i++)
-			flag = game->getFigure(yC - i, xC + i) == nullptr;
+		for (int i = 1; i < (xT - xC) && flag != L_PATH_FALSE; i++)
+			flag = (game->getFigure(yC - i, xC + i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if ((xC > xT) && (yC > yT))
 	{
-		for (int i = 1; i < (xC - xT) && flag; i++)
-			flag = game->getFigure(yC - i, xC - i) == nullptr;
+		for (int i = 1; i < (xC - xT) && flag != L_PATH_FALSE; i++)
+			flag = (game->getFigure(yC - i, xC - i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 	else if ((xC > xT) && (yC < yT))
 	{
-		for (int i = 1; i < (xC - xT) && flag; i++)
-			flag = game->getFigure(yC + i, xC - i) == nullptr;
+		for (int i = 1; i < (xC - xT) && flag != L_PATH_FALSE; i++)
+			flag = (game->getFigure(yC + i, xC - i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 
 	return flag;

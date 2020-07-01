@@ -15,10 +15,10 @@ void LQueen::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawQueen(this->color, position, reverse);
 }
 
-bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
 	LGame* game = LGame::getInstance();
-	bool flag = true;
+	int flag = L_PATH_TRUE;
 
 	int xC = oldPosition->getHorizontal();
 	int yC = oldPosition->getVertical();
@@ -27,29 +27,30 @@ bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 
 	LQueen* target = (LQueen*)game->getFigure(yT, xT);
 
-	flag = ((target == nullptr) || (target->color != this->color)) && (((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT)) || (xC == xT) || (yC == yT));
+	flag = (((target == nullptr) || (target->color != this->color)) && (((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT)) || (xC == xT) || (yC == yT)))
+		? (L_PATH_TRUE) : (L_PATH_FALSE);
 
 	if ((xC == xT) || (yC == yT))
 	{
 		if (xC < xT)
 		{
 			for (int i = xC + 1; i < xT && flag; i++)
-				flag = game->getFigure(yC, i) == nullptr;
+				flag = (game->getFigure(yC, i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if (xC > xT)
 		{
 			for (int i = xT + 1; i < xC && flag; i++)
-				flag = game->getFigure(yC, i) == nullptr;
+				flag = (game->getFigure(yC, i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if (yC < yT)
 		{
 			for (int i = yC + 1; i < yT && flag; i++)
-				flag = game->getFigure(i, xC) == nullptr;
+				flag = (game->getFigure(i, xC) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if (yC > yT)
 		{
 			for (int i = yT + 1; i < yC && flag; i++)
-				flag = game->getFigure(i, xC) == nullptr;
+				flag = (game->getFigure(i, xC) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 	}
 	else if ((xC - yC) == (xT - yT) || (xC + yC) == (xT + yT))
@@ -57,22 +58,22 @@ bool LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 		if ((xC < xT) && (yC < yT))
 		{
 			for (int i = 1; i < (xT - xC) && flag; i++)
-				flag = game->getFigure(yC + i, xC + i) == nullptr;
+				flag = (game->getFigure(yC + i, xC + i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if ((xC < xT) && (yC > yT))
 		{
 			for (int i = 1; i < (xT - xC) && flag; i++)
-				flag = game->getFigure(yC - i, xC + i) == nullptr;
+				flag = (game->getFigure(yC - i, xC + i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if ((xC > xT) && (yC > yT))
 		{
 			for (int i = 1; i < (xC - xT) && flag; i++)
-				flag = game->getFigure(yC - i, xC - i) == nullptr;
+				flag = (game->getFigure(yC - i, xC - i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if ((xC > xT) && (yC < yT))
 		{
 			for (int i = 1; i < (xC - xT) && flag; i++)
-				flag = game->getFigure(yC + i, xC - i) == nullptr;
+				flag = (game->getFigure(yC + i, xC - i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 	}
 

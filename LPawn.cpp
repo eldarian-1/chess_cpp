@@ -15,10 +15,10 @@ void LPawn::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawPawn(this->color, position, reverse);
 }
 
-bool LPawn::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LPawn::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 {
 	LGame* game = LGame::getInstance();
-	bool flag = true;
+	int flag = L_PATH_TRUE;
 
 	int xC = oldPosition->getHorizontal();
 	int yC = oldPosition->getVertical();
@@ -31,38 +31,52 @@ bool LPawn::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	{
 		if ((xC == xT) && (yC == 6) && (yT == 5 || yT == 4))
 		{
-			flag = ((yT == 5) && (!target)) || ((yT == 4) && (!target) && !(LPawn*)game->getFigure(5, xT));
+			flag = (((yT == 5) && (!target)) || ((yT == 4) && (!target) && !(LPawn*)game->getFigure(5, xT)))
+				? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if (target && (target->color != this->color) && ((abs(xC - xT) == 1) && ((yC - yT) == 1)))
 		{
-			flag = true;
+			flag = L_PATH_TRUE;
 		}
 		else if (!target && (xC == xT) && (yC - yT == 1))
 		{
-			flag = true;
+			flag = L_PATH_TRUE;
 		}
 		else
 		{
-			flag = false;
+			flag = L_PATH_FALSE;
 		}
 	}
 	else
 	{
 		if ((xC == xT) && (yC == 1) && (yT == 2 || yT == 3))
 		{
-			flag = ((yT == 2) && (!target)) || ((yT == 3) && (!target) && !(LPawn*)game->getFigure(2, xT));
+			flag = (((yT == 2) && (!target)) || ((yT == 3) && (!target) && !(LPawn*)game->getFigure(2, xT)))
+				? (L_PATH_TRUE) : (L_PATH_FALSE);
 		}
 		else if (target && (target->color != this->color) && ((abs(xC - xT) == 1) && ((yT - yC) == 1)))
 		{
-			flag = true;
+			flag = L_PATH_TRUE;
 		}
 		else if (!target && (xC == xT) && (yT - yC == 1))
 		{
-			flag = true;
+			flag = L_PATH_TRUE;
 		}
 		else
 		{
-			flag = false;
+			flag = L_PATH_FALSE;
+		}
+	}
+
+	if (flag)
+	{
+		if (this->color == L_COLOR_WHITE && yT == 0)
+		{
+			flag |= L_PATH_TRANSFORMATION;
+		}
+		else if (this->color == L_COLOR_BLACK && yT == 7)
+		{
+			flag |= L_PATH_TRANSFORMATION;
 		}
 	}
 
