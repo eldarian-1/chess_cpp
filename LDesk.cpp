@@ -3,11 +3,14 @@
 #include "LConst.h"
 #include "LMainWidget.h"
 #include "LGame.h"
+#include "LPlayer.h"
 #include "LSquare.h"
+#include "LFigure.h"
 
 #include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
+#include <QFontMetrics>
 
 LDesk* LDesk::instance = nullptr;
 
@@ -18,10 +21,11 @@ int LDesk::topMargin;
 
 void LDesk::makeCalculations(int width, int height)
 {
-    LDesk::edgeBoard = (width < height) ? (width) : (height);
-    LDesk::edgeSquare = edgeBoard / (L_CHESS_BOARD_SIZE + 2);
-    LDesk::leftMargin = (width - edgeBoard) / 2;
-    LDesk::topMargin = (height - edgeBoard) / 2;
+    edgeBoard = (width < height) ? (width) : (height);
+    edgeSquare = edgeBoard / (L_CHESS_BOARD_SIZE + 2);
+    leftMargin = (width - edgeBoard) / 2 + edgeSquare;
+    topMargin = (height - edgeBoard) / 2 + edgeSquare;
+    edgeBoard -= 2 * edgeSquare;
 }
 
 LDesk::LDesk(QWidget* widget)
@@ -75,8 +79,8 @@ void LDesk::mousePressEvent(QMouseEvent* pe)
     LGame* game = LGame::getInstance();
     if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
     {
-        int vertical = (y - topMargin) / edgeSquare - 1;
-        int horizontal = (x - leftMargin) / edgeSquare - 1;
+        int vertical = (y - topMargin) / edgeSquare;
+        int horizontal = (x - leftMargin) / edgeSquare;
 
         this->mouseIsPressed = true;
         game->mousePress(vertical, horizontal);
@@ -92,8 +96,8 @@ void LDesk::mouseReleaseEvent(QMouseEvent* pe)
     LGame* game = LGame::getInstance();
     if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
     {
-        int vertical = (y - topMargin) / edgeSquare - 1;
-        int horizontal = (x - leftMargin) / edgeSquare - 1;
+        int vertical = (y - topMargin) / edgeSquare;
+        int horizontal = (x - leftMargin) / edgeSquare;
 
         game->mouseRelease(vertical, horizontal);
         this->repaint();
@@ -107,8 +111,8 @@ void LDesk::mouseReleaseEvent(QMouseEvent* pe)
     LGame* game = LGame::getInstance();
     if (game && x >= leftMargin && y >= topMargin && x <= leftMargin + edgeBoard && y <= topMargin + edgeBoard)
     {
-        int vertical = (y - topMargin) / edgeSquare - 1;
-        int horizontal = (x - leftMargin) / edgeSquare - 1;
+        int vertical = (y - topMargin) / edgeSquare;
+        int horizontal = (x - leftMargin) / edgeSquare;
 
         if (this->mouseIsPressed)
         {
@@ -122,6 +126,138 @@ void LDesk::mouseReleaseEvent(QMouseEvent* pe)
     }
 }*/
 
+void LDesk::drawTablePlayer(LPlayer* player, bool areWhiteActive)
+{
+    QString name = player->getName();
+    QFont font;
+    font.setFamily("Helvetica");
+    font.setPointSize(14);
+
+    QFontMetrics metric(font, this);
+
+    int x, y;
+    int color = (player->getColor() == L_COLOR_WHITE) ? L_COLOR_BLACK : L_COLOR_WHITE;
+
+    int count = player->getFigureCount();
+    int H = (leftMargin - L_PADDING_BOARD) / edgeSquare;
+    int V = ceil(double(count) / H);
+    int marginLeft = (leftMargin - L_PADDING_BOARD - H * edgeSquare) / 2;
+
+    if ((areWhiteActive && player->getColor() == L_COLOR_WHITE) || (!areWhiteActive && player->getColor() == L_COLOR_BLACK))
+    {
+        x = leftMargin + L_PADDING_BOARD + edgeBoard + (leftMargin - L_PADDING_BOARD - metric.width(name)) / 2;
+        y = topMargin + L_PADDING_BOARD + edgeBoard - V * edgeSquare - 15;
+    }
+    else
+    {
+        x = (leftMargin - L_PADDING_BOARD - metric.width(name)) / 2;
+        y = topMargin;
+    }
+
+    QPainter painter;
+    painter.begin(this);
+    painter.setFont(font);
+    painter.drawText(x, y, name);
+    painter.end();
+
+    if ((areWhiteActive && player->getColor() == L_COLOR_WHITE) || (!areWhiteActive && player->getColor() == L_COLOR_BLACK))
+    {
+        for (int i = 0, h = 0, v = 0; i < count; ++i, (i % H == 0) ? (++v, h = 0) : (++h))
+        {
+            x = leftMargin + L_PADDING_BOARD + edgeBoard + marginLeft + h * edgeSquare;
+            y = topMargin + L_PADDING_BOARD + edgeBoard - (V - v) * edgeSquare;
+            switch ((*player)[i]->getType())
+            {
+            case L_FIGURE_KING: this->drawKing(color, x, y); break;
+            case L_FIGURE_QUEEN: this->drawQueen(color, x, y); break;
+            case L_FIGURE_ELEPHANT: this->drawElephant(color, x, y); break;
+            case L_FIGURE_HORSE: this->drawHorse(color, x, y); break;
+            case L_FIGURE_ROOK: this->drawRook(color, x, y); break;
+            case L_FIGURE_PAWN: this->drawPawn(color, x, y); break;
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0, h = 0, v = 0; i < count; ++i, (i % H == 0) ? (++v, h = 0) : (++h))
+        {
+            x = marginLeft + h * edgeSquare;
+            y = topMargin + v * edgeSquare + 15;
+            switch ((*player)[i]->getType())
+            {
+            case L_FIGURE_KING: this->drawKing(color, x, y); break;
+            case L_FIGURE_QUEEN: this->drawQueen(color, x, y); break;
+            case L_FIGURE_ELEPHANT: this->drawElephant(color, x, y); break;
+            case L_FIGURE_HORSE: this->drawHorse(color, x, y); break;
+            case L_FIGURE_ROOK: this->drawRook(color, x, y); break;
+            case L_FIGURE_PAWN: this->drawPawn(color, x, y); break;
+            }
+        }
+    }
+}
+
+void LDesk::drawMarkup(bool areWhiteActive)
+{
+    QPainter painter;
+    painter.begin(this);
+
+    QPen pen;
+    pen.setWidth(2);
+    pen.setColor(QColor(13, 19, 23));
+
+    QBrush brush;
+    brush.setStyle(Qt::SolidPattern);
+    brush.setColor(QColor(227, 227, 227));
+
+    painter.setPen(pen);
+    painter.setBrush(brush);
+
+    painter.drawRect(
+        leftMargin - L_PADDING_BOARD,
+        topMargin - L_PADDING_BOARD,
+        edgeBoard + 2 * L_PADDING_BOARD,
+        edgeBoard + 2 * L_PADDING_BOARD
+    );
+
+    int x = leftMargin + edgeSquare * 0.5;
+    int y = topMargin - 5;
+
+    QString markup = " ";
+
+    for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
+    {
+        markup[0] = (areWhiteActive) ? ('A' + i) : ('H' - i);
+        painter.drawText(x + i * edgeSquare, y, markup);
+    }
+
+    y += edgeBoard + 20;
+
+    for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
+    {
+        markup[0] = (areWhiteActive) ? ('A' + i) : ('H' - i);
+        painter.drawText(x + i * edgeSquare, y, markup);
+    }
+
+    x = leftMargin - 15;
+    y = topMargin + edgeSquare * 0.5;
+
+    for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
+    {
+        markup[0] = (areWhiteActive) ? ('8' - i) : ('1' + i);
+        painter.drawText(x, y + i * edgeSquare, markup);
+    }
+
+    x += edgeBoard + 25;
+
+    for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
+    {
+        markup[0] = (areWhiteActive) ? ('8' - i) : ('1' + i);
+        painter.drawText(x, y + i * edgeSquare, markup);
+    }
+
+    painter.end();
+}
+
 void LDesk::drawSquare(LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
@@ -132,9 +268,6 @@ void LDesk::drawSquare(LSquare* position, bool areWhiteActive)
         h = L_CHESS_BOARD_SIZE - 1 - h;
         v = L_CHESS_BOARD_SIZE - 1 - v;
     }
-
-    ++h;
-    ++v;
 
     int x = h * edgeSquare + leftMargin;
     int y = v * edgeSquare + topMargin;
@@ -147,12 +280,17 @@ void LDesk::drawSquare(LSquare* position, bool areWhiteActive)
     pen.setStyle(Qt::SolidLine);
     painter.begin(this);
 
-    if (color == L_COLOR_BLACK)
+    if (color == L_COLOR_WHITE)
+    {
+        brush.setColor(QColor(255, 255, 255));
+    }
+    else
     {
         brush.setColor(QColor(217, 222, 224));
-        brush.setStyle(Qt::SolidPattern);
-        painter.setBrush(brush);
     }
+
+    brush.setStyle(Qt::SolidPattern);
+    painter.setBrush(brush);
 
     QRect rect(x, y, edgeSquare, edgeSquare);
     painter.drawRect(rect);
@@ -200,7 +338,7 @@ void LDesk::drawSquare(LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawKing(int color, LSquare* position, bool areWhiteActive)
+void LDesk::calculateForDrawFigure(int& x, int& y, LSquare* position, bool areWhiteActive)
 {
     int h = position->getHorizontal();
     int v = position->getVertical();
@@ -211,12 +349,54 @@ void LDesk::drawKing(int color, LSquare* position, bool areWhiteActive)
         v = L_CHESS_BOARD_SIZE - 1 - v;
     }
 
-    ++h;
-    ++v;
+    x = h * edgeSquare + leftMargin;
+    y = v * edgeSquare + topMargin;
+}
 
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
+void LDesk::drawKing(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawKing(color, x, y);
+}
 
+void LDesk::drawQueen(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawQueen(color, x, y);
+}
+
+void LDesk::drawElephant(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawElephant(color, x, y);
+}
+
+void LDesk::drawHorse(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawHorse(color, x, y);
+}
+
+void LDesk::drawRook(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawRook(color, x, y);
+}
+
+void LDesk::drawPawn(int color, LSquare* position, bool areWhiteActive)
+{
+    int x, y;
+    this->calculateForDrawFigure(x, y, position, areWhiteActive);
+    this->drawPawn(color, x, y);
+}
+
+void LDesk::drawKing(int color, int x, int y)
+{
     QString file = (color == L_COLOR_WHITE) ? ":/LWKing.png" : ":/LBKing.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;
@@ -225,23 +405,8 @@ void LDesk::drawKing(int color, LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawQueen(int color, LSquare* position, bool areWhiteActive)
+void LDesk::drawQueen(int color, int x, int y)
 {
-    int h = position->getHorizontal();
-    int v = position->getVertical();
-
-    if (!areWhiteActive)
-    {
-        h = L_CHESS_BOARD_SIZE - 1 - h;
-        v = L_CHESS_BOARD_SIZE - 1 - v;
-    }
-
-    ++h;
-    ++v;
-
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
-
     QString file = (color == L_COLOR_WHITE) ? ":/LWQueen.png" : ":/LBQueen.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;
@@ -250,23 +415,8 @@ void LDesk::drawQueen(int color, LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawElephant(int color, LSquare* position, bool areWhiteActive)
+void LDesk::drawElephant(int color, int x, int y)
 {
-    int h = position->getHorizontal();
-    int v = position->getVertical();
-
-    if (!areWhiteActive)
-    {
-        h = L_CHESS_BOARD_SIZE - 1 - h;
-        v = L_CHESS_BOARD_SIZE - 1 - v;
-    }
-
-    ++h;
-    ++v;
-
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
-
     QString file = (color == L_COLOR_WHITE) ? ":/LWElephant.png" : ":/LBElephant.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;
@@ -275,23 +425,8 @@ void LDesk::drawElephant(int color, LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawHorse(int color, LSquare* position, bool areWhiteActive)
+void LDesk::drawHorse(int color, int x, int y)
 {
-    int h = position->getHorizontal();
-    int v = position->getVertical();
-
-    if (!areWhiteActive)
-    {
-        h = L_CHESS_BOARD_SIZE - 1 - h;
-        v = L_CHESS_BOARD_SIZE - 1 - v;
-    }
-
-    ++h;
-    ++v;
-
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
-
     QString file = (color == L_COLOR_WHITE) ? ":/LWHorse.png" : ":/LBHorse.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;
@@ -300,23 +435,8 @@ void LDesk::drawHorse(int color, LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawRook(int color, LSquare* position, bool areWhiteActive)
+void LDesk::drawRook(int color, int x, int y)
 {
-    int h = position->getHorizontal();
-    int v = position->getVertical();
-
-    if (!areWhiteActive)
-    {
-        h = L_CHESS_BOARD_SIZE - 1 - h;
-        v = L_CHESS_BOARD_SIZE - 1 - v;
-    }
-
-    ++h;
-    ++v;
-
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
-
     QString file = (color == L_COLOR_WHITE) ? ":/LWRook.png" : ":/LBRook.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;
@@ -325,23 +445,8 @@ void LDesk::drawRook(int color, LSquare* position, bool areWhiteActive)
     painter.end();
 }
 
-void LDesk::drawPawn(int color, LSquare* position, bool areWhiteActive)
+void LDesk::drawPawn(int color, int x, int y)
 {
-    int h = position->getHorizontal();
-    int v = position->getVertical();
-
-    if (!areWhiteActive)
-    {
-        h = L_CHESS_BOARD_SIZE - 1 - h;
-        v = L_CHESS_BOARD_SIZE - 1 - v;
-    }
-
-    ++h;
-    ++v;
-
-    int x = h * edgeSquare + leftMargin;
-    int y = v * edgeSquare + topMargin;
-
     QString file = (color == L_COLOR_WHITE) ? ":/LWPawn.png" : ":/LBPawn.png";
     QImage image = QImage(file).scaled(edgeSquare, edgeSquare, Qt::IgnoreAspectRatio);
     QPainter painter;

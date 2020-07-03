@@ -4,6 +4,7 @@
 
 #include <QString>
 
+class LPlayer;
 class LSquare;
 class LFigure;
 
@@ -11,7 +12,9 @@ class LBiGame :
 	public LGame
 {
 private:
-	QString nameWhite, nameBlack;
+	LPlayer* playerWhite;
+	LPlayer* playerBlack;
+
 	LSquare*** squares;
 	LFigure*** figures;
 	bool areWhiteActive;

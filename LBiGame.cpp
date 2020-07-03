@@ -1,12 +1,12 @@
 #include "LBiGame.h"
 
-#include <QString>
-
 #include "LConst.h"
 #include "LMainWidget.h"
 #include "LTransformation.h"
 #include "LDesk.h"
 #include "LSquare.h"
+
+#include "LPlayer.h"
 
 #include "LFigure.h"
 #include "LKing.h"
@@ -18,15 +18,23 @@
 
 LBiGame::LBiGame(QString n1, QString n2, int c)
 	:
-	nameWhite((c == L_COLOR_ANY) ? ((rand() % 2) ? n1 : n2) : ((c == L_COLOR_WHITE) ? n1 : n2)),
-	nameBlack((nameWhite == n1) ? n2 : n1),
 	areWhiteActive(true),
-	squares(new LSquare**[L_CHESS_BOARD_SIZE]),
-	figures(new LFigure**[L_CHESS_BOARD_SIZE]),
+	squares(new LSquare** [L_CHESS_BOARD_SIZE]),
+	figures(new LFigure** [L_CHESS_BOARD_SIZE]),
 	activeSquare(nullptr),
 	activeFigure(nullptr),
 	focusedSquare(nullptr)
 {
+	this->playerWhite = new LPlayer(
+		L_COLOR_WHITE,
+		(c == L_COLOR_ANY) ? ((rand() % 2) ? n1 : n2) : ((c == L_COLOR_WHITE) ? n1 : n2)
+	);
+
+	this->playerBlack = new LPlayer(
+		L_COLOR_BLACK,
+		(this->playerWhite->getName() == n1) ? n2 : n1
+	);
+
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
 		this->squares[i] = new LSquare * [L_CHESS_BOARD_SIZE];
@@ -89,6 +97,11 @@ void LBiGame::draw()
 {
 	LDesk* desk = LDesk::getInstance();
 
+	desk->drawTablePlayer(this->playerWhite, this->areWhiteActive);
+	desk->drawTablePlayer(this->playerBlack, this->areWhiteActive);
+
+	desk->drawMarkup(areWhiteActive);
+
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
@@ -119,7 +132,8 @@ void LBiGame::mousePress(int v, int h)
 
 	this->activeSquare = this->squares[v][h];
 	this->activeFigure = this->figures[v][h];
-	this->focusedSquare = this->squares[v][h];
+
+	this->activeSquare->setState(L_SQUARE_SELECTED);
 }
 
 void LBiGame::mouseRelease(int v, int h)
@@ -147,9 +161,21 @@ void LBiGame::mouseRelease(int v, int h)
 
 		if (response & L_PATH_TRUE)
 		{
-			QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+			QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 			QString actFig = this->activeFigure->getName();
 			QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
+
+			if (this->figures[v][h])
+			{
+				if (this->areWhiteActive)
+				{
+					this->playerWhite->addFigure(this->figures[v][h]);
+				}
+				else
+				{
+					this->playerBlack->addFigure(this->figures[v][h]);
+				}
+			}
 
 			this->figures[v][h] = this->activeFigure;
 			this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
@@ -162,7 +188,7 @@ void LBiGame::mouseRelease(int v, int h)
 
 		if (response & L_PATH_CASTLING)
 		{
-			QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+			QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 			LGame* game = LGame::getInstance();
 			int _h = this->activeSquare->getHorizontal();
 
@@ -208,7 +234,7 @@ void LBiGame::mouseRelease(int v, int h)
 
 			if (dialog->exec() == QDialog::Accepted)
 			{
-				QString name = (this->areWhiteActive) ? (this->nameWhite) : (this->nameBlack);
+				QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 				QString newFigure;
 
 				LFigure* temp = this->figures[v][h];
@@ -248,18 +274,24 @@ void LBiGame::mouseRelease(int v, int h)
 		}
 	}
 
+	this->activeSquare->setState(L_SQUARE_NATIVE);
+
 	this->activeSquare = nullptr;
 	this->activeFigure = nullptr;
 }
 
 void LBiGame::mouseMotionMove(int v, int h)
 {
-	//this->focusedSquare = this->squares[v][h];
+	/*this->focusedSquare->setState(L_SQUARE_NATIVE);
+	this->focusedSquare = this->squares[v][h];
+	this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
 }
 
 void LBiGame::mouseMove(int v, int h)
 {
+	/**this->focusedSquare->setState(L_SQUARE_NATIVE);
 	this->focusedSquare = this->squares[v][h];
+	this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
 }
 
 void LBiGame::setFigure(int v, int h, LFigure* figure)

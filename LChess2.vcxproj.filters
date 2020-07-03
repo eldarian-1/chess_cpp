@@ -107,6 +107,9 @@
     <ClCompile Include="LTransformation.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="LPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -162,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="LTransformation.h">
       <Filter>Header Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LPlayer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

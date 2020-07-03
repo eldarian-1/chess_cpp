@@ -38,7 +38,7 @@ LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	quit(new QPushButton(QIcon(":/LBPawn.png"), "Quit")),
 	pathList(new QTextEdit)
 {
-	this->resize(L_WIDTH_MENU + L_WIDTH_CHESS, L_HEIGHT);
+	this->setFixedSize(L_WIDTH_MENU + L_WIDTH_CHESS, L_HEIGHT);
 	this->setPalette(QPalette(QColor(255, 255, 255)));
 	this->pathList->setDisabled(true);
 

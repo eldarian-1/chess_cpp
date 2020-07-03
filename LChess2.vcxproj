@@ -101,6 +101,7 @@
     <ClCompile Include="LNewGame.cpp" />
     <ClCompile Include="LOptions.cpp" />
     <ClCompile Include="LPawn.cpp" />
+    <ClCompile Include="LPlayer.cpp" />
     <ClCompile Include="LQueen.cpp" />
     <ClCompile Include="LRook.cpp" />
     <ClCompile Include="LSaveGame.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="LLoadGame.h" />
     <ClInclude Include="LNetGame.h" />
     <ClInclude Include="LPawn.h" />
+    <ClInclude Include="LPlayer.h" />
     <ClInclude Include="LQueen.h" />
     <ClInclude Include="LRook.h" />
     <ClInclude Include="LSquare.h" />

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "LConst.h"
+
 class LSquare
 {
 private:
@@ -9,7 +11,7 @@ private:
 	int state;
 
 public:
-	LSquare(int vertical, int horizontal, int color);
+	LSquare(int vertical, int horizontal, int color = L_COLOR_WHITE);
 
 	int getVertical();
 	int getHorizontal();
