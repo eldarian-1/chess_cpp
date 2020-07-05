@@ -19,6 +19,7 @@
 LBiGame::LBiGame(QString n1, QString n2, int c)
 	:
 	areWhiteActive(true),
+	_isShah(0),
 	squares(new LSquare** [L_CHESS_BOARD_SIZE]),
 	figures(new LFigure** [L_CHESS_BOARD_SIZE]),
 	activeSquare(nullptr),
@@ -122,6 +123,61 @@ void LBiGame::draw()
 	}
 }
 
+int LBiGame::isShah(int color)
+{
+	int v, h;
+	bool flag;
+	int response = 0;
+
+	for (v = 0, h = 0, flag = false; !flag; (h == 7) ? (h = 0, ++v) : (++h))
+	{
+		flag = this->figures[v][h] && this->figures[v][h]->getType() == L_FIGURE_KING && this->figures[v][h]->getColor() == color;
+	}
+
+	for (int y = 0; y < L_CHESS_BOARD_SIZE; y++)
+	{
+		for (int x = 0; x < L_CHESS_BOARD_SIZE; x++)
+		{
+			if (!(y == v && x == h) &&
+				this->figures[y][x] &&
+				this->figures[y][x]->getColor() != color &&
+				(this->figures[y][x]->isPossiblePosition(this->squares[y][x], this->squares[v][h]) & L_PATH_TRUE))
+			{
+				response |= color | L_PATH_SHAH;
+				break;
+			}
+		}
+		if (response)
+		{
+			break;
+		}
+	}
+
+	return response;
+}
+
+int LBiGame::isShah(int color, int v, int h, int vK, int hK)
+{
+	LFigure* temp;
+
+	if (vK != -1)
+	{
+		temp = this->figures[v][h];
+		this->figures[v][h] = this->figures[vK][hK];
+		this->figures[vK][hK] = nullptr;
+	}
+
+	int response = this->isShah(color);
+
+	if (vK != -1)
+	{
+		this->figures[vK][hK] = this->figures[v][h];
+		this->figures[v][h] = temp;
+	}
+
+	return response;
+}
+
 void LBiGame::mousePress(int v, int h)
 {
 	if (!this->areWhiteActive)
@@ -139,9 +195,9 @@ void LBiGame::mousePress(int v, int h)
 void LBiGame::mouseRelease(int v, int h)
 {
 	if (
-		(this->areWhiteActive && this->activeFigure->getColor() != L_COLOR_WHITE)
+		(this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() != L_COLOR_WHITE)
 		||
-		(!this->areWhiteActive && this->activeFigure->getColor() == L_COLOR_WHITE)
+		(!this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() == L_COLOR_WHITE)
 		)
 	{
 		this->activeSquare = nullptr;
@@ -158,10 +214,10 @@ void LBiGame::mouseRelease(int v, int h)
 	if (this->activeFigure)
 	{
 		int response = this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]);
+		QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 
 		if (response & L_PATH_TRUE)
 		{
-			QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 			QString actFig = this->activeFigure->getName();
 			QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
 
@@ -188,7 +244,6 @@ void LBiGame::mouseRelease(int v, int h)
 
 		if (response & L_PATH_CASTLING)
 		{
-			QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
 			LGame* game = LGame::getInstance();
 			int _h = this->activeSquare->getHorizontal();
 
@@ -270,6 +325,22 @@ void LBiGame::mouseRelease(int v, int h)
 
 		if (response & L_PATH_TRUE)
 		{
+			if (this->_isShah = this->isShah(L_COLOR_WHITE) | this->isShah(L_COLOR_BLACK))
+			{
+				QString node;
+
+				if (this->_isShah & L_COLOR_WHITE)
+				{
+					node = this->playerBlack->getName() + " shah " + this->playerWhite->getName();
+				}
+				if (this->_isShah & L_COLOR_BLACK)
+				{
+					node = this->playerWhite->getName() + " shah " + this->playerBlack->getName();
+				}
+
+				LMainWidget::getInstance()->pathListAppend(node);
+			}
+
 			this->areWhiteActive = !this->areWhiteActive;
 		}
 	}

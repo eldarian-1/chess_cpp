@@ -30,6 +30,9 @@ int LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	flag = (((target == nullptr) || (target->color != this->color)) && (((abs(xT - xC) == 2) && (abs(yT - yC) == 1)) || ((abs(xT - xC) == 1) && (abs(yT - yC)) == 2)))
 		? (L_PATH_TRUE) : (L_PATH_FALSE);
 
+	if ((flag & L_PATH_TRUE) && (game->isShah(this->getColor(), yC, xC) & L_PATH_SHAH))
+		return L_PATH_FALSE;
+
 	return flag;
 }
 

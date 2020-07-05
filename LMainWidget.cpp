@@ -9,6 +9,7 @@
 #include <QPalette>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QMessageBox>
 
 #include <QScrollBar>
 #include <QHBoxLayout>
@@ -94,8 +95,10 @@ void LMainWidget::slotNewGame()
 			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
 			break;
 		case L_TYPE_BOT:
+			QMessageBox::information(nullptr, "Information", "Bot game is under development!");
 			break;
 		case L_TYPE_NET:
+			QMessageBox::information(nullptr, "Information", "Internet game is under development!");
 			break;
 		}
 
@@ -107,17 +110,17 @@ void LMainWidget::slotNewGame()
 
 void LMainWidget::slotSaveGame()
 {
-
+	QMessageBox::information(nullptr, "Information", "This section is under development!");
 }
 
 void LMainWidget::slotLoadGame()
 {
-	
+	QMessageBox::information(nullptr, "Information", "This section is under development!");
 }
 
 void LMainWidget::slotOptions()
 {
-
+	QMessageBox::information(nullptr, "Information", "This section is under development!");
 }
 
 LGame* LMainWidget::getGame() const

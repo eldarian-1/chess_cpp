@@ -18,6 +18,7 @@ private:
 	LSquare*** squares;
 	LFigure*** figures;
 	bool areWhiteActive;
+	int _isShah;
 
 	LSquare* activeSquare;
 	LFigure* activeFigure;
@@ -28,6 +29,9 @@ public:
 
 	LFigure* getFigure(int vertical, int horizontal) override;
 	void draw() override;
+
+	int isShah(int color) override;
+	int isShah(int color, int v, int h, int vK = -1, int hK = -1) override;
 
 	void mousePress(int vertical, int horizontal) override;
 	void mouseRelease(int vertical, int horizontal) override;

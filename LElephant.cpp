@@ -50,6 +50,9 @@ int LElephant::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 			flag = (game->getFigure(yC + i, xC - i) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 
+	if ((flag & L_PATH_TRUE) && (game->isShah(this->getColor(), yC, xC) & L_PATH_SHAH))
+		return L_PATH_FALSE;
+
 	return flag;
 }
 

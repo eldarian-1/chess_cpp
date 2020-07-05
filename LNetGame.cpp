@@ -17,6 +17,16 @@ void LNetGame::draw()
 
 }
 
+int LNetGame::isShah(int color)
+{
+	return 0;
+}
+
+int LNetGame::isShah(int color, int v, int h, int vK, int hK)
+{
+	return 0;
+}
+
 void LNetGame::mousePress(int vertical, int horizontal)
 {
 

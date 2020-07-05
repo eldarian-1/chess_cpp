@@ -80,6 +80,9 @@ int LPawn::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 		}
 	}
 
+	if ((flag & L_PATH_TRUE) && (game->isShah(this->getColor(), yC, xC) & L_PATH_SHAH))
+		return L_PATH_FALSE;
+
 	return flag;
 }
 

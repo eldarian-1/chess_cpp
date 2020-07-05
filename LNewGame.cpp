@@ -70,13 +70,14 @@ LNewGame::LNewGame(QWidget* widget)
 	connect(buttonOk, SIGNAL(clicked()), SLOT(accept()));
 	connect(buttonCancel, SIGNAL(clicked()), SLOT(reject()));
 
-	this->botRadio->setChecked(true);
+	this->biRadio->setChecked(true);
 	this->anyRadio->setChecked(true);
 
 	this->setWindowTitle("New Game");
 	this->setWindowIcon(QIcon());
 	this->resize(300, 270);
-	this->slotCheckBotNet();
+	this->slotCheckBi();
+	//this->slotCheckBotNet();
 	this->setLayout(mainLayout);
 	this->setModal(true);
 	this->show();
