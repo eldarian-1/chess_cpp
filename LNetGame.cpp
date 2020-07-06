@@ -17,12 +17,17 @@ void LNetGame::draw()
 
 }
 
-int LNetGame::isShah(int color)
+int LNetGame::isCheck(int color)
 {
 	return 0;
 }
 
-int LNetGame::isShah(int color, int v, int h, int vK, int hK)
+int LNetGame::isCheck(int color, int v, int h, int vK, int hK)
+{
+	return 0;
+}
+
+int LNetGame::getIsCheck() const
 {
 	return 0;
 }

@@ -77,8 +77,16 @@ int LQueen::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 		}
 	}
 
-	if ((flag & L_PATH_TRUE) && (game->isShah(this->getColor(), yC, xC) & L_PATH_SHAH))
-		return L_PATH_FALSE;
+	if (game->getIsCheck() & this->color)
+	{
+		if ((flag & L_PATH_TRUE) && (game->isCheck(this->getColor(), yT, xT, yC, xC) & L_PATH_CHECK))
+			return L_PATH_FALSE;
+	}
+	else
+	{
+		if ((flag & L_PATH_TRUE) && (game->isCheck(this->getColor(), yC, xC) & L_PATH_CHECK))
+			return L_PATH_FALSE;
+	}
 
 	return flag;
 }

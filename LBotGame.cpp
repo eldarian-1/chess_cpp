@@ -17,12 +17,17 @@ void LBotGame::draw()
 
 }
 
-int LBotGame::isShah(int color)
+int LBotGame::isCheck(int color)
 {
 	return 0;
 }
 
-int LBotGame::isShah(int color, int v, int h, int vK, int hK)
+int LBotGame::isCheck(int color, int v, int h, int vK, int hK)
+{
+	return 0;
+}
+
+int LBotGame::getIsCheck() const
 {
 	return 0;
 }
