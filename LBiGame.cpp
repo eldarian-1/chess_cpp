@@ -193,7 +193,7 @@ int LBiGame::getIsCheck() const
 	return this->_isCheck;
 }
 
-/*int LBiGame::isMat(int color)
+int LBiGame::isMat(int color)
 {
 	int v, h;
 	bool flag;
@@ -244,7 +244,7 @@ int LBiGame::getIsCheck() const
 	{
 		return L_PATH_TRUE;
 	}
-}*/
+}
 
 void LBiGame::mousePress(int v, int h)
 {

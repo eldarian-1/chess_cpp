@@ -32,10 +32,10 @@ int LNetGame::getIsCheck() const
 	return 0;
 }
 
-/*int LNetGame::isMat(int color)
+int LNetGame::isMat(int color)
 {
 	return 0;
-}*/
+}
 
 void LNetGame::mousePress(int vertical, int horizontal)
 {
