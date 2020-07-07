@@ -205,40 +205,29 @@ int LBiGame::isMat(int color)
 
 	h = (h == 0) ? (7, --v) : (--h);
 
-	if (
-		(v >= 0) &&
-		(v < L_CHESS_BOARD_SIZE) &&
-		(h + 1 >= 0) &&
-		(h + 1 < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v][h + 1]) & L_PATH_FALSE) &&
-		(v + 1 >= 0) &&
-		(v + 1 < L_CHESS_BOARD_SIZE) &&
-		(h + 1 >= 0) &&
-		(h + 1 < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v + 1][h + 1]) & L_PATH_FALSE) &&
-		(v + 1 >= 0) &&
-		(v + 1 < L_CHESS_BOARD_SIZE) &&
-		(h >= 0) &&
-		(h < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v + 1][h]) & L_PATH_FALSE) &&
-		(v >= 0) &&
-		(v < L_CHESS_BOARD_SIZE) &&
-		(h - 1 >= 0) &&
-		(h - 1 < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v][h - 1]) & L_PATH_FALSE) &&
-		(v - 1 >= 0) &&
-		(v - 1 < L_CHESS_BOARD_SIZE) &&
-		(h - 1 >= 0) &&
-		(h - 1 < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v - 1][h - 1]) & L_PATH_FALSE) &&
-		(v - 1 >= 0) &&
-		(v - 1 < L_CHESS_BOARD_SIZE) &&
-		(h >= 0) &&
-		(h < L_CHESS_BOARD_SIZE) &&
-		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v - 1][h]) & L_PATH_FALSE)
-		)
+	bool (*func)(LBiGame* game, int sV, int sH, int fV, int fH) = [](LBiGame* game, int sV, int sH, int fV, int fH)
 	{
-		return L_PATH_FALSE | L_PATH_MAT | color;
+		return ((fV >= 0) &&
+			(fV < L_CHESS_BOARD_SIZE) &&
+			(fH >= 0) &&
+			(fH < L_CHESS_BOARD_SIZE) &&
+			(game->figures[sV][sH]->isPossiblePosition(game->squares[sV][sH], game->squares[fV][fH]) & L_PATH_TRUE));
+	};
+
+	bool result[8];
+
+	result[0] = func(this, v, h, v, h + 1);
+	result[1] = func(this, v, h, v + 1, h + 1);
+	result[2] = func(this, v, h, v + 1, h);
+	result[3] = func(this, v, h, v + 1, h - 1);
+	result[4] = func(this, v, h, v, h - 1);
+	result[5] = func(this, v, h, v - 1, h - 1);
+	result[6] = func(this, v, h, v - 1, h);
+	result[7] = func(this, v, h, v - 1, h + 1);
+
+	if (!(result[0] || result[1] || result[2] || result[3] || result[4] || result[5] || result[6] || result[7]))
+	{
+		return L_PATH_MAT;
 	}
 	else
 	{
@@ -409,7 +398,7 @@ void LBiGame::mouseRelease(int v, int h)
 						node = this->playerBlack->getName() + " check " + this->playerWhite->getName();
 						mainWidget->pathListAppend(node);
 
-						/*if (this->isMat(L_COLOR_WHITE) & L_PATH_MAT)
+						if (this->isMat(L_COLOR_WHITE) & L_PATH_MAT)
 						{
 							node = this->playerBlack->getName() + "win!\n";
 							node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
@@ -418,9 +407,9 @@ void LBiGame::mouseRelease(int v, int h)
 							this->changeGameInstance(L_GAME_FINISH | L_COLOR_WHITE);
 						}
 						else
-						{*/
+						{
 							mainWidget->messageAlert(node);
-						//}
+						}
 					}
 
 					if (this->_isCheck & L_COLOR_BLACK)
@@ -428,18 +417,18 @@ void LBiGame::mouseRelease(int v, int h)
 						node = this->playerWhite->getName() + " check " + this->playerBlack->getName();
 						mainWidget->pathListAppend(node);
 
-						/*if (this->isMat(L_COLOR_BLACK) & L_PATH_MAT)
+						if (this->isMat(L_COLOR_BLACK) & L_PATH_MAT)
 						{
-							node = this->playerWhite->getName() + "win!\n";
+							node = this->playerWhite->getName() + " win!\n";
 							node += this->playerWhite->getName() + " mat " + this->playerBlack->getName();
 							mainWidget->pathListAppend(node);
 							mainWidget->messageAlert(node);
 							this->changeGameInstance(L_GAME_FINISH | L_COLOR_BLACK);
 						}
 						else
-						{*/
+						{
 							mainWidget->messageAlert(node);
-						//}
+						}
 					}
 				}
 
