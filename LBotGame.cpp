@@ -32,6 +32,11 @@ int LBotGame::getIsCheck() const
 	return 0;
 }
 
+/*int LBotGame::isMat(int color)
+{
+	return 0;
+}*/
+
 void LBotGame::mousePress(int vertical, int horizontal)
 {
 

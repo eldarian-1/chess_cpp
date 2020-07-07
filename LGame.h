@@ -10,8 +10,13 @@ private:
 	
 	bool isChecked;
 
+	int gameInstance;
+
 protected:
 	LGame();
+
+	int getGameInstance() const;
+	void changeGameInstance(int gameInstance);
 
 public:
 	static LGame* getInstance();
@@ -23,8 +28,9 @@ public:
 
 	virtual int isCheck(int color) = 0;
 	virtual int isCheck(int color, int v, int h, int vK = -1, int hK = -1) = 0;
-
 	virtual int getIsCheck() const = 0;
+
+	//virtual int isMat(int color) = 0;
 
 	virtual void mousePress(int vertical, int horizontal) = 0;
 	virtual void mouseRelease(int vertical, int horizontal) = 0;

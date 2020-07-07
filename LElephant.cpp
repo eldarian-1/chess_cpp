@@ -53,12 +53,12 @@ int LElephant::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
 	if (game->getIsCheck() & this->color)
 	{
 		if ((flag & L_PATH_TRUE) && (game->isCheck(this->getColor(), yT, xT, yC, xC) & L_PATH_CHECK))
-			return L_PATH_FALSE;
+			flag = L_PATH_FALSE;
 	}
 	else
 	{
 		if ((flag & L_PATH_TRUE) && (game->isCheck(this->getColor(), yC, xC) & L_PATH_CHECK))
-			return L_PATH_FALSE;
+			flag = L_PATH_FALSE;
 	}
 
 	return flag;

@@ -18,8 +18,9 @@ public:
 
 	int isCheck(int color) override;
 	int isCheck(int color, int v, int h, int vK = -1, int hK = -1) override;
-
 	int getIsCheck() const override;
+
+	//int isMat(int color) override;
 
 	void mousePress(int vertical, int horizontal) override;
 	void mouseRelease(int vertical, int horizontal) override;

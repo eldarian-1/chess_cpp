@@ -10,7 +10,9 @@
 LGame* LGame::instance = nullptr;
 
 LGame::LGame()
-	: isChecked(false)
+	:
+	isChecked(false),
+	gameInstance(L_GAME_RUNNING)
 {
 
 }
@@ -18,6 +20,16 @@ LGame::LGame()
 LGame* LGame::getInstance()
 {
 	return instance;
+}
+
+int LGame::getGameInstance() const
+{
+	return this->gameInstance;
+}
+
+void LGame::changeGameInstance(int gameInstance)
+{
+	this->gameInstance = gameInstance;
 }
 
 void LGame::newGame(LNewGame* dialog)

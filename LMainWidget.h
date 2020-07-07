@@ -43,6 +43,6 @@ public:
 	LGame* getGame() const;
 
 	void pathListAppend(QString string);
-
+	void messageAlert(QString string);
 
 };

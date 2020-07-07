@@ -193,199 +193,285 @@ int LBiGame::getIsCheck() const
 	return this->_isCheck;
 }
 
-void LBiGame::mousePress(int v, int h)
+/*int LBiGame::isMat(int color)
 {
-	if (!this->areWhiteActive)
+	int v, h;
+	bool flag;
+
+	for (v = 0, h = 0, flag = false; !flag && v != 8; (h == 7) ? (h = 0, ++v) : (++h))
 	{
-		v = L_CHESS_BOARD_SIZE - 1 - v;
-		h = L_CHESS_BOARD_SIZE - 1 - h;
+		flag = this->figures[v][h] && (this->figures[v][h]->getType() == L_FIGURE_KING) && (this->figures[v][h]->getColor() == color);
 	}
 
-	this->activeSquare = this->squares[v][h];
-	this->activeFigure = this->figures[v][h];
+	h = (h == 0) ? (7, --v) : (--h);
 
-	this->activeSquare->setState(L_SQUARE_SELECTED);
+	if (
+		(v >= 0) &&
+		(v < L_CHESS_BOARD_SIZE) &&
+		(h + 1 >= 0) &&
+		(h + 1 < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v][h + 1]) & L_PATH_FALSE) &&
+		(v + 1 >= 0) &&
+		(v + 1 < L_CHESS_BOARD_SIZE) &&
+		(h + 1 >= 0) &&
+		(h + 1 < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v + 1][h + 1]) & L_PATH_FALSE) &&
+		(v + 1 >= 0) &&
+		(v + 1 < L_CHESS_BOARD_SIZE) &&
+		(h >= 0) &&
+		(h < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v + 1][h]) & L_PATH_FALSE) &&
+		(v >= 0) &&
+		(v < L_CHESS_BOARD_SIZE) &&
+		(h - 1 >= 0) &&
+		(h - 1 < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v][h - 1]) & L_PATH_FALSE) &&
+		(v - 1 >= 0) &&
+		(v - 1 < L_CHESS_BOARD_SIZE) &&
+		(h - 1 >= 0) &&
+		(h - 1 < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v - 1][h - 1]) & L_PATH_FALSE) &&
+		(v - 1 >= 0) &&
+		(v - 1 < L_CHESS_BOARD_SIZE) &&
+		(h >= 0) &&
+		(h < L_CHESS_BOARD_SIZE) &&
+		(this->figures[v][h]->isPossiblePosition(this->squares[v][h], this->squares[v - 1][h]) & L_PATH_FALSE)
+		)
+	{
+		return L_PATH_FALSE | L_PATH_MAT | color;
+	}
+	else
+	{
+		return L_PATH_TRUE;
+	}
+}*/
+
+void LBiGame::mousePress(int v, int h)
+{
+	if (!(this->getGameInstance() & L_GAME_FINISH))
+	{
+		if (!this->areWhiteActive)
+		{
+			v = L_CHESS_BOARD_SIZE - 1 - v;
+			h = L_CHESS_BOARD_SIZE - 1 - h;
+		}
+
+		this->activeSquare = this->squares[v][h];
+		this->activeFigure = this->figures[v][h];
+
+		this->activeSquare->setState(L_SQUARE_SELECTED);
+	}
 }
 
 void LBiGame::mouseRelease(int v, int h)
 {
-	if (
-		(this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() != L_COLOR_WHITE)
-		||
-		(!this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() == L_COLOR_WHITE)
-		)
+	if (!(this->getGameInstance() & L_GAME_FINISH))
 	{
+		if (
+			(this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() != L_COLOR_WHITE)
+			||
+			(!this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() == L_COLOR_WHITE)
+			)
+		{
+			this->activeSquare = nullptr;
+			this->activeFigure = nullptr;
+			return;
+		}
+
+		if (!this->areWhiteActive)
+		{
+			v = L_CHESS_BOARD_SIZE - 1 - v;
+			h = L_CHESS_BOARD_SIZE - 1 - h;
+		}
+
+		if (this->activeFigure)
+		{
+			int response = this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]);
+			QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
+			LMainWidget* mainWidget = LMainWidget::getInstance();
+
+			if (response & L_PATH_TRUE)
+			{
+				QString actFig = this->activeFigure->getName();
+				QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
+
+				if (this->figures[v][h])
+				{
+					if (this->areWhiteActive)
+					{
+						this->playerWhite->addFigure(this->figures[v][h]);
+					}
+					else
+					{
+						this->playerBlack->addFigure(this->figures[v][h]);
+					}
+				}
+
+				this->figures[v][h] = this->activeFigure;
+				this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
+
+				QString node = name + ": " + actFig + " " +
+					('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
+					('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
+
+				mainWidget->pathListAppend(node);
+			}
+
+			if (response & L_PATH_CASTLING)
+			{
+				LGame* game = LGame::getInstance();
+				int _h = this->activeSquare->getHorizontal();
+
+				if (h - _h == 2)
+				{
+					LRook* rook = (LRook*)this->figures[v][h + 1];
+
+					if (!rook)
+					{
+						rook = (LRook*)this->figures[v][h + 2];
+						this->figures[v][h + 2] = nullptr;
+					}
+					else
+					{
+						this->figures[v][h + 1] = nullptr;
+					}
+
+					this->figures[v][h - 1] = rook;
+				}
+				else
+				{
+					LRook* rook = (LRook*)this->figures[v][h - 1];
+
+					if (!rook)
+					{
+						rook = (LRook*)this->figures[v][h - 2];
+						this->figures[v][h - 2] = nullptr;
+					}
+					else
+					{
+						this->figures[v][h - 1] = nullptr;
+					}
+
+					this->figures[v][h + 1] = rook;
+				}
+
+				mainWidget->pathListAppend(name + ": Castling");
+			}
+
+			if (response & L_PATH_TRANSFORMATION)
+			{
+				LTransformation* dialog = new LTransformation;
+
+				if (dialog->exec() == QDialog::Accepted)
+				{
+					QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
+					QString newFigure;
+
+					LFigure* temp = this->figures[v][h];
+
+					switch (dialog->getFigure())
+					{
+					case L_FIGURE_QUEEN:
+						newFigure = "Queen";
+						this->figures[v][h] = new LQueen(this->figures[v][h]->getColor());
+						break;
+					case L_FIGURE_ELEPHANT:
+						newFigure = "Elephant";
+						this->figures[v][h] = new LElephant(this->figures[v][h]->getColor());
+						break;
+					case L_FIGURE_HORSE:
+						newFigure = "Horse";
+						this->figures[v][h] = new LHorse(this->figures[v][h]->getColor());
+						break;
+					case L_FIGURE_ROOK:
+						newFigure = "Rook";
+						this->figures[v][h] = new LRook(this->figures[v][h]->getColor());
+						break;
+					}
+
+					QString node = name + ": Pawn to " + newFigure;
+					mainWidget->pathListAppend(node);
+
+					delete temp;
+				}
+
+				delete dialog;
+			}
+
+			if (response & L_PATH_TRUE)
+			{
+				if (this->_isCheck = this->isCheck(L_COLOR_WHITE) | this->isCheck(L_COLOR_BLACK))
+				{
+					QString node;
+
+					if (this->_isCheck & L_COLOR_WHITE)
+					{
+						node = this->playerBlack->getName() + " check " + this->playerWhite->getName();
+						mainWidget->pathListAppend(node);
+
+						/*if (this->isMat(L_COLOR_WHITE) & L_PATH_MAT)
+						{
+							node = this->playerBlack->getName() + "win!\n";
+							node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
+							mainWidget->pathListAppend(node);
+							mainWidget->messageAlert(node);
+							this->changeGameInstance(L_GAME_FINISH | L_COLOR_WHITE);
+						}
+						else
+						{*/
+							mainWidget->messageAlert(node);
+						//}
+					}
+
+					if (this->_isCheck & L_COLOR_BLACK)
+					{
+						node = this->playerWhite->getName() + " check " + this->playerBlack->getName();
+						mainWidget->pathListAppend(node);
+
+						/*if (this->isMat(L_COLOR_BLACK) & L_PATH_MAT)
+						{
+							node = this->playerWhite->getName() + "win!\n";
+							node += this->playerWhite->getName() + " mat " + this->playerBlack->getName();
+							mainWidget->pathListAppend(node);
+							mainWidget->messageAlert(node);
+							this->changeGameInstance(L_GAME_FINISH | L_COLOR_BLACK);
+						}
+						else
+						{*/
+							mainWidget->messageAlert(node);
+						//}
+					}
+				}
+
+				this->areWhiteActive = !this->areWhiteActive;
+			}
+		}
+
+		this->activeSquare->setState(L_SQUARE_NATIVE);
+
 		this->activeSquare = nullptr;
 		this->activeFigure = nullptr;
-		return;
 	}
-
-	if (!this->areWhiteActive)
-	{
-		v = L_CHESS_BOARD_SIZE - 1 - v;
-		h = L_CHESS_BOARD_SIZE - 1 - h;
-	}
-
-	if (this->activeFigure)
-	{
-		int response = this->activeFigure->isPossiblePosition(activeSquare, this->squares[v][h]);
-		QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
-		LMainWidget* mainWidget = LMainWidget::getInstance();
-
-		if (response & L_PATH_TRUE)
-		{
-			QString actFig = this->activeFigure->getName();
-			QString pasFig = (this->figures[v][h]) ? (" (" + this->figures[v][h]->getName() + ")") : ("");
-
-			if (this->figures[v][h])
-			{
-				if (this->areWhiteActive)
-				{
-					this->playerWhite->addFigure(this->figures[v][h]);
-				}
-				else
-				{
-					this->playerBlack->addFigure(this->figures[v][h]);
-				}
-			}
-
-			this->figures[v][h] = this->activeFigure;
-			this->figures[this->activeSquare->getVertical()][this->activeSquare->getHorizontal()] = nullptr;
-
-			QString node = name + ": " + actFig + " " +
-				('A' + activeSquare->getHorizontal()) + ('1' + activeSquare->getVertical()) + " - " +
-				('A' + this->squares[v][h]->getHorizontal()) + ('1' + this->squares[v][h]->getVertical()) + pasFig;
-
-			mainWidget->pathListAppend(node);
-		}
-
-		if (response & L_PATH_CASTLING)
-		{
-			LGame* game = LGame::getInstance();
-			int _h = this->activeSquare->getHorizontal();
-
-			if (h - _h == 2)
-			{
-				LRook* rook = (LRook*)this->figures[v][h + 1];
-
-				if (!rook)
-				{
-					rook = (LRook*)this->figures[v][h + 2];
-					this->figures[v][h + 2] = nullptr;
-				}
-				else
-				{
-					this->figures[v][h + 1] = nullptr;
-				}
-
-				this->figures[v][h - 1] = rook;
-			}
-			else
-			{
-				LRook* rook = (LRook*)this->figures[v][h - 1];
-
-				if (!rook)
-				{
-					rook = (LRook*)this->figures[v][h - 2];
-					this->figures[v][h - 2] = nullptr;
-				}
-				else
-				{
-					this->figures[v][h - 1] = nullptr;
-				}
-
-				this->figures[v][h + 1] = rook;
-			}
-
-			mainWidget->pathListAppend(name + ": Castling");
-		}
-
-		if (response & L_PATH_TRANSFORMATION)
-		{
-			LTransformation* dialog = new LTransformation;
-
-			if (dialog->exec() == QDialog::Accepted)
-			{
-				QString name = (this->areWhiteActive) ? (this->playerWhite->getName()) : (this->playerBlack->getName());
-				QString newFigure;
-
-				LFigure* temp = this->figures[v][h];
-
-				switch (dialog->getFigure())
-				{
-				case L_FIGURE_QUEEN:
-					newFigure = "Queen";
-					this->figures[v][h] = new LQueen(this->figures[v][h]->getColor());
-					break;
-				case L_FIGURE_ELEPHANT:
-					newFigure = "Elephant";
-					this->figures[v][h] = new LElephant(this->figures[v][h]->getColor());
-					break;
-				case L_FIGURE_HORSE:
-					newFigure = "Horse";
-					this->figures[v][h] = new LHorse(this->figures[v][h]->getColor());
-					break;
-				case L_FIGURE_ROOK:
-					newFigure = "Rook";
-					this->figures[v][h] = new LRook(this->figures[v][h]->getColor());
-					break;
-				}
-
-				QString node = name + ": Pawn to " + newFigure;
-				mainWidget->pathListAppend(node);
-
-				delete temp;
-			}
-
-			delete dialog;
-		}
-
-		if (response & L_PATH_TRUE)
-		{
-			if (this->_isCheck = this->isCheck(L_COLOR_WHITE) | this->isCheck(L_COLOR_BLACK))
-			{
-				QString node = "";
-
-				if (this->_isCheck & L_COLOR_WHITE)
-				{
-					node = this->playerBlack->getName() + " check " + this->playerWhite->getName();
-				}
-
-				if (node != "")
-				{
-					mainWidget->pathListAppend(node);
-				}
-
-				if (this->_isCheck & L_COLOR_BLACK)
-				{
-					node = this->playerWhite->getName() + " check " + this->playerBlack->getName();
-				}
-
-				mainWidget->pathListAppend(node);
-			}
-
-			this->areWhiteActive = !this->areWhiteActive;
-		}
-	}
-
-	this->activeSquare->setState(L_SQUARE_NATIVE);
-
-	this->activeSquare = nullptr;
-	this->activeFigure = nullptr;
 }
 
 void LBiGame::mouseMotionMove(int v, int h)
 {
-	/*this->focusedSquare->setState(L_SQUARE_NATIVE);
-	this->focusedSquare = this->squares[v][h];
-	this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+	if (!(this->getGameInstance() & L_GAME_FINISH))
+	{
+		/*this->focusedSquare->setState(L_SQUARE_NATIVE);
+		this->focusedSquare = this->squares[v][h];
+		this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+	}
 }
 
 void LBiGame::mouseMove(int v, int h)
 {
-	/**this->focusedSquare->setState(L_SQUARE_NATIVE);
-	this->focusedSquare = this->squares[v][h];
-	this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+	if (!(this->getGameInstance() & L_GAME_FINISH))
+	{
+		/**this->focusedSquare->setState(L_SQUARE_NATIVE);
+		this->focusedSquare = this->squares[v][h];
+		this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+	}
 }
 
 void LBiGame::setFigure(int v, int h, LFigure* figure)
