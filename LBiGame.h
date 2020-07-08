@@ -35,6 +35,7 @@ public:
 	int getIsCheck() const override;
 
 	int isMat(int color) override;
+	bool isPat(int color) override;
 
 	void mousePress(int vertical, int horizontal) override;
 	void mouseRelease(int vertical, int horizontal) override;

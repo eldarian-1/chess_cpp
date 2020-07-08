@@ -133,7 +133,7 @@ int LBiGame::isCheck(int color)
 		flag = this->figures[v][h] && (this->figures[v][h]->getType() == L_FIGURE_KING) && (this->figures[v][h]->getColor() == color);
 	}
 
-	h = (h == 0) ? (7, --v) : (--h);
+	(h == 0) ? ((v > 0) ? (h = 7, --v) : (--h)) : (--h);
 
 	if (v == 8)
 	{
@@ -203,7 +203,7 @@ int LBiGame::isMat(int color)
 		flag = this->figures[v][h] && (this->figures[v][h]->getType() == L_FIGURE_KING) && (this->figures[v][h]->getColor() == color);
 	}
 
-	h = (h == 0) ? (7, --v) : (--h);
+	(h == 0) ? ((v > 0) ? (h = 7, --v) : (--h)) : (--h);
 
 	bool (*func)(LBiGame* game, int sV, int sH, int fV, int fH) = [](LBiGame* game, int sV, int sH, int fV, int fH)
 	{
@@ -233,6 +233,99 @@ int LBiGame::isMat(int color)
 	{
 		return L_PATH_TRUE;
 	}
+}
+
+bool LBiGame::isPat(int color)
+{
+	bool flag = false;
+
+	bool result[8];
+
+	bool (*func)(LBiGame * game, int sV, int sH, int fV, int fH) = [](LBiGame* game, int sV, int sH, int fV, int fH)
+	{
+		return ((fV >= 0) &&
+			(fV < L_CHESS_BOARD_SIZE) &&
+			(fH >= 0) &&
+			(fH < L_CHESS_BOARD_SIZE) &&
+			(game->figures[sV][sH]->isPossiblePosition(game->squares[sV][sH], game->squares[fV][fH]) & L_PATH_TRUE));
+	};
+
+	for (int i = 0; i < L_CHESS_BOARD_SIZE && !flag; i++)
+	{
+		for (int j = 0; j < L_CHESS_BOARD_SIZE && !flag; j++)
+		{
+			if (this->figures[j][i] && this->figures[j][i]->getColor() == color)
+			{
+				switch (this->figures[j][i]->getType())
+				{
+				case L_FIGURE_KING:
+				case L_FIGURE_QUEEN:
+				case L_FIGURE_ELEPHANT:
+				{
+					result[0] = func(this, j, i, j + 1, i + 1);
+					result[1] = func(this, j, i, j + 1, i - 1);
+					result[2] = func(this, j, i, j - 1, i - 1);
+					result[3] = func(this, j, i, j - 1, i + 1);
+
+					flag = result[0] || result[1] || result[2] || result[3];
+
+					if (this->figures[j][i]->getType() == L_FIGURE_ELEPHANT)
+					{
+						break;
+					}
+				}
+				case L_FIGURE_ROOK:
+				{
+					result[4] = func(this, j, i, j, i + 1);
+					result[5] = func(this, j, i, j, i - 1);
+					result[6] = func(this, j, i, j + 1, i);
+					result[7] = func(this, j, i, j - 1, i);
+
+					if (this->figures[j][i]->getType() == L_FIGURE_ROOK)
+					{
+						flag = result[4] || result[5] || result[6] || result[7];
+						break;
+					}
+					else
+					{
+						flag = flag || result[4] || result[5] || result[6] || result[7];
+						break;
+					}
+				}
+				case L_FIGURE_HORSE:
+				{
+					result[0] = func(this, j, i, j + 1, i + 2);
+					result[1] = func(this, j, i, j + 1, i - 2);
+					result[2] = func(this, j, i, j - 1, i - 2);
+					result[3] = func(this, j, i, j - 1, i + 2);
+					result[4] = func(this, j, i, j + 2, i + 1);
+					result[5] = func(this, j, i, j + 2, i - 1);
+					result[6] = func(this, j, i, j - 2, i - 1);
+					result[7] = func(this, j, i, j - 2, i + 1);
+
+					flag = result[0] || result[1] || result[2] || result[3]  || result[4] || result[5] || result[6] || result[7];
+
+					break;
+				}
+				case L_FIGURE_PAWN:
+				{
+					result[0] = func(this, j, i, j + 1, i);
+					result[1] = func(this, j, i, j - 1, i);
+					result[2] = func(this, j, i, j + 1, i + 1);
+					result[3] = func(this, j, i, j + 1, i - 1);
+					result[4] = func(this, j, i, j - 1, i - 1);
+					result[5] = func(this, j, i, j - 1, i + 1);
+
+					flag = result[0] || result[1] || result[2] || result[3] || result[4] || result[5];
+
+					break;
+				}
+				}
+			}
+		}
+	}
+
+	return !flag;
 }
 
 void LBiGame::mousePress(int v, int h)
@@ -430,6 +523,14 @@ void LBiGame::mouseRelease(int v, int h)
 							mainWidget->messageAlert(node);
 						}
 					}
+				}
+				
+				else if(this->isPat(L_COLOR_WHITE) || this->isPat(L_COLOR_BLACK))
+				{
+					QString node = "Dead Heat!\nStalemate situation.";
+					mainWidget->pathListAppend(node);
+					mainWidget->messageAlert(node);
+					this->changeGameInstance(L_GAME_FINISH | L_PATH_PAT);
 				}
 
 				this->areWhiteActive = !this->areWhiteActive;

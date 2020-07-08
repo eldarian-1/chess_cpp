@@ -37,6 +37,11 @@ int LBotGame::isMat(int color)
 	return 0;
 }
 
+bool LBotGame::isPat(int color)
+{
+	return 0;
+}
+
 void LBotGame::mousePress(int vertical, int horizontal)
 {
 

@@ -31,6 +31,7 @@ public:
 	virtual int getIsCheck() const = 0;
 
 	virtual int isMat(int color) = 0;
+	virtual bool isPat(int color) = 0;
 
 	virtual void mousePress(int vertical, int horizontal) = 0;
 	virtual void mouseRelease(int vertical, int horizontal) = 0;
