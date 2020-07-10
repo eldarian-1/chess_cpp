@@ -575,11 +575,6 @@ void LGame::mouseRelease(int v, int h)
 				this->actionAfterPath();
 			}
 		}
-
-		this->activeSquare->setState(L_SQUARE_NATIVE);
-
-		this->activeSquare = nullptr;
-		this->activeFigure = nullptr;
 	}
 }
 

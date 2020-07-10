@@ -7,7 +7,7 @@
 LNetGame::LNetGame(int c)
 {
 	QString n1 = LOptions::getInstance()->getName();
-	QString n2 = "Computer";
+	QString n2 = "Internet player";
 
 	this->playerWhite = new LPlayer(
 		L_COLOR_WHITE,
@@ -30,10 +30,7 @@ void LNetGame::draw()
 
 void LNetGame::mousePress(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mousePress(vertical, horizontal);
-	}
+	LGame::mousePress(vertical, horizontal);
 }
 
 void LNetGame::mouseRelease(int vertical, int horizontal)
@@ -42,22 +39,23 @@ void LNetGame::mouseRelease(int vertical, int horizontal)
 	{
 		LGame::mouseRelease(vertical, horizontal);
 	}
+
+	if (this->activeSquare)
+	{
+		this->activeSquare->setState(L_SQUARE_NATIVE);
+		this->activeSquare = nullptr;
+		this->activeFigure = nullptr;
+	}
 }
 
 void LNetGame::mouseMotionMove(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mouseMotionMove(vertical, horizontal);
-	}
+	LGame::mouseMotionMove(vertical, horizontal);
 }
 
 void LNetGame::mouseMove(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mouseMove(vertical, horizontal);
-	}
+	LGame::mouseMove(vertical, horizontal);
 }
 
 void LNetGame::actionAfterPath()

@@ -2,6 +2,9 @@
 
 #include "LConst.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
+
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -30,11 +33,11 @@ LOptions::LOptions(QWidget* mainWidget, QWidget* widget)
 	windowHeight(L_SIZE_HD_HEIGHT),
 
 	playerEdit(new QLineEdit(playerName)),
-	winSizeNHD(new QRadioButton("nHD - ")),
-	winSizeFWVGA(new QRadioButton("FWVGA - ")),
-	winSizeHD(new QRadioButton("HD - ")),
-	winSizeHDP(new QRadioButton("HD+ - ")),
-	winSizeFHD(new QRadioButton("FullHD - ")),
+	winSizeNHD(new QRadioButton("nHD - 640x360")),
+	winSizeFWVGA(new QRadioButton("FWVGA - 854x480")),
+	winSizeHD(new QRadioButton("HD - 1280x720")),
+	winSizeHDP(new QRadioButton("HD+ - 1600x900")),
+	winSizeFHD(new QRadioButton("FullHD - 1920x1080")),
 	winSizeFULL(new QRadioButton("Full screen"))
 {
 	QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -154,8 +157,14 @@ void LOptions::slotAccepted()
 	if (this->windowSize != L_SIZE_FULL)
 	{
 		this->mainWidget->setFixedSize(this->windowWidth, this->windowHeight);
-	}
 
+		QRect rect = QApplication::desktop()->screenGeometry();
+
+		this->mainWidget->move(
+			(rect.width() - this->windowWidth) / 2,
+			(rect.height() - this->windowHeight) / 2
+		);
+	}
 
 }
 

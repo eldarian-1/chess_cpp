@@ -30,10 +30,7 @@ void LBotGame::draw()
 
 void LBotGame::mousePress(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mousePress(vertical, horizontal);
-	}
+	LGame::mousePress(vertical, horizontal);
 }
 
 void LBotGame::mouseRelease(int vertical, int horizontal)
@@ -42,22 +39,23 @@ void LBotGame::mouseRelease(int vertical, int horizontal)
 	{
 		LGame::mouseRelease(vertical, horizontal);
 	}
+
+	if (this->activeSquare)
+	{
+		this->activeSquare->setState(L_SQUARE_NATIVE);
+		this->activeSquare = nullptr;
+		this->activeFigure = nullptr;
+	}
 }
 
 void LBotGame::mouseMotionMove(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mouseMotionMove(vertical, horizontal);
-	}
+	LGame::mouseMotionMove(vertical, horizontal);
 }
 
 void LBotGame::mouseMove(int vertical, int horizontal)
 {
-	if (!this->isBlocked)
-	{
-		LGame::mouseMove(vertical, horizontal);
-	}
+	LGame::mouseMove(vertical, horizontal);
 }
 
 void LBotGame::actionAfterPath()

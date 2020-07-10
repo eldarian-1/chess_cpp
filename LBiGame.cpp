@@ -2,6 +2,7 @@
 
 #include "LConst.h"
 #include "LPlayer.h"
+#include "LSquare.h"
 
 LBiGame::LBiGame(QString n1, QString n2, int c)
 {
@@ -23,22 +24,29 @@ void LBiGame::draw()
 
 void LBiGame::mousePress(int vertical, int horizontal)
 {
-
+	LGame::mousePress(vertical, horizontal);
 }
 
 void LBiGame::mouseRelease(int vertical, int horizontal)
 {
+	LGame::mouseRelease(vertical, horizontal);
 
+	if (this->activeSquare)
+	{
+		this->activeSquare->setState(L_SQUARE_NATIVE);
+		this->activeSquare = nullptr;
+		this->activeFigure = nullptr;
+	}
 }
 
 void LBiGame::mouseMotionMove(int vertical, int horizontal)
 {
-
+	LGame::mouseMotionMove(vertical, horizontal);
 }
 
 void LBiGame::mouseMove(int vertical, int horizontal)
 {
-
+	LGame::mouseMove(vertical, horizontal);
 }
 
 void LBiGame::actionAfterPath()
