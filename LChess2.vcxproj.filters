@@ -124,9 +124,6 @@
     <ClInclude Include="LLoadGame.h">
       <Filter>Header Files\Dialog</Filter>
     </ClInclude>
-    <ClInclude Include="LOptions.h">
-      <Filter>Header Files\Dialog</Filter>
-    </ClInclude>
     <ClInclude Include="LSaveGame.h">
       <Filter>Header Files\Dialog</Filter>
     </ClInclude>
@@ -175,6 +172,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LNewGame.h">
+      <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+    <QtMoc Include="LOptions.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
   </ItemGroup>

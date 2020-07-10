@@ -1,78 +1,83 @@
 #include "LBotGame.h"
 
 #include "LFigure.h"
+#include "LPlayer.h"
+#include "LOptions.h"
 
-LBotGame::LBotGame(int color)
+LBotGame::LBotGame(int c)
 {
+	QString n1 = LOptions::getInstance()->getName();
+	QString n2 = "Computer";
 
-}
+	this->playerWhite = new LPlayer(
+		L_COLOR_WHITE,
+		(c == L_COLOR_ANY) ? ((rand() % 2) ? n1 : n2) : ((c == L_COLOR_WHITE) ? n1 : n2)
+	);
 
-LFigure* LBotGame::getFigure(int v, int h)
-{
-	return nullptr;
+	this->playerBlack = new LPlayer(
+		L_COLOR_BLACK,
+		(this->playerWhite->getName() == n1) ? n2 : n1
+	);
+
+	this->areWhiteActive = this->playerWhite->getName() == n1;
+	this->isBlocked = !this->areWhiteActive;
 }
 
 void LBotGame::draw()
 {
-
-}
-
-int LBotGame::isCheck(int color)
-{
-	return 0;
-}
-
-int LBotGame::isCheck(int color, int v, int h, int vK, int hK)
-{
-	return 0;
-}
-
-int LBotGame::getIsCheck() const
-{
-	return 0;
-}
-
-int LBotGame::isMat(int color)
-{
-	return 0;
-}
-
-bool LBotGame::isPat(int color)
-{
-	return 0;
+	LGame::draw();
 }
 
 void LBotGame::mousePress(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mousePress(vertical, horizontal);
+	}
 }
 
 void LBotGame::mouseRelease(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseRelease(vertical, horizontal);
+	}
 }
 
 void LBotGame::mouseMotionMove(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseMotionMove(vertical, horizontal);
+	}
 }
 
 void LBotGame::mouseMove(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseMove(vertical, horizontal);
+	}
 }
 
-void LBotGame::checked()
+void LBotGame::actionAfterPath()
 {
-
+	this->setBlocked(true);
+	this->waitBot();
+	this->setBlocked(false);
 }
 
-void LBotGame::unchecked()
+void LBotGame::setBlocked(bool block)
+{
+	this->isBlocked = block;
+}
+
+void LBotGame::waitBot()
 {
 
 }
 
 void LBotGame::clear()
 {
-	
+	LGame::clear();
 }

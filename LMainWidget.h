@@ -2,6 +2,7 @@
 
 #include <QWidget>
 
+class LOptions;
 class LGame;
 class LDesk;
 class QPushButton;
@@ -15,6 +16,7 @@ class LMainWidget :
 private:
 	static LMainWidget* instance;
 
+	LOptions* optionsDIalog;
 	LGame* game;
 	LDesk* desk;
 

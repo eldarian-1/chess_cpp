@@ -1,78 +1,83 @@
 #include "LNetGame.h"
 
 #include "LFigure.h"
+#include "LPlayer.h"
+#include "LOptions.h"
 
-LNetGame::LNetGame(int color)
+LNetGame::LNetGame(int c)
 {
+	QString n1 = LOptions::getInstance()->getName();
+	QString n2 = "Computer";
 
-}
+	this->playerWhite = new LPlayer(
+		L_COLOR_WHITE,
+		(c == L_COLOR_ANY) ? ((rand() % 2) ? n1 : n2) : ((c == L_COLOR_WHITE) ? n1 : n2)
+	);
 
-LFigure* LNetGame::getFigure(int v, int h)
-{
-	return nullptr;
+	this->playerBlack = new LPlayer(
+		L_COLOR_BLACK,
+		(this->playerWhite->getName() == n1) ? n2 : n1
+	);
+
+	this->areWhiteActive = this->playerWhite->getName() == n1;
+	this->isBlocked = !this->areWhiteActive;
 }
 
 void LNetGame::draw()
 {
-
-}
-
-int LNetGame::isCheck(int color)
-{
-	return 0;
-}
-
-int LNetGame::isCheck(int color, int v, int h, int vK, int hK)
-{
-	return 0;
-}
-
-int LNetGame::getIsCheck() const
-{
-	return 0;
-}
-
-int LNetGame::isMat(int color)
-{
-	return 0;
-}
-
-bool LNetGame::isPat(int color)
-{
-	return 0;
+	LGame::draw();
 }
 
 void LNetGame::mousePress(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mousePress(vertical, horizontal);
+	}
 }
 
 void LNetGame::mouseRelease(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseRelease(vertical, horizontal);
+	}
 }
 
 void LNetGame::mouseMotionMove(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseMotionMove(vertical, horizontal);
+	}
 }
 
 void LNetGame::mouseMove(int vertical, int horizontal)
 {
-
+	if (!this->isBlocked)
+	{
+		LGame::mouseMove(vertical, horizontal);
+	}
 }
 
-void LNetGame::checked()
+void LNetGame::actionAfterPath()
 {
-
+	this->setBlocked(true);
+	this->waitNet();
+	this->setBlocked(false);
 }
 
-void LNetGame::unchecked()
+void LNetGame::setBlocked(bool block)
 {
+	this->isBlocked = block;
+}
 
+void LNetGame::waitNet()
+{
+	
 }
 
 void LNetGame::clear()
 {
-
+	LGame::clear();
 }

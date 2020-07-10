@@ -4,6 +4,7 @@
 #include "LDesk.h"
 #include "LGame.h"
 #include "LNewGame.h"
+#include "LOptions.h"
 
 #include <QApplication>
 #include <QPalette>
@@ -30,6 +31,7 @@ LMainWidget* LMainWidget::getInstance(QApplication* app, QWidget* widget)
 LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	:
 	QWidget(widget),
+	optionsDIalog(LOptions::getInstance(this)),
 	game(nullptr),
 	desk(LDesk::getInstance(this)),
 	newGame(new QPushButton(QIcon(":/LBQueen.png"), "New Game")),
@@ -39,7 +41,7 @@ LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	quit(new QPushButton(QIcon(":/LBPawn.png"), "Quit")),
 	pathList(new QTextEdit)
 {
-	this->setFixedSize(L_WIDTH_MENU + L_WIDTH_CHESS, L_HEIGHT);
+	this->setFixedSize(this->optionsDIalog->getWidth(), this->optionsDIalog->getHeight());
 	this->setPalette(QPalette(QColor(255, 255, 255)));
 	this->pathList->setDisabled(true);
 
@@ -95,10 +97,10 @@ void LMainWidget::slotNewGame()
 			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
 			break;
 		case L_TYPE_BOT:
-			this->messageAlert("Bot game is under development!");
+			this->pathList->setText("New Game: " + this->optionsDIalog->getName() + " vs Computer");
 			break;
 		case L_TYPE_NET:
-			this->messageAlert("Internet game is under development!");
+			this->pathList->setText("New Game: " + this->optionsDIalog->getName() + " vs Internet player");
 			break;
 		}
 
@@ -120,7 +122,9 @@ void LMainWidget::slotLoadGame()
 
 void LMainWidget::slotOptions()
 {
-	this->messageAlert("This section is under development!");
+	this->optionsDIalog->showDialog();
+	this->optionsDIalog->exec();
+	this->optionsDIalog->hide();
 }
 
 LGame* LMainWidget::getGame() const

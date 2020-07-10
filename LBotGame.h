@@ -8,28 +8,23 @@ class LBotGame :
 	public LGame
 {
 private:
+	bool isBlocked;
 
+	void waitBot();
 
 public:
 	LBotGame(int color);
 
-	LFigure* getFigure(int vertical, int horizontal) override;
 	void draw() override;
 
-	int isCheck(int color) override;
-	int isCheck(int color, int v, int h, int vK = -1, int hK = -1) override;
-	int getIsCheck() const override;
+	virtual void mousePress(int vertical, int horizontal) override;
+	virtual void mouseRelease(int vertical, int horizontal) override;
+	virtual void mouseMotionMove(int vertical, int horizontal) override;
+	virtual void mouseMove(int vertical, int horizontal) override;
 
-	int isMat(int color) override;
-	bool isPat(int color) override;
+	void actionAfterPath() override;
 
-	void mousePress(int vertical, int horizontal) override;
-	void mouseRelease(int vertical, int horizontal) override;
-	void mouseMotionMove(int vertical, int horizontal) override;
-	void mouseMove(int vertical, int horizontal) override;
-
-	void checked() override;
-	void unchecked() override;
+	void setBlocked(bool block);
 
 	void clear() override;
 

@@ -16,8 +16,8 @@ LNewGame::LNewGame(QWidget* widget)
 	biRadio(new QRadioButton("Two players")),
 	botRadio(new QRadioButton("Versus Bot")),
 	netRadio(new QRadioButton("Versus Internet-players")),
-	name1(new QLabel("Name 1:")),
-	name2(new QLabel("Name 2:")),
+	name1(new QLabel("Player 1:")),
+	name2(new QLabel("Player 2:")),
 	name1Edit(new QLineEdit),
 	name2Edit(new QLineEdit),
 	whiteRadio(new QRadioButton("White")),
@@ -32,7 +32,7 @@ LNewGame::LNewGame(QWidget* widget)
 	QHBoxLayout* hLayoutName1 = new QHBoxLayout;
 	QHBoxLayout* hLayoutName2 = new QHBoxLayout;
 
-	QGroupBox* color = new QGroupBox("Color");
+	QGroupBox* color = new QGroupBox("Color of Player 1");
 	QHBoxLayout* hLayoutColor = new QHBoxLayout;
 
 	QHBoxLayout* hLayoutButton = new QHBoxLayout;
@@ -74,10 +74,8 @@ LNewGame::LNewGame(QWidget* widget)
 	this->anyRadio->setChecked(true);
 
 	this->setWindowTitle("New Game");
-	this->setWindowIcon(QIcon());
 	this->resize(300, 270);
 	this->slotCheckBi();
-	//this->slotCheckBotNet();
 	this->setLayout(mainLayout);
 	this->setModal(true);
 	this->show();

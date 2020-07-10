@@ -128,7 +128,7 @@
     <ClInclude Include="LSquare.h" />
     <ClInclude Include="LTransformation.h" />
     <QtMoc Include="LNewGame.h" />
-    <ClInclude Include="LOptions.h" />
+    <QtMoc Include="LOptions.h" />
     <ClInclude Include="LSaveGame.h" />
     <QtMoc Include="LMainWidget.h" />
   </ItemGroup>
