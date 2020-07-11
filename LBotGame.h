@@ -2,7 +2,12 @@
 
 #include "LGame.h"
 
+template<class T>
+class QVector;
+
 class LFigure;
+
+struct LPath;
 
 class LBotGame :
 	public LGame
@@ -10,7 +15,14 @@ class LBotGame :
 private:
 	bool isBlocked;
 
+	int myColor;
+
 	void waitBot();
+
+	QVector<LPath> uglyMoves();
+	LPath calculateBestMove();
+	void completeMove();
+	void completeMove(LPath path);
 
 public:
 	LBotGame(int color);
@@ -28,4 +40,11 @@ public:
 
 	void clear() override;
 
+};
+
+struct LPath
+{
+	LSquare* from;
+	LSquare* to;
+	int result;
 };
