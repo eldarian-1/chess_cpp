@@ -1,8 +1,9 @@
 #pragma once
 
-#include "LSquare.h"
-
 class QString;
+
+class LPath;
+class LSquare;
 
 class LFigure
 {
@@ -14,7 +15,7 @@ protected:
 
 public:
 	virtual void draw(LSquare* position, bool reverse) = 0;
-	virtual int isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) = 0;
+	virtual int isPossiblePath(LPath* path) = 0;
 
 	int getColor() const;
 	int getType() const;

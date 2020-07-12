@@ -1,6 +1,8 @@
 #include "LNetGame.h"
 
+#include "LConst.h"
 #include "LFigure.h"
+#include "LSquare.h"
 #include "LPlayer.h"
 #include "LOptions.h"
 
@@ -23,41 +25,6 @@ LNetGame::LNetGame(int c)
 	this->isBlocked = !this->areWhiteActive;
 }
 
-void LNetGame::draw()
-{
-	LGame::draw();
-}
-
-void LNetGame::mousePress(int vertical, int horizontal)
-{
-	LGame::mousePress(vertical, horizontal);
-}
-
-void LNetGame::mouseRelease(int vertical, int horizontal)
-{
-	if (!this->isBlocked)
-	{
-		LGame::mouseRelease(vertical, horizontal);
-	}
-
-	if (this->activeSquare)
-	{
-		this->activeSquare->setState(L_SQUARE_NATIVE);
-		this->activeSquare = nullptr;
-		this->activeFigure = nullptr;
-	}
-}
-
-void LNetGame::mouseMotionMove(int vertical, int horizontal)
-{
-	LGame::mouseMotionMove(vertical, horizontal);
-}
-
-void LNetGame::mouseMove(int vertical, int horizontal)
-{
-	LGame::mouseMove(vertical, horizontal);
-}
-
 void LNetGame::actionAfterPath()
 {
 	this->setBlocked(true);
@@ -73,9 +40,4 @@ void LNetGame::setBlocked(bool block)
 void LNetGame::waitNet()
 {
 	
-}
-
-void LNetGame::clear()
-{
-	LGame::clear();
 }

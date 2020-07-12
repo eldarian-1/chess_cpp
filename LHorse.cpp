@@ -4,6 +4,9 @@
 #include "LGame.h"
 #include "LConst.h"
 
+#include "LPath.h"
+#include "LSquare.h"
+
 LHorse::LHorse(int color)
 	: LFigure(color)
 {
@@ -15,15 +18,15 @@ void LHorse::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawHorse(this->color, position, reverse);
 }
 
-int LHorse::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LHorse::isPossiblePath(LPath* path)
 {
 	LGame* game = LGame::getInstance();
 	int flag = L_PATH_TRUE;
 
-	int xC = oldPosition->getHorizontal();
-	int yC = oldPosition->getVertical();
-	int xT = newPosition->getHorizontal();
-	int yT = newPosition->getVertical();
+	int xC = path->getFrom()->getHorizontal();
+	int yC = path->getFrom()->getVertical();
+	int xT = path->getTo()->getHorizontal();
+	int yT = path->getTo()->getVertical();
 
 	LHorse* target = (LHorse*)game->getFigure(yT, xT);
 

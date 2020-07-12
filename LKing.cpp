@@ -5,6 +5,9 @@
 #include "LConst.h"
 #include "LRook.h"
 
+#include "LPath.h"
+#include "LSquare.h"
+
 LKing::LKing(int color)
 	:
 	LFigure(color),
@@ -18,15 +21,15 @@ void LKing::draw(LSquare* position, bool reverse)
 	LDesk::getInstance()->drawKing(this->color, position, reverse);
 }
 
-int LKing::isPossiblePosition(LSquare* oldPosition, LSquare* newPosition)
+int LKing::isPossiblePath(LPath* path)
 {
 	LGame* game = LGame::getInstance();
 	int flag = L_PATH_TRUE;
 
-	int xC = oldPosition->getHorizontal();
-	int yC = oldPosition->getVertical();
-	int xT = newPosition->getHorizontal();
-	int yT = newPosition->getVertical();
+	int xC = path->getFrom()->getHorizontal();
+	int yC = path->getFrom()->getVertical();
+	int xT = path->getTo()->getHorizontal();
+	int yT = path->getTo()->getVertical();
 
 	LKing* target = (LKing*)game->getFigure(yT, xT);
 

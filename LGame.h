@@ -4,6 +4,7 @@ class LNewGame;
 class LFigure;
 
 class LPlayer;
+class LPath;
 class LSquare;
 class LFigure;
 
@@ -38,7 +39,7 @@ public:
 	static void newGame(LNewGame* dialog);
 
 	virtual LFigure* getFigure(int vertical, int horizontal) final;
-	virtual void draw();
+	virtual void draw() final;
 
 	virtual int isCheck(int color) final;
 	virtual int isCheck(int color, int v, int h, int vK = -1, int hK = -1) final;
@@ -47,15 +48,18 @@ public:
 	virtual int isMat(int color) final;
 	virtual bool isPat(int color) final;
 
-	virtual void mousePress(int vertical, int horizontal);
-	virtual void mouseRelease(int vertical, int horizontal);
-	virtual void mouseMotionMove(int vertical, int horizontal);
-	virtual void mouseMove(int vertical, int horizontal);
+	virtual void mousePress(int vertical, int horizontal) final;
+	virtual void mouseRelease(int vertical, int horizontal) final;
+	virtual void mouseMotionMove(int vertical, int horizontal) final;
+	virtual void mouseMove(int vertical, int horizontal) final;
+
+	virtual void completeMove(LPath* path) final;
+	virtual int getFigureTransformation() final;
 	
 	virtual void setFigure(int vertical, int horizontal, LFigure* figure) final;
 
 	virtual void actionAfterPath();
 
-	virtual void clear();
+	virtual void clear() final;
 
 };

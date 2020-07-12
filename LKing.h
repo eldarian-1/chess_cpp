@@ -12,7 +12,7 @@ public:
 	LKing(int color);
 
 	void draw(LSquare* position, bool reverse) override;
-	int isPossiblePosition(LSquare* oldPosition, LSquare* newPosition) override;
+	int isPossiblePath(LPath* path) override;
 	QString getName() const override;
 
 };
