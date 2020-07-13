@@ -4,6 +4,7 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QStyle>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -14,17 +15,18 @@
 
 LOptions* LOptions::instance = nullptr;
 
-LOptions* LOptions::getInstance(QWidget* mainWidget, QWidget* widget)
+LOptions* LOptions::getInstance(QApplication* app, QWidget* mainWidget, QWidget* widget)
 {
 	if (!instance)
-		instance = new LOptions(mainWidget, widget);
+		instance = new LOptions(app, mainWidget, widget);
 
 	return instance;
 }
 
-LOptions::LOptions(QWidget* mainWidget, QWidget* widget)
+LOptions::LOptions(QApplication* app, QWidget* mainWidget, QWidget* widget)
 	:
 	QDialog(widget),
+	app(app),
 	mainWidget(mainWidget),
 
 	playerName("Player"),
@@ -158,11 +160,13 @@ void LOptions::slotAccepted()
 	{
 		this->mainWidget->setFixedSize(this->windowWidth, this->windowHeight);
 
-		QRect rect = QApplication::desktop()->screenGeometry();
-
-		this->mainWidget->move(
-			(rect.width() - this->windowWidth) / 2,
-			(rect.height() - this->windowHeight) / 2
+		this->mainWidget->setGeometry(
+			QStyle::alignedRect(
+				Qt::LeftToRight,
+				Qt::AlignCenter,
+				this->mainWidget->size(),
+				QApplication::desktop()->screenGeometry()
+			)
 		);
 	}
 

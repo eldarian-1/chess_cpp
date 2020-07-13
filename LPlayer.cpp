@@ -1,5 +1,7 @@
 #include "LPlayer.h"
 
+#include "LFigure.h"
+
 LPlayer::LPlayer(int c, QString n)
 	:
 	color(c),
@@ -26,6 +28,11 @@ int LPlayer::getFigureCount()
 LFigure* LPlayer::operator [] (int index) const
 {
 	return this->figures[index];
+}
+
+void LPlayer::setName(QString name)
+{
+	this->name = name;
 }
 
 void LPlayer::addFigure(LFigure* figure)

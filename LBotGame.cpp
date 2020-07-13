@@ -17,25 +17,27 @@
 #include "LHorse.h"
 #include "LRook.h"
 
-LBotGame::LBotGame(int c)
+LBotGame::LBotGame(int color)
 	:
-	LGame(),
-	myColor(c)
+	LGame()
 {
 	QString n1 = LOptions::getInstance()->getName();
 	QString n2 = "Computer";
 
 	this->playerWhite = new LPlayer(
 		L_COLOR_WHITE,
-		(this->myColor == L_COLOR_WHITE ? n1 : n2)
+		(color == L_COLOR_WHITE ? n1 : n2)
 	);
 
 	this->playerBlack = new LPlayer(
 		L_COLOR_BLACK,
-		(this->myColor == L_COLOR_WHITE ? n2 : n1)
+		(color == L_COLOR_WHITE ? n2 : n1)
 	);
 
-	this->areWhiteActive = this->myColor == L_COLOR_WHITE;
+	this->me = (color == L_COLOR_WHITE) ? (this->playerWhite) : (this->playerBlack);
+	this->bot = (color == L_COLOR_WHITE) ? (this->playerBlack) : (this->playerWhite);
+
+	this->areWhiteActive = color == L_COLOR_WHITE;
 	this->isBlocked = !this->areWhiteActive;
 }
 
@@ -53,7 +55,35 @@ void LBotGame::setBlocked(bool block)
 
 void LBotGame::waitBot()
 {
-	this->completeMove();
+	LPath* path = this->calculateBestMove();
+
+	if (path)
+	{
+		this->completeMove(path);
+	}
+	else
+	{
+
+		LMainWidget* mainWidget = LMainWidget::getInstance();
+		QString node = "";
+
+		if (this->isMat(this->bot->getColor()))
+		{
+			this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | this->bot->getColor());
+
+			node = this->me->getName() + "win!\n";
+			node += this->me->getName() + " mat " + this->bot->getName();
+		}
+		else if (this->isPat(this->bot->getColor()))
+		{
+			this->changeGameInstance(L_GAME_FINISH | L_PATH_PAT);
+
+			node = "Dead Heat!\nStalemate situation.";
+		}
+
+		mainWidget->pathListAppend(node);
+		mainWidget->messageAlert(node);
+	}
 }
 
 QVector<LPath*> LBotGame::uglyMoves()
@@ -67,7 +97,7 @@ QVector<LPath*> LBotGame::uglyMoves()
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			if (this->figures[i][j] && this->figures[i][j]->getColor() != this->myColor)
+			if (this->figures[i][j] && this->figures[i][j]->getColor() == bot->getColor())
 			{
 				for (int k = 0; k < L_CHESS_BOARD_SIZE; k++)
 				{
@@ -95,17 +125,18 @@ QVector<LPath*> LBotGame::uglyMoves()
 	return paths;
 }
 
-LPath* LBotGame::calculateBestMove()
+int LBotGame::getFigureTransformation()
 {
-	QVector<LPath*> paths = this->uglyMoves();
-	return paths[rand() % paths.size()];
-}
+	int figure;
 
-void LBotGame::completeMove()
-{
-	LMainWidget* mainWidget = LMainWidget::getInstance();
+	if (!this->isBlocked)
+	{
+		figure = LGame::getFigureTransformation();
+	}
+	else
+	{
+		figure = L_FIGURE_QUEEN;
+	}
 
-	LPath* path = this->calculateBestMove();
-
-	LGame::completeMove(path);
+	return figure;
 }

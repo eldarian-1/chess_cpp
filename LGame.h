@@ -54,7 +54,7 @@ public:
 	virtual void mouseMove(int vertical, int horizontal) final;
 
 	virtual void completeMove(LPath* path) final;
-	virtual int getFigureTransformation() final;
+	virtual int getFigureTransformation();
 	
 	virtual void setFigure(int vertical, int horizontal, LFigure* figure) final;
 

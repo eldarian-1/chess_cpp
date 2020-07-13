@@ -87,6 +87,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="LChess2.qrc" />
+    <ClCompile Include="LAverageBot.cpp" />
+    <ClCompile Include="LBeginBot.cpp" />
     <ClCompile Include="LBiGame.cpp" />
     <ClCompile Include="LBotGame.cpp" />
     <ClCompile Include="LDesk.cpp" />
@@ -107,10 +109,14 @@
     <ClCompile Include="LRook.cpp" />
     <ClCompile Include="LSaveGame.cpp" />
     <ClCompile Include="LSquare.cpp" />
+    <ClCompile Include="LStrongBot.cpp" />
     <ClCompile Include="LTransformation.cpp" />
+    <ClCompile Include="LWeakBot.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LAverageBot.h" />
+    <ClInclude Include="LBeginBot.h" />
     <ClInclude Include="LBiGame.h" />
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LDesk.h" />
@@ -128,7 +134,9 @@
     <ClInclude Include="LQueen.h" />
     <ClInclude Include="LRook.h" />
     <ClInclude Include="LSquare.h" />
+    <ClInclude Include="LStrongBot.h" />
     <ClInclude Include="LTransformation.h" />
+    <ClInclude Include="LWeakBot.h" />
     <QtMoc Include="LNewGame.h" />
     <QtMoc Include="LOptions.h" />
     <ClInclude Include="LSaveGame.h" />

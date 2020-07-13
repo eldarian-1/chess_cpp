@@ -12,21 +12,24 @@ class LBotGame :
 	public LGame
 {
 private:
-	bool isBlocked;
+	LPlayer* me;
+	LPlayer* bot;
 
-	int myColor;
+	bool isBlocked;
 
 	void waitBot();
 
-	QVector<LPath*> uglyMoves();
-	LPath* calculateBestMove();
-	void completeMove();
+protected:
+	virtual QVector<LPath*> uglyMoves() final;
+	virtual LPath* calculateBestMove() = 0;
 
 public:
 	LBotGame(int color);
 
-	void actionAfterPath() override;
+	virtual void actionAfterPath() override;
 
 	void setBlocked(bool block);
+
+	virtual int getFigureTransformation() override;
 
 };

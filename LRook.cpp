@@ -73,6 +73,11 @@ int LRook::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LRook::getValue() const
+{
+	return L_VALUE_ROOK;
+}
+
 QString LRook::getName() const
 {
 	return "Rook";

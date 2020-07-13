@@ -47,6 +47,11 @@ int LHorse::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LHorse::getValue() const
+{
+	return L_VALUE_HORSE;
+}
+
 QString LHorse::getName() const
 {
 	return "Horse";

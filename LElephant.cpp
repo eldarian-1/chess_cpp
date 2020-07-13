@@ -67,6 +67,11 @@ int LElephant::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LElephant::getValue() const
+{
+	return L_VALUE_ELEPHANT;
+}
+
 QString LElephant::getName() const
 {
 	return "Elephant";

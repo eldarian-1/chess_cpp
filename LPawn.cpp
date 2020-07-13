@@ -97,6 +97,11 @@ int LPawn::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LPawn::getValue() const
+{
+	return L_VALUE_PAWN;
+}
+
 QString LPawn::getName() const
 {
 	return "Pawn";

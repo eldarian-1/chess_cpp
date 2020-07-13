@@ -7,6 +7,11 @@
 #include "LBotGame.h"
 #include "LNetGame.h"
 
+#include "LBeginBot.h"
+#include "LWeakBot.h"
+#include "LAverageBot.h"
+#include "LStrongBot.h"
+
 #include "LConst.h"
 #include "LMainWidget.h"
 #include "LTransformation.h"
@@ -102,9 +107,12 @@ void LGame::changeGameInstance(int gameInstance)
 void LGame::newGame(LNewGame* dialog)
 {
 	int gameType = dialog->getGameType();
-	int color = dialog->getColor();
+	int botPower = dialog->getBotPower();
+
 	QString name1 = dialog->getName1();
 	QString name2 = dialog->getName2();
+
+	int color = dialog->getColor();
 
 	color = (color == L_COLOR_ANY) ? (rand() % 2 + L_COLOR_WHITE) : color;
 
@@ -117,14 +125,42 @@ void LGame::newGame(LNewGame* dialog)
 	switch (gameType)
 	{
 	case L_TYPE_BI:
+	{
 		instance = new LBiGame(name1, name2, color);
 		break;
+	}
 	case L_TYPE_BOT:
-		instance = new LBotGame(color);
+	{
+		switch (botPower)
+		{
+		case L_BOT_BEGIN:
+		{
+			instance = new LBeginBot(color);
+			break;
+		}
+		case L_BOT_WEAK:
+		{
+			instance = new LWeakBot(color);
+			break;
+		}
+		case L_BOT_AVERAGE:
+		{
+			instance = new LAverageBot(color);
+			break;
+		}
+		case L_BOT_STRONG:
+		{
+			instance = new LStrongBot(color);
+			break;
+		}
+		}
 		break;
+	}
 	case L_TYPE_NET:
+	{
 		instance = new LNetGame(color);
 		break;
+	}
 	}
 
 	if ((gameType == L_TYPE_BOT || gameType == L_TYPE_NET) && color == L_COLOR_BLACK)
@@ -490,17 +526,10 @@ void LGame::completeMove(LPath* path)
 		{
 			QString passFigure = " (" + this->figures[newVer][newHor]->getName() + ")";
 
-			if (this->areWhiteActive)
-			{
-				this->playerWhite->addFigure(this->figures[newVer][newHor]);
-			}
-			else
-			{
-				this->playerBlack->addFigure(this->figures[newVer][newHor]);
-			}
+			actPlayer->addFigure(this->figures[newVer][newHor]);
 		}
 
-		this->figures[newVer][newHor] = this->activeFigure;
+		this->figures[newVer][newHor] = this->figures[oldVer][oldHor];
 		this->figures[oldVer][oldHor] = nullptr;
 
 		QString node = actName + ": " + actFigure + " " +
@@ -513,7 +542,6 @@ void LGame::completeMove(LPath* path)
 	if (isPossible & L_PATH_CASTLING)
 	{
 		LGame* game = LGame::getInstance();
-		int _h = this->activeSquare->getHorizontal();
 
 		if (newHor - oldHor == 2)
 		{
@@ -603,7 +631,7 @@ void LGame::completeMove(LPath* path)
 					node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_FINISH | L_COLOR_WHITE);
+					this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | L_COLOR_WHITE);
 				}
 				else
 				{
@@ -622,7 +650,7 @@ void LGame::completeMove(LPath* path)
 					node += this->playerWhite->getName() + " mat " + this->playerBlack->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_FINISH | L_COLOR_BLACK);
+					this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | L_COLOR_BLACK);
 				}
 				else
 				{
@@ -631,7 +659,7 @@ void LGame::completeMove(LPath* path)
 			}
 		}
 
-		else if (this->isPat(L_COLOR_WHITE) || this->isPat(L_COLOR_BLACK))
+		else if (this->isPat(path->getPassive()->getColor()))
 		{
 			QString node = "Dead Heat!\nStalemate situation.";
 			mainWidget->pathListAppend(node);

@@ -15,6 +15,7 @@ class LOptions :
 private:
 	static LOptions* instance;
 
+	QApplication* app;
 	QWidget* mainWidget;
 
 	QString playerName;
@@ -31,10 +32,10 @@ private:
 	QRadioButton* winSizeFULL;
 
 protected:
-	LOptions(QWidget* mainWidget, QWidget* widget);
+	LOptions(QApplication* app, QWidget* mainWidget, QWidget* widget);
 
 public:
-	static LOptions* getInstance(QWidget* mainWidget = nullptr, QWidget* widget = nullptr);
+	static LOptions* getInstance(QApplication* app = nullptr, QWidget* mainWidget = nullptr, QWidget* widget = nullptr);
 
 	void showDialog();
 

@@ -94,6 +94,11 @@ int LQueen::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LQueen::getValue() const
+{
+	return L_VALUE_QUEEN;
+}
+
 QString LQueen::getName() const
 {
 	return "Queen";

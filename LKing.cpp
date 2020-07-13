@@ -116,6 +116,11 @@ int LKing::isPossiblePath(LPath* path)
 	return flag;
 }
 
+int LKing::getValue() const
+{
+	return L_VALUE_KING;
+}
+
 QString LKing::getName() const
 {
 	return "King";

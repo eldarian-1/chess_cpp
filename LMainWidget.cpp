@@ -31,7 +31,7 @@ LMainWidget* LMainWidget::getInstance(QApplication* app, QWidget* widget)
 LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	:
 	QWidget(widget),
-	optionsDIalog(LOptions::getInstance(this)),
+	optionsDIalog(LOptions::getInstance(app, this)),
 	game(nullptr),
 	desk(LDesk::getInstance(this)),
 	newGame(new QPushButton(QIcon(":/LBQueen.png"), "New Game")),

@@ -19,6 +19,8 @@ public:
 
 	int getColor() const;
 	int getType() const;
+
+	virtual int getValue() const = 0;
 	virtual QString getName() const = 0;
 
 };

@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Figure">
       <UniqueIdentifier>{4364afff-3207-4789-b932-e38fc62452a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game\Bot">
+      <UniqueIdentifier>{cb13deb0-4c97-4aa2-be99-7eaa53d16479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Bot">
+      <UniqueIdentifier>{ea5fbf44-c67b-442a-80a1-a619a448cd24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="LChess2.qrc">
@@ -113,6 +119,18 @@
     <ClCompile Include="LPath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LAverageBot.cpp">
+      <Filter>Source Files\Game\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="LBeginBot.cpp">
+      <Filter>Source Files\Game\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="LStrongBot.cpp">
+      <Filter>Source Files\Game\Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="LWeakBot.cpp">
+      <Filter>Source Files\Game\Bot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -171,6 +189,18 @@
     </ClInclude>
     <ClInclude Include="LPath.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LAverageBot.h">
+      <Filter>Header Files\Game\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="LBeginBot.h">
+      <Filter>Header Files\Game\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="LStrongBot.h">
+      <Filter>Header Files\Game\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="LWeakBot.h">
+      <Filter>Header Files\Game\Bot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

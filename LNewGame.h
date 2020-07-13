@@ -2,6 +2,7 @@
 
 #include <QDialog>
 
+class QGroupBox;
 class QLabel;
 class QLineEdit;
 class QRadioButton;
@@ -15,6 +16,13 @@ private:
 	QRadioButton* biRadio;
 	QRadioButton* botRadio;
 	QRadioButton* netRadio;
+
+	QGroupBox* botPower;
+
+	QRadioButton* beginRadio;
+	QRadioButton* weakRadio;
+	QRadioButton* averageRadio;
+	QRadioButton* strongRadio;
 
 	QLabel* name1;
 	QLabel* name2;
@@ -31,11 +39,14 @@ public:
 
 private slots:
 	void slotCheckBi();
+	void slotCheckBot();
+	void slotCheckBiNet();
 	void slotCheckBotNet();
 
 public:
 	int getGameType() const;
 	int getColor() const;
+	int getBotPower() const;
 	QString getName1() const;
 	QString getName2() const;
 
