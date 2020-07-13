@@ -131,6 +131,9 @@
     <ClCompile Include="LWeakBot.cpp">
       <Filter>Source Files\Game\Bot</Filter>
     </ClCompile>
+    <ClCompile Include="LBoard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -201,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="LWeakBot.h">
       <Filter>Header Files\Game\Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="LBoard.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

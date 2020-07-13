@@ -5,11 +5,11 @@
 class LAverageBot :
 	public LBotGame
 {
-protected:
-	virtual LPath* calculateBestMove() override;
-
 public:
 	LAverageBot(int color) : LBotGame(color) {}
+
+protected:
+	virtual LPath* calculateBestMove() override;
 
 
 };

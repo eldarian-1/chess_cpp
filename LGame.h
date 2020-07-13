@@ -5,6 +5,7 @@ class LFigure;
 
 class LPlayer;
 class LPath;
+class LBoard;
 class LSquare;
 class LFigure;
 
@@ -19,8 +20,7 @@ protected:
 	LPlayer* playerWhite;
 	LPlayer* playerBlack;
 
-	LSquare*** squares;
-	LFigure*** figures;
+	LBoard* board;
 	int _isCheck;
 
 	bool areWhiteActive;
@@ -55,9 +55,6 @@ public:
 
 	virtual void completeMove(LPath* path) final;
 	virtual int getFigureTransformation();
-	
-	virtual void setFigure(int vertical, int horizontal, LFigure* figure) final;
-
 	virtual void actionAfterPath();
 
 	virtual void clear() final;

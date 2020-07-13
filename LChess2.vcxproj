@@ -90,6 +90,7 @@
     <ClCompile Include="LAverageBot.cpp" />
     <ClCompile Include="LBeginBot.cpp" />
     <ClCompile Include="LBiGame.cpp" />
+    <ClCompile Include="LBoard.cpp" />
     <ClCompile Include="LBotGame.cpp" />
     <ClCompile Include="LDesk.cpp" />
     <ClCompile Include="LElephant.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="LAverageBot.h" />
     <ClInclude Include="LBeginBot.h" />
     <ClInclude Include="LBiGame.h" />
+    <ClInclude Include="LBoard.h" />
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LDesk.h" />
     <ClInclude Include="LConst.h" />

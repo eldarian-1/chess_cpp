@@ -2,6 +2,7 @@
 
 #include <QVector>
 
+#include "LBoard.h"
 #include "LPath.h"
 #include "LSquare.h"
 #include "LFigure.h"
@@ -34,9 +35,9 @@ LPath* LStrongBot::calculateBestMove()
 
 			int tempValue = 0;
 
-			if (this->figures[toVer][toHor])
+			if (this->board->getFigure(toVer, toHor))
 			{
-				tempValue = this->figures[toVer][toHor]->getValue();
+				tempValue = this->board->getFigure(toVer, toHor)->getValue();
 			}
 
 			if (value < tempValue)
