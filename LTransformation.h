@@ -15,6 +15,7 @@ private:
 
 public:
 	LTransformation(QWidget* widget = nullptr);
+	//~LTransformation();
 
 	int getFigure();
 

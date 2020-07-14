@@ -14,7 +14,9 @@ private:
 
 public:
 	LPlayer(int color, QString name = "");
+	LPlayer(const LPlayer& player);
 
+	LPlayer* getClone();
 	int getColor() const;
 	QString getName() const;
 

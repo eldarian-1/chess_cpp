@@ -13,7 +13,7 @@ LPath* LBeginBot::calculateBestMove()
 
 	int size = paths.size();
 
-	LPath* path = nullptr;
+	LPath* path;
 
 	if (size)
 	{
@@ -49,12 +49,17 @@ LPath* LBeginBot::calculateBestMove()
 
 		if (index != -1)
 		{
-			path = paths[index];
+			path = paths[index]->getClone();
 		}
 		else
 		{
-			path = paths[rand() % size];
+			path = paths[rand() % size]->getClone();
 		}
+	}
+
+	for (int i = 0; i < size; i++)
+	{
+		delete paths[i];
 	}
 
 	return path;

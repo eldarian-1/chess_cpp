@@ -5,5 +5,12 @@
 class LSaveGame :
 	public QDialog
 {
+private:
+
+
+public:
+	LSaveGame() {};
+	~LSaveGame() {};
+
 
 };

@@ -45,6 +45,11 @@ LGame::LGame()
 	
 }
 
+LGame::~LGame()
+{
+	this->clear();
+}
+
 LGame* LGame::getInstance()
 {
 	return instance;
@@ -409,7 +414,7 @@ void LGame::mouseRelease(int v, int h)
 				LPlayer* pass = this->areWhiteActive ? this->playerBlack : this->playerWhite;
 				LSquare*& from = this->board->getSquare(this->activeSquare->getVertical(), this->activeSquare->getHorizontal());
 				LSquare*& to = this->board->getSquare(v, h);
-				LPath* path = new LPath(act, pass, from, to);
+				LPath* path = new LPath(act->getClone(), pass->getClone(), from, to);
 
 				int isPossible = this->activeFigure->isPossiblePath(path);
 
@@ -419,6 +424,8 @@ void LGame::mouseRelease(int v, int h)
 					this->completeMove(path);
 					this->actionAfterPath();
 				}
+
+				delete path;
 			}
 
 		}
@@ -645,5 +652,10 @@ void LGame::actionAfterPath()
 
 void LGame::clear()
 {
+	delete this->playerWhite;
+	delete this->playerBlack;
 	delete this->board;
+	delete this->activeSquare;
+	delete this->activeFigure;
+	delete this->focusedSquare;
 }

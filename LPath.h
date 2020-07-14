@@ -6,7 +6,7 @@ class LSquare;
 class LPath
 {
 private:
-	static LSquare* nullPtr;
+	static LSquare* nullSquare;
 
 	LPlayer* playerActive;
 	LPlayer* playerPassive;
@@ -16,17 +16,22 @@ private:
 
 public:
 	LPath(
-		LSquare*& from = nullPtr,
-		LSquare*& to = nullPtr
+		LSquare*& from = nullSquare,
+		LSquare*& to = nullSquare
 	);
 
 	LPath(
 		LPlayer* act = nullptr,
 		LPlayer* pass = nullptr,
-		LSquare*& from = nullPtr,
-		LSquare*& to = nullPtr
+		LSquare*& from = nullSquare,
+		LSquare*& to = nullSquare
 	);
 
+	LPath(const LPath& path);
+
+	~LPath();
+
+	LPath* getClone();
 	LPlayer* getActive();
 	LPlayer* getPassive();
 	LSquare*& getFrom();

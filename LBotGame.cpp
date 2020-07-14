@@ -38,8 +38,16 @@ LBotGame::LBotGame(int color)
 	this->me = (color == L_COLOR_WHITE) ? (this->playerWhite) : (this->playerBlack);
 	this->bot = (color == L_COLOR_WHITE) ? (this->playerBlack) : (this->playerWhite);
 
+	this->me = this->me->getClone();
+	this->bot = this->bot->getClone();
+
 	this->areWhiteActive = color == L_COLOR_WHITE;
 	this->isBlocked = !this->areWhiteActive;
+}
+
+LBotGame::~LBotGame()
+{
+	this->clear();
 }
 
 void LBotGame::actionAfterPath()
@@ -61,6 +69,7 @@ void LBotGame::waitBot()
 	if (path)
 	{
 		this->completeMove(path);
+		delete path;
 	}
 	else
 	{
@@ -91,12 +100,6 @@ QVector<LPath*> LBotGame::uglyMoves(bool itsMe, LBoard* board)
 {
 	QVector<LPath*> paths;
 
-	LPlayer* me = (this->areWhiteActive) ? this->playerWhite : this->playerBlack;
-	LPlayer* bot = (this->areWhiteActive) ? this->playerBlack : this->playerWhite;
-
-	LPlayer* act = (itsMe) ? me : bot;
-	LPlayer* pas = (itsMe) ? bot : me;
-
 	if (!board)
 	{
 		board = this->board;
@@ -106,13 +109,13 @@ QVector<LPath*> LBotGame::uglyMoves(bool itsMe, LBoard* board)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			if (board->getFigure(i, j) && board->getFigure(i, j)->getColor() == bot->getColor())
+			if (board->getFigure(i, j) && board->getFigure(i, j)->getColor() == this->bot->getColor())
 			{
 				for (int k = 0; k < L_CHESS_BOARD_SIZE; k++)
 				{
 					for (int l = 0; l < L_CHESS_BOARD_SIZE; l++)
 					{
-						LPath* path = new LPath(bot, me, board->getSquare(i, j), board->getSquare(k, l));
+						LPath* path = new LPath(this->bot->getClone(), this->me->getClone(), board->getSquare(i, j), board->getSquare(k, l));
 
 						int result = board->getFigure(i, j)->isPossiblePath(path);
 
@@ -148,4 +151,11 @@ int LBotGame::getFigureTransformation()
 	}
 
 	return figure;
+}
+
+void LBotGame::clear()
+{
+	LGame::~LGame();
+	delete this->me;
+	delete this->bot;
 }

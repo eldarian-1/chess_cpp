@@ -26,7 +26,7 @@ LBotTree::LBotTree(LBotTree* parent, LBoard* board, LPath* path, int value, int 
 	number(number),
 	_isClean(true)
 {
-	LBoard* tempBoard = board->getClone();
+	LBoard* tempBoard = board;
 	tempBoard->completePath(path);
 	this->pBoard = tempBoard;
 	this->setValue(value);
@@ -107,9 +107,11 @@ void LBotTree::clear()
 	for (int i = 0; i < size; i++)
 	{
 		this->pChilds[i]->clear();
+		delete this->pChilds[i];
 	}
 
-	this->pParent = nullptr;
+	delete this->pPath;
+
 	this->pChilds.clear();
 	this->pPath = nullptr;
 	this->value = 0;

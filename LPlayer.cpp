@@ -10,6 +10,19 @@ LPlayer::LPlayer(int c, QString n)
 
 }
 
+LPlayer::LPlayer(const LPlayer& player)
+	:
+	color(player.color),
+	name(player.name)
+{
+
+}
+
+LPlayer* LPlayer::getClone()
+{
+	return new LPlayer(*this);
+}
+
 int LPlayer::getColor() const
 {
 	return this->color;

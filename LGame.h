@@ -29,6 +29,7 @@ protected:
 	LSquare* focusedSquare;
 
 	LGame();
+	~LGame();
 
 	virtual int getGameInstance() const final;
 	virtual void changeGameInstance(int gameInstance) final;
@@ -57,6 +58,6 @@ public:
 	virtual int getFigureTransformation();
 	virtual void actionAfterPath();
 
-	virtual void clear() final;
+	virtual void clear();
 
 };

@@ -25,6 +25,7 @@ protected:
 
 public:
 	LBotGame(int color);
+	~LBotGame();
 
 	virtual void actionAfterPath() override;
 
@@ -32,4 +33,5 @@ public:
 
 	virtual int getFigureTransformation() override;
 
+	virtual void clear() override;
 };

@@ -19,7 +19,7 @@ LPath* LAverageBot::calculateBestMove()
 {
 	this->minimax();
 
-	LPath* path = nullptr;
+	LPath* path;
 
 	int size = botTree->getSize();
 
@@ -29,7 +29,7 @@ LPath* LAverageBot::calculateBestMove()
 	{
 		int tempValue = (*botTree)[i]->getValue();
 
-		if (value <= tempValue)
+		if (value < tempValue)
 		{
 			index = i;
 			value = tempValue;
@@ -39,6 +39,16 @@ LPath* LAverageBot::calculateBestMove()
 	if (index != -1)
 	{
 		path = (*botTree)[index]->getPath();
+		path = path->getClone();
+	}
+	else if (!size)
+	{
+		path = nullptr;
+	}
+	else
+	{
+		path = (*botTree)[rand() % size]->getPath();
+		path = path->getClone();
 	}
 
 	clearTree();
@@ -67,7 +77,7 @@ void LAverageBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			LPath*& tempPath = paths[i];
+			LPath* tempPath = paths[i]->getClone();
 
 			LSquare* from = tempPath->getFrom();
 			LSquare* to = tempPath->getTo();
@@ -83,15 +93,20 @@ void LAverageBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 
 			if (figure)
 			{
-				value = figure->getValue();
+				value = ((itsMe) ? (-1) : (1)) * figure->getValue();
 			}
 
 			LBotTree* tempTree = botTree->addChild(board, tempPath, value);
 
-			if (depth > 0)
+			if (depth > 1)
 			{
-				minimax(tempTree, depth + (itsMe) ? (-1) : (0), !itsMe);
+				minimax(tempTree, depth + ((itsMe) ? (-1) : (0)), !itsMe);
 			}
 		}
+	}
+
+	for (int i = 0; i < size; i++)
+	{
+		delete paths[i];
 	}
 }
