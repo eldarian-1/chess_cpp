@@ -91,6 +91,7 @@ LNewGame::LNewGame(QWidget* widget)
 	connect(buttonCancel, SIGNAL(clicked()), SLOT(reject()));
 
 	this->biRadio->setChecked(true);
+	this->beginRadio->setChecked(true);
 	this->anyRadio->setChecked(true);
 
 	this->setWindowTitle("New Game");
@@ -180,6 +181,8 @@ int LNewGame::getBotPower() const
 	{
 		return LConst::L_BOT_STRONG;
 	}
+
+	return 0;
 }
 
 QString LNewGame::getName1() const

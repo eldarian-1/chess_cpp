@@ -72,7 +72,7 @@ void LBotGame::waitBot()
 		{
 			this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | this->bot->getColor());
 
-			node = this->me->getName() + "win!\n";
+			node = this->me->getName() + " win!\n";
 			node += this->me->getName() + " mat " + this->bot->getName();
 		}
 		else if (this->isPat(this->bot->getColor()))
@@ -87,26 +87,34 @@ void LBotGame::waitBot()
 	}
 }
 
-QVector<LPath*> LBotGame::uglyMoves()
+QVector<LPath*> LBotGame::uglyMoves(bool itsMe, LBoard* board)
 {
 	QVector<LPath*> paths;
 
-	LPlayer* bot = (this->areWhiteActive) ? this->playerBlack : this->playerWhite;
 	LPlayer* me = (this->areWhiteActive) ? this->playerWhite : this->playerBlack;
+	LPlayer* bot = (this->areWhiteActive) ? this->playerBlack : this->playerWhite;
+
+	LPlayer* act = (itsMe) ? me : bot;
+	LPlayer* pas = (itsMe) ? bot : me;
+
+	if (!board)
+	{
+		board = this->board;
+	}
 
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			if (this->board->getFigure(i, j) && this->board->getFigure(i, j)->getColor() == bot->getColor())
+			if (board->getFigure(i, j) && board->getFigure(i, j)->getColor() == bot->getColor())
 			{
 				for (int k = 0; k < L_CHESS_BOARD_SIZE; k++)
 				{
 					for (int l = 0; l < L_CHESS_BOARD_SIZE; l++)
 					{
-						LPath* path = new LPath(bot, me, this->board->getSquare(i, j), this->board->getSquare(k, l));
+						LPath* path = new LPath(bot, me, board->getSquare(i, j), board->getSquare(k, l));
 
-						int result = this->board->getFigure(i, j)->isPossiblePath(path);
+						int result = board->getFigure(i, j)->isPossiblePath(path);
 
 						if (result & L_PATH_TRUE)
 						{

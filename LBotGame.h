@@ -20,7 +20,7 @@ private:
 	void waitBot();
 
 protected:
-	virtual QVector<LPath*> uglyMoves() final;
+	virtual QVector<LPath*> uglyMoves(bool itsMe = false, LBoard* board = nullptr) final;
 	virtual LPath* calculateBestMove() = 0;
 
 public:

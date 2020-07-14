@@ -1,5 +1,6 @@
 #pragma once
 
+class LPath;
 class LSquare;
 class LFigure;
 
@@ -11,7 +12,7 @@ private:
 
 public:
 	LBoard();
-	LBoard(const LBoard* board);
+	LBoard(const LBoard& board);
 	~LBoard();
 
 	LBoard* getClone();
@@ -20,5 +21,7 @@ public:
 	LFigure*& getFigure(int v, int h) const;
 
 	void setFigure(LFigure* figure, int v, int h);
+
+	void completePath(LPath* path);
 
 };

@@ -580,7 +580,7 @@ void LGame::completeMove(LPath* path)
 
 				if (this->isMat(L_COLOR_WHITE) & L_PATH_MAT)
 				{
-					node = this->playerBlack->getName() + "win!\n";
+					node = this->playerBlack->getName() + " win!\n";
 					node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);

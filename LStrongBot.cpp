@@ -2,27 +2,72 @@
 
 #include <QVector>
 
+#include "LBotTree.h"
 #include "LBoard.h"
 #include "LPath.h"
 #include "LSquare.h"
 #include "LFigure.h"
 
+LBotTree* LStrongBot::botTree = new LBotTree;
+
+void LStrongBot::clearTree()
+{
+	botTree->clear();
+}
+
 LPath* LStrongBot::calculateBestMove()
 {
-	QVector<LPath*> paths = this->uglyMoves();
-
-	int size = paths.size();
+	this->minimax();
 
 	LPath* path = nullptr;
 
+	int size = botTree->getSize();
+
+	int index = -1, value = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		int tempValue = (*botTree)[i]->getValue();
+
+		if (value <= tempValue)
+		{
+			index = i;
+			value = tempValue;
+		}
+	}
+
+	if (index != -1)
+	{
+		path = (*botTree)[index]->getPath();
+	}
+
+	clearTree();
+
+	return path;
+}
+
+void LStrongBot::minimax(LBotTree* botTree, int depth, bool itsMe)
+{
+	LBoard* board;
+
+	if (!botTree)
+	{
+		botTree = LStrongBot::botTree;
+		board = this->board;
+	}
+	else
+	{
+		board = botTree->getBoard();
+	}
+
+	QVector<LPath*> paths = this->uglyMoves(itsMe, botTree->getBoard());
+	int size = paths.size();
+
 	if (size)
 	{
-		int value = 0;
-		int index = -1;
-
 		for (int i = 0; i < size; i++)
 		{
-			LPath* tempPath = paths[i];
+			LPath*& tempPath = paths[i];
 
 			LSquare* from = tempPath->getFrom();
 			LSquare* to = tempPath->getTo();
@@ -33,29 +78,20 @@ LPath* LStrongBot::calculateBestMove()
 			int toVer = to->getVertical();
 			int toHor = to->getHorizontal();
 
-			int tempValue = 0;
+			LFigure* figure = board->getFigure(toVer, toHor);
+			int value = 0;
 
-			if (this->board->getFigure(toVer, toHor))
+			if (figure)
 			{
-				tempValue = this->board->getFigure(toVer, toHor)->getValue();
+				value = figure->getValue();
 			}
 
-			if (value < tempValue)
-			{
-				value = tempValue;
-				index = i;
-			}
-		}
+			LBotTree* tempTree = botTree->addChild(board, tempPath, value);
 
-		if (index != -1)
-		{
-			path = paths[index];
-		}
-		else
-		{
-			path = paths[rand() % size];
+			if (depth > 0)
+			{
+				minimax(tempTree, depth + (itsMe) ? (-1) : (0), !itsMe);
+			}
 		}
 	}
-
-	return path;
 }

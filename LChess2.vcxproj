@@ -92,6 +92,7 @@
     <ClCompile Include="LBiGame.cpp" />
     <ClCompile Include="LBoard.cpp" />
     <ClCompile Include="LBotGame.cpp" />
+    <ClCompile Include="LBotTree.cpp" />
     <ClCompile Include="LDesk.cpp" />
     <ClCompile Include="LElephant.cpp" />
     <ClCompile Include="LFigure.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="LBiGame.h" />
     <ClInclude Include="LBoard.h" />
     <ClInclude Include="LBotGame.h" />
+    <ClInclude Include="LBotTree.h" />
     <ClInclude Include="LDesk.h" />
     <ClInclude Include="LConst.h" />
     <ClInclude Include="LElephant.h" />

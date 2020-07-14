@@ -2,6 +2,7 @@
 
 #include "LConst.h"
 
+#include "LPath.h"
 #include "LSquare.h"
 #include "LFigure.h"
 
@@ -64,7 +65,7 @@ LBoard::LBoard()
 	this->figures[6][7] = new LPawn(L_COLOR_WHITE);
 }
 
-LBoard::LBoard(const LBoard* board)
+LBoard::LBoard(const LBoard& board)
 	:
 	squares(new LSquare** [L_CHESS_BOARD_SIZE]),
 	figures(new LFigure** [L_CHESS_BOARD_SIZE])
@@ -79,10 +80,10 @@ LBoard::LBoard(const LBoard* board)
 			this->squares[i][j] = new LSquare(i, j, color);
 			this->figures[i][j] = nullptr;
 
-			if (board->figures[i][j])
+			if (board.figures[i][j])
 			{
-				int color = board->figures[i][j]->getColor();
-				int type = board->figures[i][j]->getType();
+				int color = board.figures[i][j]->getColor();
+				int type = board.figures[i][j]->getType();
 
 				switch (type)
 				{
@@ -134,7 +135,7 @@ LBoard::~LBoard()
 
 LBoard* LBoard::getClone()
 {
-	return new LBoard(this);
+	return new LBoard(*this);
 }
 
 LSquare*& LBoard::getSquare(int v, int h) const
@@ -150,4 +151,9 @@ LFigure*& LBoard::getFigure(int v, int h) const
 void LBoard::setFigure(LFigure* figure, int v, int h)
 {
 	this->figures[v][h] = figure;
+}
+
+void LBoard::completePath(LPath* path)
+{
+	
 }

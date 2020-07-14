@@ -134,6 +134,9 @@
     <ClCompile Include="LBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LBotTree.cpp">
+      <Filter>Source Files\Game\Bot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -207,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="LBoard.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LBotTree.h">
+      <Filter>Header Files\Game\Bot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
