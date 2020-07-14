@@ -8,6 +8,8 @@ class LFigure;
 class LPlayer
 {
 private:
+	LPlayer* original;
+
 	int color;
 	QString name;
 	QVector<LFigure*> figures;
@@ -16,6 +18,7 @@ public:
 	LPlayer(int color, QString name = "");
 	LPlayer(const LPlayer& player);
 
+	LPlayer* getOriginal();
 	LPlayer* getClone();
 	int getColor() const;
 	QString getName() const;

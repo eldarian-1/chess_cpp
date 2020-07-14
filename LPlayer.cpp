@@ -4,6 +4,7 @@
 
 LPlayer::LPlayer(int c, QString n)
 	:
+	original(this),
 	color(c),
 	name(n)
 {
@@ -12,10 +13,17 @@ LPlayer::LPlayer(int c, QString n)
 
 LPlayer::LPlayer(const LPlayer& player)
 	:
+	original(player.original),
 	color(player.color),
-	name(player.name)
+	name(player.name),
+	figures(player.figures)
 {
 
+}
+
+LPlayer* LPlayer::getOriginal()
+{
+	return this->original;
 }
 
 LPlayer* LPlayer::getClone()

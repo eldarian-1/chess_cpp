@@ -486,7 +486,7 @@ void LGame::completeMove(LPath* path)
 		{
 			QString passFigure = " (" + this->board->getFigure(newVer, newHor)->getName() + ")";
 
-			actPlayer->addFigure(this->board->getFigure(newVer, newHor));
+			actPlayer->getOriginal()->addFigure(this->board->getFigure(newVer, newHor));
 		}
 
 		this->board->getFigure(newVer, newHor) = this->board->getFigure(oldVer, oldHor);
