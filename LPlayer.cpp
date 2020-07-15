@@ -2,6 +2,10 @@
 
 #include "LFigure.h"
 
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomElement>
+
 LPlayer::LPlayer(int c, QString n)
 	:
 	original(this),
@@ -21,12 +25,33 @@ LPlayer::LPlayer(const LPlayer& player)
 
 }
 
-LPlayer* LPlayer::getOriginal()
+LPlayer* LPlayer::playerFromXml(QDomDocument* document)
+{
+	QDomNodeList parent = document->documentElement().toElement().childNodes();
+
+	LPlayer* player;
+
+	if (parent.at(0).toElement().tagName() == "wait")
+	{
+		player = nullptr;
+	}
+	else
+	{
+		QString name = parent.at(0).toElement().text();
+		int color = parent.at(1).toElement().text().toInt();
+
+		player = new LPlayer(color, name);
+	}
+
+	return player;
+}
+
+LPlayer* LPlayer::getOriginal() const
 {
 	return this->original;
 }
 
-LPlayer* LPlayer::getClone()
+LPlayer* LPlayer::getClone() const
 {
 	return new LPlayer(*this);
 }
@@ -41,7 +66,15 @@ QString LPlayer::getName() const
 	return this->name;
 }
 
-int LPlayer::getFigureCount()
+QString LPlayer::getText() const
+{
+	QString color;
+	color.setNum(this->color);
+
+	return "?name=" + this->name + "&color=" + color;
+}
+
+int LPlayer::getFigureCount() const
 {
 	return this->figures.size();
 }

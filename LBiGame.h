@@ -12,6 +12,6 @@ private:
 public:
 	LBiGame(QString name1, QString name2, int color);
 
-	void actionAfterPath() override;
+	void actionAfterPath(LPath* path) override;
 
 };

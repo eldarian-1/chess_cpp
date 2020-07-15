@@ -40,7 +40,9 @@ LGame::LGame()
 	board(new LBoard),
 	activeSquare(nullptr),
 	activeFigure(nullptr),
-	focusedSquare(nullptr)
+	focusedSquare(nullptr),
+	playerWhite(nullptr),
+	playerBlack(nullptr)
 {
 	
 }
@@ -124,9 +126,9 @@ void LGame::newGame(LNewGame* dialog)
 	}
 	}
 
-	if ((gameType == L_TYPE_BOT || gameType == L_TYPE_NET) && color == L_COLOR_BLACK)
+	if (gameType == L_TYPE_BOT && color == L_COLOR_BLACK)
 	{
-		instance->actionAfterPath();
+		instance->actionAfterPath(nullptr);
 	}
 }
 
@@ -138,12 +140,20 @@ LFigure* LGame::getFigure(int v, int h)
 	return this->board->getFigure(v, h);
 }
 
+LSquare*& LGame::getSquare(int v, int h)
+{
+	return this->board->getSquare(v, h);
+}
+
 void LGame::draw()
 {
 	LDesk* desk = LDesk::getInstance();
 
-	desk->drawTablePlayer(this->playerWhite, this->areWhiteActive);
-	desk->drawTablePlayer(this->playerBlack, this->areWhiteActive);
+	if (this->playerWhite && this->playerBlack)
+	{
+		desk->drawTablePlayer(this->playerWhite, this->areWhiteActive);
+		desk->drawTablePlayer(this->playerBlack, this->areWhiteActive);
+	}
 
 	desk->drawMarkup(areWhiteActive);
 
@@ -376,7 +386,7 @@ bool LGame::isPat(int color)
 
 void LGame::mousePress(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_FINISH))
+	if (!(this->getGameInstance() & L_GAME_PAUSE))
 	{
 		if (!this->areWhiteActive)
 		{
@@ -393,7 +403,7 @@ void LGame::mousePress(int v, int h)
 
 void LGame::mouseRelease(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_FINISH))
+	if (!(this->getGameInstance() & L_GAME_PAUSE))
 	{
 		if (!(
 			(this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() != L_COLOR_WHITE)
@@ -422,7 +432,7 @@ void LGame::mouseRelease(int v, int h)
 				{
 					path->setPossible(isPossible);
 					this->completeMove(path);
-					this->actionAfterPath();
+					this->actionAfterPath(path);
 				}
 
 				delete path;
@@ -439,7 +449,7 @@ void LGame::mouseRelease(int v, int h)
 
 void LGame::mouseMotionMove(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_FINISH))
+	if (!(this->getGameInstance() & L_GAME_PAUSE))
 	{
 		/*this->focusedSquare->setState(L_SQUARE_NATIVE);
 		this->focusedSquare = this->squares[v][h];
@@ -449,7 +459,7 @@ void LGame::mouseMotionMove(int v, int h)
 
 void LGame::mouseMove(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_FINISH))
+	if (!(this->getGameInstance() & L_GAME_PAUSE))
 	{
 		/**this->focusedSquare->setState(L_SQUARE_NATIVE);
 		this->focusedSquare = this->squares[v][h];
@@ -591,7 +601,7 @@ void LGame::completeMove(LPath* path)
 					node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | L_COLOR_WHITE);
+					this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_WHITE);
 				}
 				else
 				{
@@ -610,7 +620,7 @@ void LGame::completeMove(LPath* path)
 					node += this->playerWhite->getName() + " mat " + this->playerBlack->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | L_COLOR_BLACK);
+					this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_BLACK);
 				}
 				else
 				{
@@ -624,7 +634,7 @@ void LGame::completeMove(LPath* path)
 			QString node = "Dead Heat!\nStalemate situation.";
 			mainWidget->pathListAppend(node);
 			mainWidget->messageAlert(node);
-			this->changeGameInstance(L_GAME_FINISH | L_PATH_PAT);
+			this->changeGameInstance(L_GAME_PAUSE | L_PATH_PAT);
 		}
 	}
 }
@@ -645,7 +655,7 @@ int LGame::getFigureTransformation()
 	return figure;
 }
 
-void LGame::actionAfterPath()
+void LGame::actionAfterPath(LPath* path)
 {
 	
 }

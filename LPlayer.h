@@ -3,6 +3,8 @@
 #include <QString>
 #include <QVector>
 
+class QDomDocument;
+
 class LFigure;
 
 class LPlayer
@@ -18,12 +20,15 @@ public:
 	LPlayer(int color, QString name = "");
 	LPlayer(const LPlayer& player);
 
-	LPlayer* getOriginal();
-	LPlayer* getClone();
+	static LPlayer* playerFromXml(QDomDocument* document);
+
+	LPlayer* getOriginal() const;
+	LPlayer* getClone() const;
 	int getColor() const;
 	QString getName() const;
+	QString getText() const;
 
-	int getFigureCount();
+	int getFigureCount() const;
 	LFigure* operator [] (int index) const;
 
 	void setName(QString name);

@@ -17,7 +17,7 @@ LBiGame::LBiGame(QString n1, QString n2, int c)
 	);
 }
 
-void LBiGame::actionAfterPath()
+void LBiGame::actionAfterPath(LPath* path)
 {
 	this->areWhiteActive = !this->areWhiteActive;
 }

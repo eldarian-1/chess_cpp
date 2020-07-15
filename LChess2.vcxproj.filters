@@ -137,6 +137,9 @@
     <ClCompile Include="LBotTree.cpp">
       <Filter>Source Files\Game\Bot</Filter>
     </ClCompile>
+    <ClCompile Include="LClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -158,9 +161,6 @@
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="LBotGame.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="LNetGame.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="LElephant.h">
@@ -224,6 +224,12 @@
     </QtMoc>
     <QtMoc Include="LOptions.h">
       <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+    <QtMoc Include="LClient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LNetGame.h">
+      <Filter>Header Files\Game</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

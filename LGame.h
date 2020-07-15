@@ -40,6 +40,7 @@ public:
 	static void newGame(LNewGame* dialog);
 
 	virtual LFigure* getFigure(int vertical, int horizontal) final;
+	virtual LSquare*& getSquare(int vertical, int horizontal) final;
 	virtual void draw() final;
 
 	virtual int isCheck(int color) final;
@@ -56,7 +57,7 @@ public:
 
 	virtual void completeMove(LPath* path) final;
 	virtual int getFigureTransformation();
-	virtual void actionAfterPath();
+	virtual void actionAfterPath(LPath* path);
 
 	virtual void clear();
 

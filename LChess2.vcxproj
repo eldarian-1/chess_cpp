@@ -48,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>msvc2017</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;network;xml</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
@@ -93,6 +93,7 @@
     <ClCompile Include="LBoard.cpp" />
     <ClCompile Include="LBotGame.cpp" />
     <ClCompile Include="LBotTree.cpp" />
+    <ClCompile Include="LClient.cpp" />
     <ClCompile Include="LDesk.cpp" />
     <ClCompile Include="LElephant.cpp" />
     <ClCompile Include="LFigure.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="LBoard.h" />
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LBotTree.h" />
+    <QtMoc Include="LClient.h" />
     <ClInclude Include="LDesk.h" />
     <ClInclude Include="LConst.h" />
     <ClInclude Include="LElephant.h" />
@@ -131,7 +133,7 @@
     <ClInclude Include="LHorse.h" />
     <ClInclude Include="LKing.h" />
     <ClInclude Include="LLoadGame.h" />
-    <ClInclude Include="LNetGame.h" />
+    <QtMoc Include="LNetGame.h" />
     <ClInclude Include="LPath.h" />
     <ClInclude Include="LPawn.h" />
     <ClInclude Include="LPlayer.h" />

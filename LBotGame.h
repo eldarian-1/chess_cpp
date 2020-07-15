@@ -27,7 +27,7 @@ public:
 	LBotGame(int color);
 	~LBotGame();
 
-	virtual void actionAfterPath() override;
+	virtual void actionAfterPath(LPath* path) override;
 
 	void setBlocked(bool block);
 

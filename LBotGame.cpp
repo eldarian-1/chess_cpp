@@ -50,7 +50,7 @@ LBotGame::~LBotGame()
 	this->clear();
 }
 
-void LBotGame::actionAfterPath()
+void LBotGame::actionAfterPath(LPath* path)
 {
 	this->setBlocked(true);
 	this->waitBot();
@@ -79,14 +79,14 @@ void LBotGame::waitBot()
 
 		if (this->isMat(this->bot->getColor()))
 		{
-			this->changeGameInstance(L_GAME_FINISH | L_PATH_MAT | this->bot->getColor());
+			this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | this->bot->getColor());
 
 			node = this->me->getName() + " win!\n";
 			node += this->me->getName() + " mat " + this->bot->getName();
 		}
 		else if (this->isPat(this->bot->getColor()))
 		{
-			this->changeGameInstance(L_GAME_FINISH | L_PATH_PAT);
+			this->changeGameInstance(L_GAME_PAUSE | L_PATH_PAT);
 
 			node = "Dead Heat!\nStalemate situation.";
 		}

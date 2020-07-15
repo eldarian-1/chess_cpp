@@ -1,5 +1,8 @@
 #pragma once
 
+class QDomDocument;
+class QString;
+
 class LPlayer;
 class LSquare;
 
@@ -31,13 +34,22 @@ public:
 
 	~LPath();
 
-	LPath* getClone();
-	LPlayer* getActive();
-	LPlayer* getPassive();
-	LSquare*& getFrom();
-	LSquare*& getTo();
-	int isPossible();
+	static LPath* pathFromXml(QDomDocument* document);
 
+	LPath* getClone() const;
+
+	QString getText() const;
+
+	LPlayer* getActive() const;
+	LPlayer* getPassive() const;
+	LSquare*& getFrom() const;
+	LSquare*& getTo() const;
+	int isPossible() const;
+
+	void setActive(LPlayer* active);
+	void setPassive(LPlayer* passive);
 	void setPossible(int isPossible);
+
+	void clear();
 
 };

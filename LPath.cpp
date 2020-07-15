@@ -1,6 +1,12 @@
 #include "LPath.h"
 
+#include "LGame.h"
 #include "LPlayer.h"
+#include "LSquare.h"
+
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomElement>
 
 LSquare* LPath::nullSquare = nullptr;
 
@@ -39,37 +45,101 @@ LPath::~LPath()
 	delete this->playerPassive;
 }
 
-LPath* LPath::getClone()
+LPath* LPath::pathFromXml(QDomDocument* document)
+{
+	QDomNodeList parent = document->documentElement().toElement().childNodes();
+
+	LPath* path;
+
+	if (parent.at(0).toElement().tagName() == "wait")
+	{
+		path = nullptr;
+	}
+	else
+	{
+		int fromV = parent.at(0).toElement().text().toInt();
+		int fromH = parent.at(1).toElement().text().toInt();
+		int toV = parent.at(2).toElement().text().toInt();
+		int toH = parent.at(3).toElement().text().toInt();
+		int isPossible = parent.at(4).toElement().text().toInt();
+
+		LGame* game = LGame::getInstance();
+
+		path = new LPath(
+			game->getSquare(fromV, fromH),
+			game->getSquare(toV, toH)
+		);
+
+		path->setPossible(isPossible);
+	}
+
+	return path;
+}
+
+LPath* LPath::getClone() const
 {
 	return new LPath(*this);
 }
 
-LPlayer* LPath::getActive()
+QString LPath::getText() const
+{
+	QString fromV;
+	QString fromH;
+	QString toV;
+	QString toH;
+	QString isPossible;
+
+	fromV.setNum(this->from->getVertical());
+	fromH.setNum(this->from->getHorizontal());
+	toV.setNum(this->to->getVertical());
+	toH.setNum(this->to->getHorizontal());
+	isPossible.setNum(this->_isPossible);
+	
+	return "?fromV=" + fromV + "&fromH=" + fromH + "&toV=" + toV + "&toH=" + toH + "&isPossible=" + isPossible;
+}
+
+LPlayer* LPath::getActive() const
 {
 	return this->playerActive;
 }
 
-LPlayer* LPath::getPassive()
+LPlayer* LPath::getPassive() const
 {
 	return this->playerPassive;
 }
 
-LSquare*& LPath::getFrom()
+LSquare*& LPath::getFrom() const
 {
 	return this->from;
 }
 
-LSquare*& LPath::getTo()
+LSquare*& LPath::getTo() const
 {
 	return this->to;
 }
 
-int LPath::isPossible()
+int LPath::isPossible() const
 {
 	return this->_isPossible;
+}
+
+void LPath::setActive(LPlayer* active)
+{
+	this->playerActive = active;
+}
+
+void LPath::setPassive(LPlayer* passive)
+{
+	this->playerPassive = passive;
 }
 
 void LPath::setPossible(int isPossible)
 {
 	this->_isPossible = isPossible;
+}
+
+void LPath::clear()
+{
+	delete this->from;
+	delete this->to;
 }
