@@ -5,6 +5,7 @@
 #include "LMainWidget.h"
 
 #include "LConst.h"
+#include "LDesk.h"
 #include "LPath.h"
 #include "LFigure.h"
 #include "LSquare.h"
@@ -12,16 +13,14 @@
 #include "LOptions.h"
 #include "LClient.h"
 
-LNetGame::LNetGame(int c, QObject* object)
+LNetGame::LNetGame(QObject* object)
 	:
 	QObject(object),
 	LGame(),
 	client(LClient::getInstance()),
 	me(nullptr),
-	rival(nullptr),
-	myColor(c)
+	rival(nullptr)
 {
-	this->areWhiteActive = !(c == L_COLOR_BLACK);
 	this->changeGameInstance(L_GAME_PAUSE);
 
 	connect(this->client, SIGNAL(signalConnecting(bool)), this, SLOT(slotConnectiong(bool)));
@@ -29,17 +28,22 @@ LNetGame::LNetGame(int c, QObject* object)
 	connect(this->client, SIGNAL(signalGetPath(LPath*)), this, SLOT(slotGetPath(LPath*)));
 
 	QString name = LOptions::getInstance()->getName();
-	LPlayer* tempPlayer = new LPlayer(c, name);
 
-	client->newGame(tempPlayer);
-	delete tempPlayer;
+	client->newGame(name);
 }
 
 void LNetGame::actionAfterPath(LPath* path)
 {
-	this->changeGameInstance(L_GAME_PAUSE);
-	this->client->sendPath(path);
-	this->client->getPath();
+	if (path && (path->getActive()->getOriginal() == this->me))
+	{
+		this->changeGameInstance(L_GAME_PAUSE);
+		this->client->sendPath(path);
+		this->client->getPath();
+	}
+	else if(!path)
+	{
+		this->client->getPath();
+	}
 }
 
 void LNetGame::slotConnecting(bool isConnect)
@@ -49,33 +53,39 @@ void LNetGame::slotConnecting(bool isConnect)
 
 void LNetGame::slotNewGame(LPlayer* player)
 {
+	QString myName = LOptions::getInstance()->getName();
+
 	if (player)
 	{
-		QString myName = LOptions::getInstance()->getName();
-		this->myColor = (player->getColor() == L_COLOR_WHITE) ? L_COLOR_BLACK : L_COLOR_WHITE;
+		int myColor = (player->getColor() == L_COLOR_WHITE) ? L_COLOR_BLACK : L_COLOR_WHITE;
 
-		this->me = new LPlayer(this->myColor, myName);
+		this->me = new LPlayer(myColor, myName);
 		this->rival = player;
 
-		this->areWhiteActive = this->myColor == L_COLOR_WHITE;
+		this->imWhite = myColor == L_COLOR_WHITE;
 
-		this->playerWhite = (this->areWhiteActive) ? this->me : this->rival;
-		this->playerBlack = (this->areWhiteActive) ? this->rival : this->me;
+		this->playerWhite = (this->imWhite) ? this->me : this->rival;
+		this->playerBlack = (this->imWhite) ? this->rival : this->me;
 
-		this->changeGameInstance(L_GAME_RUNNING);
+		if (this->imWhite)
+		{
+			this->changeGameInstance(L_GAME_RUNNING);
+		}
 
 		LMainWidget* mainWidget = LMainWidget::getInstance();
 		mainWidget->pathListAppend(me->getName() + " vs " + player->getName());
+
+		LDesk::getInstance()->repaint();
+
+		if (!this->imWhite)
+		{
+			this->actionAfterPath(nullptr);
+		}
 	}
 	else
 	{
 		this->thread()->usleep(500);
-
-		QString name = LOptions::getInstance()->getName();
-		LPlayer* tempPlayer = new LPlayer(this->myColor, name);
-
-		client->newGame(tempPlayer);
-		delete tempPlayer;
+		client->newGame(myName);
 	}
 }
 
@@ -86,9 +96,11 @@ void LNetGame::slotGetPath(LPath* path)
 		path->setActive(this->rival);
 		path->setPassive(this->me);
 
+		this->changeGameInstance(L_GAME_RUNNING);
+
 		this->completeMove(path);
 
-		this->changeGameInstance(L_GAME_RUNNING);
+		LDesk::getInstance()->repaint();
 	}
 	else
 	{

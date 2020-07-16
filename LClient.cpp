@@ -5,15 +5,17 @@
 #include <QNetworkReply>
 
 #include <QDomDocument>
+#include <QDomNode>
+#include <QDomElement>
 
 #include "LPlayer.h"
 #include "LPath.h"
 
 QString LClient::urlSite = "http://lchess.com/";
-QString LClient::uriConnect = "connect.xml";
-QString LClient::uriNewGame = "newgame.xml";
-QString LClient::uriSendPath = "sendpath.xml";
-QString LClient::uriGetPath = "getpath.xml";
+QString LClient::uriConnect = "connect.php";
+QString LClient::uriNewGame = "newgame.php";
+QString LClient::uriSendPath = "sendpath.php";
+QString LClient::uriGetPath = "getpath.php";
 
 LClient* LClient::instance = nullptr;
 
@@ -22,6 +24,12 @@ LClient::LClient(QObject* object)
 	QObject(object),
 	networkAccessManager(new QNetworkAccessManager(this))
 {
+	int cId = rand();
+	this->clientId.setNum(cId);
+	this->clientId = "clientId=" + this->clientId;
+
+	this->gameId = "";
+
 	connect(
 		this->networkAccessManager, SIGNAL(finished(QNetworkReply*)),
 		this, SLOT(slotFinished(QNetworkReply*))
@@ -74,16 +82,31 @@ void LClient::done(const QUrl& url, const QByteArray& array)
 	QDomDocument* document = new QDomDocument;
 	document->setContent(string);
 
-	if (url == urlSite + uriConnect)
+	QString temp = (this->gameId != "") ? (this->gameId + "&") : ("");
+
+	if (url == urlSite + uriConnect + "?" + this->clientId)
 	{
 		emit signalConnecting(true);
 	}
-	else if (url == urlSite + uriNewGame + this->player)
+	else if (url == urlSite + uriNewGame + "?" + temp + this->clientId + "&" + this->player)
 	{
+		if (this->gameId == "")
+		{
+			this->gameId =
+				"gameId="
+				+ document
+				->documentElement()
+				.toElement()
+				.childNodes()
+				.at(0)
+				.toElement()
+				.text();
+		}
+
 		LPlayer* player = LPlayer::playerFromXml(document);
 		emit signalNewGame(player);
 	}
-	else if (url == urlSite + uriGetPath)
+	else if (url == urlSite + uriGetPath + "?" + this->gameId + "&" + this->clientId)
 	{
 		LPath* path = LPath::pathFromXml(document);
 		emit signalGetPath(path);
@@ -98,22 +121,25 @@ void LClient::connecting()
 	this->download(QUrl(url));
 }
 
-void LClient::newGame(LPlayer* p)
+void LClient::newGame(QString name)
 {
-	this->player = p->getText();
-	QString url = urlSite + uriNewGame + this->player;
+	this->player = "name=" + name;
+
+	QString temp = (this->gameId != "") ? (this->gameId + "&") : ("");
+
+	QString url = urlSite + uriNewGame + "?" + temp + this->clientId + "&" + this->player;
 	this->download(QUrl(url));
 }
 
 void LClient::sendPath(LPath* p)
 {
-	this->path = p->getText();
-	QString url = urlSite + uriSendPath + this->path;
+	this->path = "path=" + p->getText();
+	QString url = urlSite + uriSendPath + "?" + this->gameId + "&" + this->clientId + "&" + this->path;
 	this->download(QUrl(url));
 }
 
 void LClient::getPath()
 {
-	QString url = urlSite + uriGetPath;
+	QString url = urlSite + uriGetPath + "?" + this->gameId + "&" + this->clientId;
 	this->download(QUrl(url));
 }

@@ -29,6 +29,7 @@ LNewGame::LNewGame(QWidget* widget)
 	name1Edit(new QLineEdit),
 	name2Edit(new QLineEdit),
 
+	color(new QGroupBox("Color of Player 1")),
 	whiteRadio(new QRadioButton("White")),
 	blackRadio(new QRadioButton("Black")),
 	anyRadio(new QRadioButton("Any"))
@@ -42,7 +43,6 @@ LNewGame::LNewGame(QWidget* widget)
 	QHBoxLayout* hLayoutName1 = new QHBoxLayout;
 	QHBoxLayout* hLayoutName2 = new QHBoxLayout;
 
-	QGroupBox* color = new QGroupBox("Color of Player 1");
 	QHBoxLayout* hLayoutColor = new QHBoxLayout;
 
 	QHBoxLayout* hLayoutButton = new QHBoxLayout;
@@ -70,8 +70,8 @@ LNewGame::LNewGame(QWidget* widget)
 	hLayoutName2->addWidget(this->name2);
 	hLayoutName2->addWidget(this->name2Edit);
 
-	mainLayout->addWidget(color);
-	color->setLayout(hLayoutColor);
+	mainLayout->addWidget(this->color);
+	this->color->setLayout(hLayoutColor);
 	hLayoutColor->addWidget(this->whiteRadio);
 	hLayoutColor->addWidget(this->blackRadio);
 	hLayoutColor->addWidget(this->anyRadio);
@@ -86,6 +86,7 @@ LNewGame::LNewGame(QWidget* widget)
 	connect(this->botRadio, SIGNAL(clicked()), SLOT(slotCheckBotNet()));
 	connect(this->netRadio, SIGNAL(clicked()), SLOT(slotCheckBiNet()));
 	connect(this->netRadio, SIGNAL(clicked()), SLOT(slotCheckBotNet()));
+	connect(this->netRadio, SIGNAL(clicked()), SLOT(slotCheckNet()));
 
 	connect(buttonOk, SIGNAL(clicked()), SLOT(accept()));
 	connect(buttonCancel, SIGNAL(clicked()), SLOT(reject()));
@@ -107,6 +108,7 @@ LNewGame::LNewGame(QWidget* widget)
 
 void LNewGame::slotCheckBi()
 {
+	this->color->setVisible(true);
 	this->name1Edit->setVisible(true);
 	this->name2Edit->setVisible(true);
 	this->name1->setVisible(true);
@@ -120,6 +122,7 @@ void LNewGame::slotCheckBiNet()
 
 void LNewGame::slotCheckBot()
 {
+	this->color->setVisible(true);
 	this->botPower->setVisible(true);
 }
 
@@ -129,6 +132,11 @@ void LNewGame::slotCheckBotNet()
 	this->name2Edit->setVisible(false);
 	this->name1->setVisible(false);
 	this->name2->setVisible(false);
+}
+
+void LNewGame::slotCheckNet()
+{
+	this->color->setVisible(false);
 }
 
 int LNewGame::getGameType() const

@@ -19,10 +19,10 @@ private:
 	LPlayer* me;
 	LPlayer* rival;
 
-	int myColor;
+	bool& imWhite = LGame::areWhiteActive;
 
 public:
-	LNetGame(int color, QObject* object = nullptr);
+	LNetGame(QObject* object = nullptr);
 
 	void actionAfterPath(LPath* path) override;
 

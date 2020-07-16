@@ -30,6 +30,8 @@ private:
 	QLineEdit* name1Edit;
 	QLineEdit* name2Edit;
 
+	QGroupBox* color;
+
 	QRadioButton* whiteRadio;
 	QRadioButton* blackRadio;
 	QRadioButton* anyRadio;
@@ -42,6 +44,7 @@ private slots:
 	void slotCheckBot();
 	void slotCheckBiNet();
 	void slotCheckBotNet();
+	void slotCheckNet();
 
 public:
 	int getGameType() const;

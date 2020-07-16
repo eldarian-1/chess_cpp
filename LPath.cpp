@@ -95,7 +95,7 @@ QString LPath::getText() const
 	toH.setNum(this->to->getHorizontal());
 	isPossible.setNum(this->_isPossible);
 	
-	return "?fromV=" + fromV + "&fromH=" + fromH + "&toV=" + toV + "&toH=" + toH + "&isPossible=" + isPossible;
+	return "&fromV=" + fromV + "&fromH=" + fromH + "&toV=" + toV + "&toH=" + toH + "&isPossible=" + isPossible;
 }
 
 LPlayer* LPath::getActive() const

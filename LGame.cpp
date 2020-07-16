@@ -121,7 +121,7 @@ void LGame::newGame(LNewGame* dialog)
 	}
 	case L_TYPE_NET:
 	{
-		instance = new LNetGame(color);
+		instance = new LNetGame;
 		break;
 	}
 	}
@@ -503,8 +503,8 @@ void LGame::completeMove(LPath* path)
 		this->board->getFigure(oldVer, oldHor) = nullptr;
 
 		QString node = actName + ": " + actFigure + " " +
-			('A' + oldHor) + ('1' + oldVer) + " - " +
-			('A' + newHor) + ('1' + newVer) + passFigure;
+			('A' + oldHor) + ('8' - oldVer) + " - " +
+			('A' + newHor) + ('8' - newVer) + passFigure;
 
 		mainWidget->pathListAppend(node);
 	}

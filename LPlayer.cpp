@@ -37,8 +37,8 @@ LPlayer* LPlayer::playerFromXml(QDomDocument* document)
 	}
 	else
 	{
-		QString name = parent.at(0).toElement().text();
-		int color = parent.at(1).toElement().text().toInt();
+		QString name = parent.at(1).toElement().text();
+		int color = parent.at(2).toElement().text().toInt();
 
 		player = new LPlayer(color, name);
 	}
@@ -71,7 +71,7 @@ QString LPlayer::getText() const
 	QString color;
 	color.setNum(this->color);
 
-	return "?name=" + this->name + "&color=" + color;
+	return "&name=" + this->name + "&color=" + color;
 }
 
 int LPlayer::getFigureCount() const

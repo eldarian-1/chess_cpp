@@ -27,6 +27,8 @@ private:
 
 	QNetworkAccessManager* networkAccessManager;
 
+	QString gameId;
+	QString clientId;
 	QString player;
 	QString path;
 
@@ -50,7 +52,7 @@ private:
 
 public:
 	void connecting();
-	void newGame(LPlayer* player);
+	void newGame(QString name);
 	void sendPath(LPath* path);
 	void getPath();
 
