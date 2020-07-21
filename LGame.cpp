@@ -132,6 +132,16 @@ void LGame::newGame(LNewGame* dialog)
 	}
 }
 
+void LGame::setGame(LGame* game)
+{
+	if (instance)
+	{
+		delete instance;
+	}
+
+	instance = game;
+}
+
 LFigure* LGame::getFigure(int v, int h)
 {
 	if (v < 0 || v >= L_CHESS_BOARD_SIZE || h < 0 || h >= L_CHESS_BOARD_SIZE)
@@ -658,6 +668,11 @@ int LGame::getFigureTransformation()
 void LGame::actionAfterPath(LPath* path)
 {
 	
+}
+
+int LGame::getTypeOfGame()
+{
+	return 0;
 }
 
 void LGame::clear()

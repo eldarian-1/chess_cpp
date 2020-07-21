@@ -26,6 +26,8 @@ public:
 
 	void actionAfterPath(LPath* path) override;
 
+	virtual int getTypeOfGame() override;
+
 private slots:
 	void slotConnecting(bool isConnect);
 	void slotNewGame(LPlayer* player);

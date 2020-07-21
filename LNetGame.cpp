@@ -46,6 +46,11 @@ void LNetGame::actionAfterPath(LPath* path)
 	}
 }
 
+int LNetGame::getTypeOfGame()
+{
+	return L_TYPE_NET;
+}
+
 void LNetGame::slotConnecting(bool isConnect)
 {
 

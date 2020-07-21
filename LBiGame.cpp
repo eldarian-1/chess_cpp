@@ -21,3 +21,8 @@ void LBiGame::actionAfterPath(LPath* path)
 {
 	this->areWhiteActive = !this->areWhiteActive;
 }
+
+int LBiGame::getTypeOfGame()
+{
+	return L_TYPE_BI;
+}

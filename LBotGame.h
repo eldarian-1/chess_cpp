@@ -33,5 +33,7 @@ public:
 
 	virtual int getFigureTransformation() override;
 
+	virtual int getTypeOfGame() override final;
+
 	virtual void clear() override;
 };

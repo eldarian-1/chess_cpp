@@ -4,6 +4,8 @@
 #include "LDesk.h"
 #include "LGame.h"
 #include "LNewGame.h"
+#include "LLoadGame.h"
+#include "LSaveGame.h"
 #include "LOptions.h"
 
 #include <QApplication>
@@ -112,12 +114,23 @@ void LMainWidget::slotNewGame()
 
 void LMainWidget::slotSaveGame()
 {
-	this->messageAlert("This section is under development!");
+	LSaveGame* dialog = new LSaveGame(this->game);
+
+	dialog->exec();
+
+	delete dialog;
 }
 
 void LMainWidget::slotLoadGame()
 {
-	this->messageAlert("This section is under development!");
+	LLoadGame* dialog = new LLoadGame;
+
+	if (dialog->exec() == QDialog::Accepted)
+	{
+		LGame::setGame(dialog->getSelectedSave());
+	}
+
+	delete dialog;
 }
 
 void LMainWidget::slotOptions()

@@ -153,6 +153,11 @@ int LBotGame::getFigureTransformation()
 	return figure;
 }
 
+int LBotGame::getTypeOfGame()
+{
+	return L_TYPE_BOT;
+}
+
 void LBotGame::clear()
 {
 	LGame::~LGame();

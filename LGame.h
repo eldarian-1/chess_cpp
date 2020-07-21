@@ -38,6 +38,7 @@ public:
 	static LGame* getInstance();
 
 	static void newGame(LNewGame* dialog);
+	static void setGame(LGame* game);
 
 	virtual LFigure* getFigure(int vertical, int horizontal) final;
 	virtual LSquare*& getSquare(int vertical, int horizontal) final;
@@ -58,6 +59,7 @@ public:
 	virtual void completeMove(LPath* path) final;
 	virtual int getFigureTransformation();
 	virtual void actionAfterPath(LPath* path);
+	virtual int getTypeOfGame();
 
 	virtual void clear();
 

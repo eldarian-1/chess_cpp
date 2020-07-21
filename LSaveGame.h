@@ -2,15 +2,31 @@
 
 #include <QDialog>
 
+class LGame;
+
+class QListWidget;
+class QListWidgetItem;
+class QLineEdit;
+
 class LSaveGame :
 	public QDialog
 {
-private:
+	Q_OBJECT
 
+private:
+	LGame* game;
+	QListWidgetItem* selectedSave;
+	QListWidget* saves;
+	QLineEdit* lineEdit;
 
 public:
-	LSaveGame() {};
-	~LSaveGame() {};
+	LSaveGame(LGame* game);
+	~LSaveGame();
 
+public slots:
+	void slotSelectSave(QListWidgetItem* item);
+	void slotTextChanged(const QString& text);
+	void slotSave();
+	void slotDeleteSave();
 
 };

@@ -2,15 +2,28 @@
 
 #include <QDialog>
 
+class LGame;
+
+class QListWidget;
+class QListWidgetItem;
+
 class LLoadGame :
 	public QDialog
 {
-private:
+	Q_OBJECT
 
+private:
+	QListWidgetItem* selectedSave;
+	QListWidget* saves;
 
 public:
-	LLoadGame() {};
-	~LLoadGame() {};
+	LLoadGame();
+	~LLoadGame();
 
+	LGame* getSelectedSave();
+
+public slots:
+	void slotSelectSave(QListWidgetItem* item);
+	void slotDeleteSave();
 
 };

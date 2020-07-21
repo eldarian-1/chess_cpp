@@ -110,7 +110,9 @@
     <ClCompile Include="LPlayer.cpp" />
     <ClCompile Include="LQueen.cpp" />
     <ClCompile Include="LRook.cpp" />
+    <ClCompile Include="LSave.cpp" />
     <ClCompile Include="LSaveGame.cpp" />
+    <ClCompile Include="LSaveKeeper.cpp" />
     <ClCompile Include="LSquare.cpp" />
     <ClCompile Include="LStrongBot.cpp" />
     <ClCompile Include="LTransformation.cpp" />
@@ -132,20 +134,22 @@
     <ClInclude Include="LGame.h" />
     <ClInclude Include="LHorse.h" />
     <ClInclude Include="LKing.h" />
-    <ClInclude Include="LLoadGame.h" />
+    <QtMoc Include="LLoadGame.h" />
     <QtMoc Include="LNetGame.h" />
     <ClInclude Include="LPath.h" />
     <ClInclude Include="LPawn.h" />
     <ClInclude Include="LPlayer.h" />
     <ClInclude Include="LQueen.h" />
     <ClInclude Include="LRook.h" />
+    <ClInclude Include="LSave.h" />
+    <ClInclude Include="LSaveKeeper.h" />
     <ClInclude Include="LSquare.h" />
     <ClInclude Include="LStrongBot.h" />
     <ClInclude Include="LTransformation.h" />
     <ClInclude Include="LWeakBot.h" />
     <QtMoc Include="LNewGame.h" />
     <QtMoc Include="LOptions.h" />
-    <ClInclude Include="LSaveGame.h" />
+    <QtMoc Include="LSaveGame.h" />
     <QtMoc Include="LMainWidget.h" />
   </ItemGroup>
   <ItemGroup>
