@@ -52,15 +52,15 @@ void LSaveKeeper::save(QString name)
 		stream << *game->playerBlack;
 		stream << *game->board;
 		stream << game->_isCheck << '\n';
-		stream << (int)game->areWhiteActive << '\n';
+		stream << (game->areWhiteActive ? 1 : 0) << '\n';
 
 		if (typeOfGame == L_TYPE_BOT)
 		{
 			LBotGame* bgame = (LBotGame*)game;
 
-			stream << (bgame->me == game->playerWhite) << '\n';
-			stream << (bgame->bot == game->playerBlack) << '\n';
-			stream << bgame->isBlocked << '\n';
+			stream << ((bgame->me == game->playerWhite) ? 1 : 0) << '\n';
+			stream << ((bgame->bot == game->playerBlack) ? 1 : 0) << '\n';
+			stream << (bgame->isBlocked ? 1 : 0) << '\n';
 		}
 
 		file.close();
@@ -113,27 +113,13 @@ LGame* LSaveKeeper::loadSave(QString name)
 			LBotGame* bgame = (LBotGame*)game;
 
 			stream >> flag;
-			if (flag)
-			{
-				bgame->me = game->playerWhite;
-			}
-			else
-			{
-				bgame->me = game->playerBlack;
-			}
+			bgame->me = flag ? game->playerWhite : game->playerBlack;
 
 			stream >> flag;
-			if (flag)
-			{
-				bgame->bot = game->playerBlack;
-			}
-			else
-			{
-				bgame->bot = game->playerWhite;
-			}
+			bgame->bot = flag ? game->playerBlack : game->playerWhite;
 
 			stream >> flag;
-			bgame->isBlocked = (flag == 0);
+			bgame->isBlocked = flag;
 		}
 
 		file.close();

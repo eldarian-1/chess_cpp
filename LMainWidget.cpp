@@ -137,6 +137,7 @@ void LMainWidget::slotLoadGame()
 	if (dialog->exec() == QDialog::Accepted)
 	{
 		LGame::setGame(dialog->getSelectedSave());
+		this->saveGame->setVisible(true);
 	}
 
 	delete dialog;

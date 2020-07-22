@@ -141,7 +141,7 @@ QTextStream& operator >> (QTextStream& out, LBoard& board)
 	int count;
 	out >> count;
 
-	for (int i = 0; i < L_CHESS_BOARD_SIZE; ++i)
+	for (int i = 0; i < count; ++i)
 	{
 		int v, h, type, color;
 

@@ -137,11 +137,6 @@ void LGame::newGame(LNewGame* dialog)
 
 void LGame::setGame(LGame* game)
 {
-	if (instance)
-	{
-		delete instance;
-	}
-
 	instance = game;
 }
 
