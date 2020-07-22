@@ -29,40 +29,6 @@ LBoard::LBoard()
 			this->figures[i][j] = nullptr;
 		}
 	}
-
-	this->figures[0][4] = new LKing(L_COLOR_BLACK);
-	this->figures[0][3] = new LQueen(L_COLOR_BLACK);
-	this->figures[0][2] = new LElephant(L_COLOR_BLACK);
-	this->figures[0][5] = new LElephant(L_COLOR_BLACK);
-	this->figures[0][1] = new LHorse(L_COLOR_BLACK);
-	this->figures[0][6] = new LHorse(L_COLOR_BLACK);
-	this->figures[0][0] = new LRook(L_COLOR_BLACK);
-	this->figures[0][7] = new LRook(L_COLOR_BLACK);
-	this->figures[1][0] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][1] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][2] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][3] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][4] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][5] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][6] = new LPawn(L_COLOR_BLACK);
-	this->figures[1][7] = new LPawn(L_COLOR_BLACK);
-
-	this->figures[7][4] = new LKing(L_COLOR_WHITE);
-	this->figures[7][3] = new LQueen(L_COLOR_WHITE);
-	this->figures[7][2] = new LElephant(L_COLOR_WHITE);
-	this->figures[7][5] = new LElephant(L_COLOR_WHITE);
-	this->figures[7][1] = new LHorse(L_COLOR_WHITE);
-	this->figures[7][6] = new LHorse(L_COLOR_WHITE);
-	this->figures[7][0] = new LRook(L_COLOR_WHITE);
-	this->figures[7][7] = new LRook(L_COLOR_WHITE);
-	this->figures[6][0] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][1] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][2] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][3] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][4] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][5] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][6] = new LPawn(L_COLOR_WHITE);
-	this->figures[6][7] = new LPawn(L_COLOR_WHITE);
 }
 
 LBoard::LBoard(const LBoard& board)
@@ -85,32 +51,7 @@ LBoard::LBoard(const LBoard& board)
 				int color = board.figures[i][j]->getColor();
 				int type = board.figures[i][j]->getType();
 
-				switch (type)
-				{
-				case L_FIGURE_KING:
-					this->figures[i][j] = new LKing(color);
-					break;
-
-				case L_FIGURE_QUEEN	:
-					this->figures[i][j] = new LQueen(color);
-					break;
-
-				case L_FIGURE_ELEPHANT:
-					this->figures[i][j] = new LElephant(color);
-					break;
-
-				case L_FIGURE_HORSE:
-					this->figures[i][j] = new LHorse(color);
-					break;
-
-				case L_FIGURE_ROOK:
-					this->figures[i][j] = new LRook(color);
-					break;
-
-				case L_FIGURE_PAWN:
-					this->figures[i][j] = new LPawn(color);
-					break;
-				}
+				this->figures[i][j] = LFigure::create(type, color);
 			}
 		}
 	}
@@ -148,6 +89,43 @@ LFigure*& LBoard::getFigure(int v, int h) const
 	return this->figures[v][h];
 }
 
+void LBoard::setFigures()
+{
+	this->figures[0][4] = LFigure::create(L_FIGURE_KING, L_COLOR_BLACK);
+	this->figures[0][3] = LFigure::create(L_FIGURE_QUEEN, L_COLOR_BLACK);
+	this->figures[0][2] = LFigure::create(L_FIGURE_ELEPHANT, L_COLOR_BLACK);
+	this->figures[0][5] = LFigure::create(L_FIGURE_ELEPHANT, L_COLOR_BLACK);
+	this->figures[0][1] = LFigure::create(L_FIGURE_HORSE, L_COLOR_BLACK);
+	this->figures[0][6] = LFigure::create(L_FIGURE_HORSE, L_COLOR_BLACK);
+	this->figures[0][0] = LFigure::create(L_FIGURE_ROOK, L_COLOR_BLACK);
+	this->figures[0][7] = LFigure::create(L_FIGURE_ROOK, L_COLOR_BLACK);
+	this->figures[1][0] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][1] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][2] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][3] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][4] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][5] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][6] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+	this->figures[1][7] = LFigure::create(L_FIGURE_PAWN, L_COLOR_BLACK);
+
+	this->figures[7][4] = LFigure::create(L_FIGURE_KING, L_COLOR_WHITE);
+	this->figures[7][3] = LFigure::create(L_FIGURE_QUEEN, L_COLOR_WHITE);
+	this->figures[7][2] = LFigure::create(L_FIGURE_ELEPHANT, L_COLOR_WHITE);
+	this->figures[7][5] = LFigure::create(L_FIGURE_ELEPHANT, L_COLOR_WHITE);
+	this->figures[7][1] = LFigure::create(L_FIGURE_HORSE, L_COLOR_WHITE);
+	this->figures[7][6] = LFigure::create(L_FIGURE_HORSE, L_COLOR_WHITE);
+	this->figures[7][0] = LFigure::create(L_FIGURE_ROOK, L_COLOR_WHITE);
+	this->figures[7][7] = LFigure::create(L_FIGURE_ROOK, L_COLOR_WHITE);
+	this->figures[6][0] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][1] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][2] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][3] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][4] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][5] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][6] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+	this->figures[6][7] = LFigure::create(L_FIGURE_PAWN, L_COLOR_WHITE);
+}
+
 void LBoard::setFigure(LFigure* figure, int v, int h)
 {
 	this->figures[v][h] = figure;
@@ -155,5 +133,56 @@ void LBoard::setFigure(LFigure* figure, int v, int h)
 
 void LBoard::completePath(LPath* path)
 {
-	
+
+}
+
+QTextStream& operator >> (QTextStream& out, LBoard& board)
+{
+	int count;
+	out >> count;
+
+	for (int i = 0; i < L_CHESS_BOARD_SIZE; ++i)
+	{
+		int v, h, type, color;
+
+		out >> v >> h >> type >> color;
+
+		board.figures[v][h] = LFigure::create(type, color);
+	}
+
+	return out;
+}
+
+QTextStream& operator << (QTextStream& in, const LBoard& board)
+{
+	int count = 0;
+
+	for (int v = 0; v < L_CHESS_BOARD_SIZE; ++v)
+	{
+		for (int h = 0; h < L_CHESS_BOARD_SIZE; ++h)
+		{
+			if (board.figures[v][h])
+			{
+				++count;
+			}
+		}
+	}
+
+	in << count << '\n';
+
+	for (int v = 0; v < L_CHESS_BOARD_SIZE; ++v)
+	{
+		for (int h = 0; h < L_CHESS_BOARD_SIZE; ++h)
+		{
+			if (board.figures[v][h])
+			{
+				in << v << '\n';
+				in << h << '\n';
+				in << board.figures[v][h]->getType() << '\n';
+				in << board.figures[v][h]->getColor() << '\n';
+			}
+		}
+	}
+
+	return in;
 }

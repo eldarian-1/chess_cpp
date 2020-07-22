@@ -12,6 +12,8 @@ class LBotGame :
 	public LGame
 {
 private:
+	friend class LSaveKeeper;
+
 	LPlayer* me;
 	LPlayer* bot;
 
@@ -24,6 +26,7 @@ protected:
 	virtual LPath* calculateBestMove() = 0;
 
 public:
+	LBotGame();
 	LBotGame(int color);
 	~LBotGame();
 
@@ -34,6 +37,7 @@ public:
 	virtual int getFigureTransformation() override;
 
 	virtual int getTypeOfGame() override final;
+	virtual int getTypeOfBot() = 0;
 
 	virtual void clear() override;
 };

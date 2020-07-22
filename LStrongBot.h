@@ -13,6 +13,7 @@ private:
 	static LBotTree* botTree;
 
 public:
+	LStrongBot() : LBotGame() {}
 	LStrongBot(int color) : LBotGame(color) {}
 
 protected:
@@ -21,5 +22,7 @@ protected:
 	virtual LPath* calculateBestMove() override;
 
 	void minimax(LBotTree* botTree = nullptr, int depth = L_DEPTH_STRONG, bool itsMe = false);
+
+	virtual int getTypeOfBot() override;
 
 };

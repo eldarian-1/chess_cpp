@@ -37,7 +37,7 @@ LGame::LGame()
 	gameInstance(L_GAME_RUNNING),
 	areWhiteActive(true),
 	_isCheck(0),
-	board(new LBoard),
+	board(nullptr),
 	activeSquare(nullptr),
 	activeFigure(nullptr),
 	focusedSquare(nullptr),
@@ -130,6 +130,9 @@ void LGame::newGame(LNewGame* dialog)
 	{
 		instance->actionAfterPath(nullptr);
 	}
+
+	instance->board = new LBoard;
+	instance->board->setFigures();
 }
 
 void LGame::setGame(LGame* game)
@@ -140,6 +143,50 @@ void LGame::setGame(LGame* game)
 	}
 
 	instance = game;
+}
+
+void LGame::loadGame(int typeOfGame, int typeOfBot)
+{
+	if (instance)
+	{
+		delete instance;
+	}
+
+	switch (typeOfGame)
+	{
+
+	case L_TYPE_BI:
+		instance = new LBiGame;
+		break;
+
+	case L_TYPE_BOT:
+		switch (typeOfBot)
+		{
+
+		case L_BOT_BEGIN:
+			instance = new LBeginBot;
+			break;
+
+		case L_BOT_WEAK:
+			instance = new LWeakBot;
+			break;
+
+		case L_BOT_AVERAGE:
+			instance = new LAverageBot;
+			break;
+
+		case L_BOT_STRONG:
+			instance = new LStrongBot;
+			break;
+
+		}
+		break;
+
+	}
+
+	instance->board = new LBoard;
+	instance->playerWhite = new LPlayer(L_COLOR_WHITE);
+	instance->playerBlack = new LPlayer(L_COLOR_BLACK);
 }
 
 LFigure* LGame::getFigure(int v, int h)

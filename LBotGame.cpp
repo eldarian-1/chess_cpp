@@ -18,6 +18,16 @@
 #include "LHorse.h"
 #include "LRook.h"
 
+LBotGame::LBotGame()
+	:
+	LGame(),
+	me(nullptr),
+	bot(nullptr),
+	isBlocked(false)
+{
+
+}
+
 LBotGame::LBotGame(int color)
 	:
 	LGame()

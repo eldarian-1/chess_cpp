@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <QVector>
+#include <QTextStream>
 
 class QDomDocument;
 
@@ -34,5 +35,8 @@ public:
 	void setName(QString name);
 
 	void addFigure(LFigure* figure);
+
+	friend QTextStream& operator >> (QTextStream& out, LPlayer& player);
+	friend QTextStream& operator << (QTextStream& in, const LPlayer& player);
 
 };

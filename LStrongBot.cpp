@@ -111,3 +111,8 @@ void LStrongBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 		delete paths[i];
 	}
 }
+
+int LStrongBot::getTypeOfBot()
+{
+	return L_BOT_STRONG;
+}

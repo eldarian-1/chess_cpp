@@ -2,8 +2,6 @@
 
 #include <QDialog>
 
-class LGame;
-
 class QListWidget;
 class QListWidgetItem;
 class QLineEdit;
@@ -14,13 +12,12 @@ class LSaveGame :
 	Q_OBJECT
 
 private:
-	LGame* game;
 	QListWidgetItem* selectedSave;
 	QListWidget* saves;
 	QLineEdit* lineEdit;
 
 public:
-	LSaveGame(LGame* game);
+	LSaveGame();
 	~LSaveGame();
 
 public slots:

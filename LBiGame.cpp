@@ -4,7 +4,16 @@
 #include "LPlayer.h"
 #include "LSquare.h"
 
+LBiGame::LBiGame()
+	:
+	LGame()
+{
+
+}
+
 LBiGame::LBiGame(QString n1, QString n2, int c)
+	:
+	LGame()
 {
 	this->playerWhite = new LPlayer(
 		L_COLOR_WHITE,

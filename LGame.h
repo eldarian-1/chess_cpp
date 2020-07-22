@@ -12,6 +12,8 @@ class LFigure;
 class LGame
 {
 private:
+	friend class LSaveKeeper;
+
 	static LGame* instance;
 
 	int gameInstance;
@@ -39,6 +41,7 @@ public:
 
 	static void newGame(LNewGame* dialog);
 	static void setGame(LGame* game);
+	static void loadGame(int typeOfGame, int typeOfBot = -1);
 
 	virtual LFigure* getFigure(int vertical, int horizontal) final;
 	virtual LSquare*& getSquare(int vertical, int horizontal) final;

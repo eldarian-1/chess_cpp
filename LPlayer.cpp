@@ -93,3 +93,43 @@ void LPlayer::addFigure(LFigure* figure)
 {
 	this->figures.push_back(figure);
 }
+
+QTextStream& operator >> (QTextStream& out, LPlayer& player)
+{
+	out >> player.name;
+
+	int count;
+	out >> count;
+
+	for (int i = 0; i < count; ++i)
+	{
+		int type;
+		int color;
+
+		out >> type >> color;
+
+		LFigure* figure = LFigure::create(type, color);
+		player.figures.push_back(figure);
+	}
+
+	return out;
+}
+
+QTextStream& operator << (QTextStream& in, const LPlayer& player)
+{
+	in << player.name << '\n';
+
+	int count = player.figures.size();
+	in << count << '\n';
+
+	for (int i = 0; i < count; ++i)
+	{
+		int type = player.figures[i]->getType();
+		int color = player.figures[i]->getColor();
+
+		in << type << '\n';
+		in << color << '\n';
+	}
+
+	return in;
+}

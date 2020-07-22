@@ -8,6 +8,7 @@ class LBiGame :
 	public LGame
 {
 public:
+	LBiGame();
 	LBiGame(QString name1, QString name2, int color);
 
 	void actionAfterPath(LPath* path) override;

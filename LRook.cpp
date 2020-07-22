@@ -12,7 +12,7 @@ LRook::LRook(int color)
 	LFigure(color),
 	_isWalked(false)
 {
-	this->type = L_FIGURE_ROOK;
+	
 }
 
 void LRook::draw(LSquare* position, bool reverse)
@@ -71,6 +71,11 @@ int LRook::isPossiblePath(LPath* path)
 	}
 
 	return flag;
+}
+
+int LRook::getType() const
+{
+	return L_FIGURE_ROOK;
 }
 
 int LRook::getValue() const

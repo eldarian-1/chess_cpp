@@ -12,7 +12,7 @@ LLoadGame::LLoadGame()
 	:
 	selectedSave(nullptr)
 {
-	QVector<QString> names = LSaveKeeper::getNameSaves();
+	QStringList names = LSaveKeeper::getNameSaves();
 
 	QVBoxLayout* mainLayout = new QVBoxLayout;
 	this->saves = new QListWidget;
@@ -74,10 +74,13 @@ void LLoadGame::slotSelectSave(QListWidgetItem* item)
 
 void LLoadGame::slotDeleteSave()
 {
-	LSaveKeeper::deleteSave(this->selectedSave->text());
+	if (this->selectedSave)
+	{
+		LSaveKeeper::deleteSave(this->selectedSave->text());
 
-	this->saves->removeItemWidget(this->selectedSave);
+		this->saves->removeItemWidget(this->selectedSave);
 
-	delete this->selectedSave;
-	this->selectedSave = nullptr;
+		delete this->selectedSave;
+		this->selectedSave = nullptr;
+	}
 }

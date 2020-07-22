@@ -10,7 +10,7 @@
 LPawn::LPawn(int color)
 	: LFigure(color)
 {
-	this->type = L_FIGURE_PAWN;
+	
 }
 
 void LPawn::draw(LSquare* position, bool reverse)
@@ -95,6 +95,11 @@ int LPawn::isPossiblePath(LPath* path)
 	}
 
 	return flag;
+}
+
+int LPawn::getType() const
+{
+	return L_FIGURE_PAWN;
 }
 
 int LPawn::getValue() const

@@ -17,10 +17,10 @@ private:
 	static LSaveKeeper* getInstance();
 
 public:
-	static QVector<QString> getNameSaves();
+	static QStringList getNameSaves();
 
-	static void save(QString name, LGame* game);
-	static void rewriteSave(QString oldGame, LGame* newGame);
+	static void save(QString name);
+	static void rewriteSave(QString oldGame);
 	static LGame* loadSave(QString name);
 	static void deleteSave(QString name);
 

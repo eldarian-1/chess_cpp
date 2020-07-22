@@ -9,12 +9,11 @@
 
 #include "LSaveKeeper.h"
 
-LSaveGame::LSaveGame(LGame* game)
+LSaveGame::LSaveGame()
 	:
-	game(game),
 	selectedSave(nullptr)
 {
-	QVector<QString> names = LSaveKeeper::getNameSaves();
+	QStringList names = LSaveKeeper::getNameSaves();
 
 	QVBoxLayout* mainLayout = new QVBoxLayout;
 	this->saves = new QListWidget;
@@ -89,20 +88,23 @@ void LSaveGame::slotSave()
 {
 	if (this->selectedSave)
 	{
-		LSaveKeeper::rewriteSave(this->lineEdit->text(), this->game);
+		LSaveKeeper::rewriteSave(this->lineEdit->text());
 	}
 	else
 	{
-		LSaveKeeper::save(this->lineEdit->text(), this->game);
+		LSaveKeeper::save(this->lineEdit->text());
 	}
 }
 
 void LSaveGame::slotDeleteSave()
 {
-	LSaveKeeper::deleteSave(this->selectedSave->text());
+	if (this->selectedSave)
+	{
+		LSaveKeeper::deleteSave(this->selectedSave->text());
 
-	this->saves->removeItemWidget(this->selectedSave);
+		this->saves->removeItemWidget(this->selectedSave);
 
-	delete this->selectedSave;
-	this->selectedSave = nullptr;
+		delete this->selectedSave;
+		this->selectedSave = nullptr;
+	}
 }

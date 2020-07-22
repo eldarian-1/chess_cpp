@@ -93,7 +93,9 @@ void LMainWidget::slotNewGame()
 	{
 		LGame::newGame(dialog);
 
-		switch (dialog->getGameType())
+		int type = dialog->getGameType();
+
+		switch (type)
 		{
 		case L_TYPE_BI:
 			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
@@ -106,7 +108,14 @@ void LMainWidget::slotNewGame()
 			break;
 		}
 
-		this->saveGame->setVisible(true);
+		if (type == L_TYPE_BI || type == L_TYPE_BOT)
+		{
+			this->saveGame->setVisible(true);
+		}
+		else
+		{
+			this->saveGame->setVisible(false);
+		}
 	}
 
 	delete dialog;
@@ -114,7 +123,7 @@ void LMainWidget::slotNewGame()
 
 void LMainWidget::slotSaveGame()
 {
-	LSaveGame* dialog = new LSaveGame(this->game);
+	LSaveGame* dialog = new LSaveGame;
 
 	dialog->exec();
 

@@ -13,7 +13,7 @@ LKing::LKing(int color)
 	LFigure(color),
 	_isCastled(false)
 {
-	this->type = L_FIGURE_KING;
+	
 }
 
 void LKing::draw(LSquare* position, bool reverse)
@@ -114,6 +114,11 @@ int LKing::isPossiblePath(LPath* path)
 		flag = L_PATH_FALSE;
 
 	return flag;
+}
+
+int LKing::getType() const
+{
+	return L_FIGURE_KING;
 }
 
 int LKing::getValue() const

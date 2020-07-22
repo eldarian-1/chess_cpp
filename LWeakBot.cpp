@@ -110,3 +110,8 @@ void LWeakBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 		delete paths[i];
 	}
 }
+
+int LWeakBot::getTypeOfBot()
+{
+	return L_BOT_WEAK;
+}

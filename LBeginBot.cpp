@@ -64,3 +64,8 @@ LPath* LBeginBot::calculateBestMove()
 
 	return path;
 }
+
+int LBeginBot::getTypeOfBot()
+{
+	return L_BOT_BEGIN;
+}

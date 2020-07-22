@@ -10,7 +10,7 @@
 LHorse::LHorse(int color)
 	: LFigure(color)
 {
-	this->type = L_FIGURE_HORSE;
+	
 }
 
 void LHorse::draw(LSquare* position, bool reverse)
@@ -45,6 +45,11 @@ int LHorse::isPossiblePath(LPath* path)
 	}
 
 	return flag;
+}
+
+int LHorse::getType() const
+{
+	return L_FIGURE_HORSE;
 }
 
 int LHorse::getValue() const

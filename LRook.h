@@ -14,6 +14,7 @@ public:
 	void draw(LSquare* position, bool reverse) override;
 	int isPossiblePath(LPath* path) override;
 
+	virtual int getType() const override;
 	virtual int getValue() const override;
 	virtual QString getName() const override;
 

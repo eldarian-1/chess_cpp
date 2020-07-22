@@ -10,7 +10,7 @@
 LQueen::LQueen(int color)
 	: LFigure(color)
 {
-	this->type = L_FIGURE_QUEEN;
+	
 }
 
 void LQueen::draw(LSquare* position, bool reverse)
@@ -92,6 +92,11 @@ int LQueen::isPossiblePath(LPath* path)
 	}
 
 	return flag;
+}
+
+int LQueen::getType() const
+{
+	return L_FIGURE_QUEEN;
 }
 
 int LQueen::getValue() const

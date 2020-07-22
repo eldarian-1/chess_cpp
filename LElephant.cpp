@@ -10,7 +10,7 @@
 LElephant::LElephant(int color)
 	: LFigure(color)
 {
-	this->type = L_FIGURE_ELEPHANT;
+	
 }
 
 void LElephant::draw(LSquare* position, bool reverse)
@@ -65,6 +65,11 @@ int LElephant::isPossiblePath(LPath* path)
 	}
 
 	return flag;
+}
+
+int LElephant::getType() const
+{
+	return L_FIGURE_ELEPHANT;
 }
 
 int LElephant::getValue() const
