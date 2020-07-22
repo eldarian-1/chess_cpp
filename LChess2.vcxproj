@@ -110,7 +110,6 @@
     <ClCompile Include="LPlayer.cpp" />
     <ClCompile Include="LQueen.cpp" />
     <ClCompile Include="LRook.cpp" />
-    <ClCompile Include="LSave.cpp" />
     <ClCompile Include="LSaveGame.cpp" />
     <ClCompile Include="LSaveKeeper.cpp" />
     <ClCompile Include="LSquare.cpp" />
@@ -141,7 +140,6 @@
     <ClInclude Include="LPlayer.h" />
     <ClInclude Include="LQueen.h" />
     <ClInclude Include="LRook.h" />
-    <ClInclude Include="LSave.h" />
     <ClInclude Include="LSaveKeeper.h" />
     <ClInclude Include="LSquare.h" />
     <ClInclude Include="LStrongBot.h" />

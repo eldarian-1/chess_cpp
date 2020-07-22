@@ -143,9 +143,6 @@
     <ClCompile Include="LSaveKeeper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LSave.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LConst.h">
@@ -215,9 +212,6 @@
       <Filter>Header Files\Game\Bot</Filter>
     </ClInclude>
     <ClInclude Include="LSaveKeeper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LSave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
