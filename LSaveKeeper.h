@@ -1,21 +1,12 @@
 #pragma once
 
-#include <QVector>
+#include <QStringList>
 
 class LSave;
 class LGame;
 
 class LSaveKeeper
 {
-private:
-	static LSaveKeeper* instance;
-
-	QVector<LSave*> games;
-
-	LSaveKeeper();
-
-	static LSaveKeeper* getInstance();
-
 public:
 	static QStringList getNameSaves();
 

@@ -126,13 +126,13 @@ void LGame::newGame(LNewGame* dialog)
 	}
 	}
 
+	instance->board = new LBoard;
+	instance->board->setFigures();
+
 	if (gameType == L_TYPE_BOT && color == L_COLOR_BLACK)
 	{
 		instance->actionAfterPath(nullptr);
 	}
-
-	instance->board = new LBoard;
-	instance->board->setFigures();
 }
 
 void LGame::setGame(LGame* game)

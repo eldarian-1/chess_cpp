@@ -9,23 +9,6 @@
 #include <QDir>
 #include <QTextStream>
 
-LSaveKeeper* LSaveKeeper::instance = nullptr;
-
-LSaveKeeper::LSaveKeeper()
-{
-
-}
-
-LSaveKeeper* LSaveKeeper::getInstance()
-{
-	if (!instance)
-	{
-		instance = new LSaveKeeper;
-	}
-
-	return instance;
-}
-
 void LSaveKeeper::save(QString name)
 {
 	LGame * const & game = LGame::instance;
