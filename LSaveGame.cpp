@@ -47,7 +47,7 @@ LSaveGame::LSaveGame()
 	this->delButton->setEnabled(false);
 	this->saveButton->setEnabled(false);
 
-	this->setWindowTitle("Load Game");
+	this->setWindowTitle("Save Game");
 	this->setLayout(mainLayout);
 	this->setModal(true);
 	this->show();

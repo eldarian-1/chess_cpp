@@ -56,7 +56,7 @@ int LRook::isPossiblePath(LPath* path)
 			flag = (game->getFigure(i, xC) == nullptr) ? (L_PATH_TRUE) : (L_PATH_FALSE);
 	}
 
-	if (!(flag & L_PATH_FALSE) && !this->_isWalked)
+	if (!(flag == L_PATH_FALSE) && !this->_isWalked)
 		this->_isWalked = true;
 
 	if (game->getIsCheck() & this->color)

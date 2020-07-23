@@ -91,33 +91,52 @@ void LMainWidget::slotNewGame()
 {
 	LNewGame* dialog = new LNewGame;
 
-	if (dialog->exec() == QDialog::Accepted)
-	{
-		LGame::newGame(dialog);
+	bool flag = dialog->exec() == QDialog::Accepted;
 
+	while (flag)
+	{
+		QString text = "Are you sure you want to start a new game:\n";
+		QString gameType;
 		int type = dialog->getGameType();
 
 		switch (type)
 		{
 		case L_TYPE_BI:
-			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
+			gameType = dialog->getName1() + " vs " + dialog->getName2();
 			break;
 		case L_TYPE_BOT:
-			this->pathList->setText("New Game: " + this->optionsDialog->getName() + " vs Computer");
+			gameType = this->optionsDialog->getName() + " vs Computer";
 			break;
 		case L_TYPE_NET:
-			this->pathList->setText("New Game: " + this->optionsDialog->getName() + " vs Internet player");
+			gameType = this->optionsDialog->getName() + " vs Internet player";
 			break;
 		}
 
-		if (type == L_TYPE_BI || type == L_TYPE_BOT)
+		LConfirm* confirm = new LConfirm(text + gameType);
+
+		if (confirm->exec() == QDialog::Accepted)
 		{
-			this->saveGame->setVisible(true);
+			LGame::newGame(dialog);
+
+			this->pathList->setText(gameType);
+
+			if (type == L_TYPE_BI || type == L_TYPE_BOT)
+			{
+				this->saveGame->setVisible(true);
+			}
+			else
+			{
+				this->saveGame->setVisible(false);
+			}
+
+			flag = false;
 		}
 		else
 		{
-			this->saveGame->setVisible(false);
+			flag = dialog->exec() == QDialog::Accepted;
 		}
+
+		delete confirm;
 	}
 
 	delete dialog;

@@ -107,11 +107,15 @@ int LKing::isPossiblePath(LPath* path)
 		}
 	}
 
-	if (!(flag & L_PATH_FALSE) && !this->_isCastled)
+	if (!(flag == L_PATH_FALSE) && !this->_isCastled)
+	{
 		this->_isCastled = true;
+	}
 
 	if ((flag & L_PATH_TRUE) && (game->isCheck(this->getColor(), yT, xT, yC, xC) & L_PATH_CHECK))
+	{
 		flag = L_PATH_FALSE;
+	}
 
 	return flag;
 }
