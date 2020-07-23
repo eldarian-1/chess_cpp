@@ -143,11 +143,22 @@ QTextStream& operator >> (QTextStream& out, LBoard& board)
 
 	for (int i = 0; i < count; ++i)
 	{
-		int v, h, type, color;
+		int v, h, type, color, temp;
 
 		out >> v >> h >> type >> color;
 
 		board.figures[v][h] = LFigure::create(type, color);
+
+		if (type == L_FIGURE_KING)
+		{
+			out >> temp;
+			((LKing*)board.figures[v][h])->setCastled(temp);
+		}
+		else if (type == L_FIGURE_ROOK)
+		{
+			out >> temp;
+			((LRook*)board.figures[v][h])->setWalked(temp);
+		}
 	}
 
 	return out;
@@ -176,10 +187,24 @@ QTextStream& operator << (QTextStream& in, const LBoard& board)
 		{
 			if (board.figures[v][h])
 			{
+				int type, color;
+
+				type = board.figures[v][h]->getType();
+				color = board.figures[v][h]->getColor();
+
 				in << v << '\n';
 				in << h << '\n';
-				in << board.figures[v][h]->getType() << '\n';
-				in << board.figures[v][h]->getColor() << '\n';
+				in << type << '\n';
+				in << color << '\n';
+
+				if (type == L_FIGURE_KING)
+				{
+					in << (((LKing*)board.figures[v][h])->isCastled() ? 1 : 0) << '\n';
+				}
+				else if (type == L_FIGURE_ROOK)
+				{
+					in << (((LRook*)board.figures[v][h])->isWalked() ? 1 : 0) << '\n';
+				}
 			}
 		}
 	}

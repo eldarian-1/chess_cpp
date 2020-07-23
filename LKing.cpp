@@ -130,3 +130,13 @@ QString LKing::getName() const
 {
 	return "King";
 }
+
+bool LKing::isCastled() const
+{
+	return this->_isCastled;
+}
+
+void LKing::setCastled(bool isCastled)
+{
+	this->_isCastled = isCastled;
+}

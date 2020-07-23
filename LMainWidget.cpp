@@ -3,6 +3,7 @@
 #include "LConst.h"
 #include "LDesk.h"
 #include "LGame.h"
+#include "LConfirm.h"
 #include "LNewGame.h"
 #include "LLoadGame.h"
 #include "LSaveGame.h"
@@ -33,7 +34,8 @@ LMainWidget* LMainWidget::getInstance(QApplication* app, QWidget* widget)
 LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	:
 	QWidget(widget),
-	optionsDIalog(LOptions::getInstance(app, this)),
+	app(app),
+	optionsDialog(LOptions::getInstance(app, this)),
 	game(nullptr),
 	desk(LDesk::getInstance(this)),
 	newGame(new QPushButton(QIcon(":/LBQueen.png"), "New Game")),
@@ -43,7 +45,7 @@ LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	quit(new QPushButton(QIcon(":/LBPawn.png"), "Quit")),
 	pathList(new QTextEdit)
 {
-	this->setFixedSize(this->optionsDIalog->getWidth(), this->optionsDIalog->getHeight());
+	this->setFixedSize(this->optionsDialog->getWidth(), this->optionsDialog->getHeight());
 	this->setPalette(QPalette(QColor(255, 255, 255)));
 	this->pathList->setDisabled(true);
 
@@ -73,7 +75,7 @@ LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
 	connect(this->saveGame, SIGNAL(clicked()), SLOT(slotSaveGame()));
 	connect(this->loadGame, SIGNAL(clicked()), SLOT(slotLoadGame()));
 	connect(this->options, SIGNAL(clicked()), SLOT(slotOptions()));
-	connect(this->quit, SIGNAL(clicked()), app, SLOT(quit()));
+	connect(this->quit, SIGNAL(clicked()), SLOT(slotQuit()));
 }
 
 void LMainWidget::paintEvent(QPaintEvent* event)
@@ -101,10 +103,10 @@ void LMainWidget::slotNewGame()
 			this->pathList->setText("New Game: " + dialog->getName1() + " vs " + dialog->getName2());
 			break;
 		case L_TYPE_BOT:
-			this->pathList->setText("New Game: " + this->optionsDIalog->getName() + " vs Computer");
+			this->pathList->setText("New Game: " + this->optionsDialog->getName() + " vs Computer");
 			break;
 		case L_TYPE_NET:
-			this->pathList->setText("New Game: " + this->optionsDIalog->getName() + " vs Internet player");
+			this->pathList->setText("New Game: " + this->optionsDialog->getName() + " vs Internet player");
 			break;
 		}
 
@@ -134,7 +136,9 @@ void LMainWidget::slotLoadGame()
 {
 	LLoadGame* dialog = new LLoadGame;
 
-	if (dialog->exec() == QDialog::Accepted)
+	bool flagDialog = dialog->exec() == QDialog::Accepted;
+
+	while (flagDialog)
 	{
 		LGame* game = dialog->getSelectedSave();
 
@@ -142,6 +146,11 @@ void LMainWidget::slotLoadGame()
 		{
 			LGame::setGame(game);
 			this->saveGame->setVisible(true);
+			flagDialog = false;
+		}
+		else
+		{
+			flagDialog = dialog->exec() == QDialog::Accepted;
 		}
 	}
 
@@ -150,14 +159,31 @@ void LMainWidget::slotLoadGame()
 
 void LMainWidget::slotOptions()
 {
-	this->optionsDIalog->showDialog();
-	this->optionsDIalog->exec();
-	this->optionsDIalog->hide();
+	this->optionsDialog->showDialog();
+	this->optionsDialog->exec();
+	this->optionsDialog->hide();
+}
+
+void LMainWidget::slotQuit()
+{
+	LConfirm* confirm = new LConfirm("Are you sure you want to get out?");
+
+	if (confirm->exec() == QDialog::Accepted)
+	{
+		this->app->quit();
+	}
+
+	delete confirm;
 }
 
 LGame* LMainWidget::getGame() const
 {
 	return this->game;
+}
+
+void LMainWidget::setPathList(QString string)
+{
+	this->pathList->setText(string);
 }
 
 void LMainWidget::pathListAppend(QString string)

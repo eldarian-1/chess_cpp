@@ -13,6 +13,6 @@ public:
 
 	virtual int getType() const override;
 	virtual int getValue() const override;
-	QString getName() const override;
+	virtual QString getName() const override;
 
 };

@@ -138,6 +138,11 @@ void LGame::newGame(LNewGame* dialog)
 void LGame::setGame(LGame* game)
 {
 	instance = game;
+
+	LMainWidget::getInstance()
+		->setPathList(
+			instance->playerWhite->getName() + " vs " + instance->playerBlack->getName()
+		);
 }
 
 void LGame::loadGame(int typeOfGame, int typeOfBot)

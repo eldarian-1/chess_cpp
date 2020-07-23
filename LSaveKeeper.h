@@ -2,17 +2,24 @@
 
 #include <QStringList>
 
-class LSave;
 class LGame;
 
 class LSaveKeeper
 {
-public:
-	static QStringList getNameSaves();
+private:
+	static LSaveKeeper* instance;
 
-	static void save(QString name);
-	static void rewriteSave(QString oldGame);
-	static LGame* loadSave(QString name);
-	static void deleteSave(QString name);
+protected:
+	LSaveKeeper() {}
+
+public:
+	static LSaveKeeper* getInstance();
+
+	QStringList getNameSaves();
+
+	void save(QString name);
+	void rewriteSave(QString oldGame);
+	LGame* loadSave(QString name);
+	void deleteSave(QString name);
 
 };

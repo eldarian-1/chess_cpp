@@ -2,9 +2,12 @@
 
 #include <QDialog>
 
+class LSaveKeeper;
+
 class QListWidget;
 class QListWidgetItem;
 class QLineEdit;
+class QPushButton;
 
 class LSaveGame :
 	public QDialog
@@ -12,9 +15,14 @@ class LSaveGame :
 	Q_OBJECT
 
 private:
+	LSaveKeeper* saveKeeper;
+
 	QListWidgetItem* selectedSave;
 	QListWidget* saves;
+
 	QLineEdit* lineEdit;
+	QPushButton* delButton;
+	QPushButton* saveButton;
 
 public:
 	LSaveGame();

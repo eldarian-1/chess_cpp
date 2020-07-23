@@ -92,3 +92,8 @@ bool LRook::isWalked() const
 {
 	return this->_isWalked;
 }
+
+void LRook::setWalked(bool isWalked)
+{
+	this->_isWalked = isWalked;
+}

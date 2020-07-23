@@ -94,6 +94,7 @@
     <ClCompile Include="LBotGame.cpp" />
     <ClCompile Include="LBotTree.cpp" />
     <ClCompile Include="LClient.cpp" />
+    <ClCompile Include="LConfirm.cpp" />
     <ClCompile Include="LDesk.cpp" />
     <ClCompile Include="LElephant.cpp" />
     <ClCompile Include="LFigure.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LBotTree.h" />
     <QtMoc Include="LClient.h" />
+    <QtMoc Include="LConfirm.h" />
     <ClInclude Include="LDesk.h" />
     <ClInclude Include="LConst.h" />
     <ClInclude Include="LElephant.h" />

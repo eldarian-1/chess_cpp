@@ -9,6 +9,18 @@
 #include <QDir>
 #include <QTextStream>
 
+LSaveKeeper* LSaveKeeper::instance = nullptr;
+
+LSaveKeeper* LSaveKeeper::getInstance()
+{
+	if (!instance)
+	{
+		instance = new LSaveKeeper;
+	}
+
+	return instance;
+}
+
 void LSaveKeeper::save(QString name)
 {
 	LGame * const & game = LGame::instance;
@@ -52,8 +64,8 @@ void LSaveKeeper::save(QString name)
 
 void LSaveKeeper::rewriteSave(QString oldGame)
 {
-	deleteSave(oldGame);
-	save(oldGame);
+	this->deleteSave(oldGame);
+	this->save(oldGame);
 }
 
 LGame* LSaveKeeper::loadSave(QString name)

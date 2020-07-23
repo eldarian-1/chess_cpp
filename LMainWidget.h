@@ -2,6 +2,7 @@
 
 #include <QWidget>
 
+class QApplication;
 class LOptions;
 class LGame;
 class LDesk;
@@ -16,7 +17,8 @@ class LMainWidget :
 private:
 	static LMainWidget* instance;
 
-	LOptions* optionsDIalog;
+	QApplication* app;
+	LOptions* optionsDialog;
 	LGame* game;
 	LDesk* desk;
 
@@ -40,10 +42,12 @@ private slots:
 	void slotSaveGame();
 	void slotLoadGame();
 	void slotOptions();
+	void slotQuit();
 
 public:
 	LGame* getGame() const;
 
+	void setPathList(QString string);
 	void pathListAppend(QString string);
 	void messageAlert(QString string);
 

@@ -19,5 +19,6 @@ public:
 	virtual QString getName() const override;
 
 	bool isWalked() const;
+	void setWalked(bool isWalked);
 
 };
