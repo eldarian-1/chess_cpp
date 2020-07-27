@@ -11,7 +11,7 @@
 #include "LPlayer.h"
 #include "LPath.h"
 
-QString LClient::urlSite = "http://lchess.com/";
+QString LClient::urlSite = "http://lchess.com/query/";
 QString LClient::uriConnect = "connect.php";
 QString LClient::uriNewGame = "newgame.php";
 QString LClient::uriSendPath = "sendpath.php";

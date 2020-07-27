@@ -339,7 +339,7 @@ int LGame::isMat(int color)
 		}
 	}
 
-	return flag;
+	return (!flag ? L_PATH_MAT : L_PATH_TRUE);
 }
 
 bool LGame::isPat(int color)
