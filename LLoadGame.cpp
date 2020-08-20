@@ -9,68 +9,106 @@
 #include "LSaveKeeper.h"
 #include "LConfirm.h"
 
-LLoadGame::LLoadGame()
+class LLoadGamePrivate
+{
+public:
+	LSaveKeeper* saveKeeper;
+
+	QListWidgetItem* lstWgtSelected;
+	QListWidget* lstSaves;
+
+	QVBoxLayout* lytMain;
+	QHBoxLayout* lytButton;
+
+	QPushButton* btnDelete;
+	QPushButton* btnLoad;
+
+	LLoadGamePrivate();
+	~LLoadGamePrivate();
+};
+
+LLoadGamePrivate::LLoadGamePrivate()
 	:
 	saveKeeper(LSaveKeeper::getInstance()),
-	selectedSave(nullptr)
+	lstWgtSelected(nullptr),
+	lstSaves(new QListWidget),
+	lytMain(new QVBoxLayout),
+	lytButton(new QHBoxLayout),
+	btnDelete(new QPushButton("Delete")),
+	btnLoad(new QPushButton("Load"))
 {
 	QStringList names = saveKeeper->getNameSaves();
-
-	QVBoxLayout* mainLayout = new QVBoxLayout;
-	this->saves = new QListWidget;
-	QHBoxLayout* buttonLayout = new QHBoxLayout;
-	this->delButton = new QPushButton("Delete");
-	this->loadButton = new QPushButton("Load");
 
 	for (int i = 0; i < names.size(); i++)
 	{
 		QListWidgetItem* item = new QListWidgetItem;
 		item->setText(names[i]);
-		this->saves->addItem(item);
+		lstSaves->addItem(item);
 	}
 
-	connect(this->saves, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotSelectSave(QListWidgetItem*)));
-	connect(delButton, SIGNAL(clicked()), SLOT(slotDeleteSave()));
-	connect(loadButton, SIGNAL(clicked()), SLOT(accept()));
+	lytMain->addWidget(lstSaves);
+	lytMain->addLayout(lytButton);
 
-	mainLayout->addWidget(this->saves);
-	mainLayout->addLayout(buttonLayout);
+	lytButton->addWidget(btnDelete);
+	lytButton->addWidget(btnLoad);
 
-	buttonLayout->addWidget(this->delButton);
-	buttonLayout->addWidget(this->loadButton);
+	btnDelete->setEnabled(false);
+	btnLoad->setEnabled(false);
+}
 
-	this->delButton->setEnabled(false);
-	this->loadButton->setEnabled(false);
+LLoadGamePrivate::~LLoadGamePrivate()
+{
+	while (lstSaves->count())
+	{
+		QListWidgetItem* item = lstSaves->item(0);
+		lstSaves->removeItemWidget(item);
+		delete item;
+	}
 
-	this->setWindowTitle("Load Game");
-	this->setLayout(mainLayout);
-	this->setModal(true);
-	this->show();
+	delete btnDelete;
+	delete btnLoad;
+	delete lytButton;
+	delete lstSaves;
+	delete lytMain;
+}
+
+LLoadGame::LLoadGame()
+	:
+	m(new LLoadGamePrivate)
+{
+	connect(m->lstSaves, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotSelectSave(QListWidgetItem*)));
+	connect(m->btnDelete, SIGNAL(clicked()), SLOT(slotDeleteSave()));
+	connect(m->btnLoad, SIGNAL(clicked()), SLOT(accept()));
+
+	setWindowTitle("Load Game");
+	setLayout(m->lytMain);
+	setModal(true);
+	show();
 }
 
 LLoadGame::~LLoadGame()
 {
-	delete this->selectedSave;
-	delete this->saves;
+	disconnect(m->lstSaves, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotSelectSave(QListWidgetItem*)));
+	disconnect(m->btnDelete, SIGNAL(clicked()), this, SLOT(slotDeleteSave()));
+	disconnect(m->btnLoad, SIGNAL(clicked()), this, SLOT(accept()));
 
-	delete this->delButton;
-	delete this->loadButton;
+	delete m;
 }
 
 QString LLoadGame::getNameSelectedSave()
 {
-	return this->selectedSave->text();
+	return m->lstWgtSelected->text();
 }
 
 LGame* LLoadGame::getSelectedSave()
 {
 	LGame* game = nullptr;
 
-	LConfirm* confirm = new LConfirm("Are you sure you want to download the game: " + this->getNameSelectedSave());
+	LConfirm* confirm = new LConfirm("Are you sure you want to download the game: " + getNameSelectedSave());
 
 	if (confirm->exec() == QDialog::Accepted)
 	{
-		game = saveKeeper->loadSave(this->selectedSave->text());
+		game = m->saveKeeper->loadSave(m->lstWgtSelected->text());
 	}
 
 	delete confirm;
@@ -80,27 +118,27 @@ LGame* LLoadGame::getSelectedSave()
 
 void LLoadGame::slotSelectSave(QListWidgetItem* item)
 {
-	this->selectedSave = item;
+	m->lstWgtSelected = item;
 
-	this->delButton->setEnabled(true);
-	this->loadButton->setEnabled(true);
+	m->btnDelete->setEnabled(true);
+	m->btnLoad->setEnabled(true);
 }
 
 void LLoadGame::slotDeleteSave()
 {
-	LConfirm* confirm = new LConfirm("Are you sure you want to delete the game: " + this->getNameSelectedSave());
+	LConfirm* confirm = new LConfirm("Are you sure you want to delete the game: " + getNameSelectedSave());
 
 	if (confirm->exec() == QDialog::Accepted)
 	{
-		saveKeeper->deleteSave(this->selectedSave->text());
+		m->saveKeeper->deleteSave(m->lstWgtSelected->text());
 
-		this->saves->removeItemWidget(this->selectedSave);
+		m->lstSaves->removeItemWidget(m->lstWgtSelected);
 
-		delete this->selectedSave;
-		this->selectedSave = nullptr;
+		delete m->lstWgtSelected;
+		m->lstWgtSelected = nullptr;
 
-		this->delButton->setEnabled(false);
-		this->loadButton->setEnabled(false);
+		m->btnDelete->setEnabled(false);
+		m->btnLoad->setEnabled(false);
 	}
 
 	delete confirm;

@@ -2,20 +2,17 @@
 
 #include <QDialog>
 
-class QRadioButton;
+class LTransformationPrivate;
 
 class LTransformation :
 	public QDialog
 {
 private:
-	QRadioButton* queenRadio;
-	QRadioButton* elephantRadio;
-	QRadioButton* horseRadio;
-	QRadioButton* rookRadio;
+	LTransformationPrivate* m;
 
 public:
 	LTransformation(QWidget* widget = nullptr);
-	//~LTransformation();
+	~LTransformation();
 
 	int getFigure();
 

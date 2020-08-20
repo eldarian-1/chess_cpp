@@ -3,11 +3,8 @@
 #include <QDialog>
 
 class LGame;
-class LSaveKeeper;
-
-class QListWidget;
 class QListWidgetItem;
-class QPushButton;
+class LLoadGamePrivate;
 
 class LLoadGame :
 	public QDialog
@@ -15,13 +12,7 @@ class LLoadGame :
 	Q_OBJECT
 
 private:
-	LSaveKeeper* saveKeeper;
-
-	QListWidgetItem* selectedSave;
-	QListWidget* saves;
-
-	QPushButton* delButton;
-	QPushButton* loadButton;
+	LLoadGamePrivate* m;
 
 public:
 	LLoadGame();

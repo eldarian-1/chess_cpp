@@ -2,10 +2,7 @@
 
 #include <QDialog>
 
-class QGroupBox;
-class QLabel;
-class QLineEdit;
-class QRadioButton;
+class LNewGamePrivate;
 
 class LNewGame :
 	public QDialog
@@ -13,31 +10,11 @@ class LNewGame :
 	Q_OBJECT
 
 private:
-	QRadioButton* biRadio;
-	QRadioButton* botRadio;
-	QRadioButton* netRadio;
-
-	QGroupBox* botPower;
-
-	QRadioButton* beginRadio;
-	QRadioButton* weakRadio;
-	QRadioButton* averageRadio;
-	QRadioButton* strongRadio;
-
-	QLabel* name1;
-	QLabel* name2;
-
-	QLineEdit* name1Edit;
-	QLineEdit* name2Edit;
-
-	QGroupBox* color;
-
-	QRadioButton* whiteRadio;
-	QRadioButton* blackRadio;
-	QRadioButton* anyRadio;
+	LNewGamePrivate* m;
 
 public:
 	LNewGame(QWidget* widget = nullptr);
+	~LNewGame();
 
 private slots:
 	void slotCheckBi();
@@ -54,4 +31,3 @@ public:
 	QString getName2() const;
 
 };
-

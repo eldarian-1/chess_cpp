@@ -4,8 +4,7 @@
 
 class QWidget;
 class QString;
-class QLineEdit;
-class QRadioButton;
+class LOptionsPrivate;
 
 class LOptions :
 	public QDialog
@@ -14,34 +13,22 @@ class LOptions :
 
 private:
 	static LOptions* instance;
-
-	QApplication* app;
-	QWidget* mainWidget;
-
-	QString playerName;
-	int windowSize;
-	int windowWidth;
-	int windowHeight;
-
-	QLineEdit* playerEdit;
-	QRadioButton* winSizeNHD;
-	QRadioButton* winSizeFWVGA;
-	QRadioButton* winSizeHD;
-	QRadioButton* winSizeHDP;
-	QRadioButton* winSizeFHD;
-	QRadioButton* winSizeFULL;
-
-protected:
-	LOptions(QApplication* app, QWidget* mainWidget, QWidget* widget);
+	LOptionsPrivate* m;
 
 public:
-	static LOptions* getInstance(QApplication* app = nullptr, QWidget* mainWidget = nullptr, QWidget* widget = nullptr);
+	static LOptions* getInstance(QWidget* mainWidget = nullptr, QWidget* widget = nullptr);
 
-	void showDialog();
+protected:
+	LOptions(QWidget* mainWidget, QWidget* widget);
+
+public:
+	~LOptions();
 
 	QString getName() const;
 	int getWidth() const;
 	int getHeight() const;
+
+	void showDialog();
 
 public slots:
 	void slotAccepted();

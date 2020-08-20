@@ -2,7 +2,6 @@
 
 #include <QWidget>
 
-class QApplication;
 class LOptions;
 class LGame;
 class LDesk;
@@ -17,7 +16,6 @@ class LMainWidget :
 private:
 	static LMainWidget* instance;
 
-	QApplication* app;
 	LOptions* optionsDialog;
 	LGame* game;
 	LDesk* desk;
@@ -30,9 +28,9 @@ private:
 	QTextEdit* pathList;
 
 public:
-	static LMainWidget* getInstance(QApplication* app = nullptr, QWidget* widget = nullptr);
+	static LMainWidget* getInstance(QWidget* widget = nullptr);
 
-	LMainWidget(QApplication* app, QWidget* widget);
+	LMainWidget(QWidget* widget);
 
 protected:
 	virtual void paintEvent(QPaintEvent* event);

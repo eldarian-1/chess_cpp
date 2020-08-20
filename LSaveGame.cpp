@@ -1,7 +1,6 @@
 #include "LSaveGame.h"
 
 #include <QVBoxLayout>
-#include <QLineEdit>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QLineEdit>
@@ -10,62 +9,105 @@
 #include "LSaveKeeper.h"
 #include "LConfirm.h"
 
-LSaveGame::LSaveGame()
+class LSaveGamePrivate
+{
+public:
+	LSaveKeeper* saveKeeper;
+
+	QListWidgetItem* lstWgtSelected;
+	QListWidget* lstSaves;
+
+	QVBoxLayout* lytMain;
+	QHBoxLayout* lytButton;
+
+	QLineEdit* leSaveName;
+
+	QPushButton* btnDelete;
+	QPushButton* btnSave;
+
+	LSaveGamePrivate();
+	~LSaveGamePrivate();
+};
+
+LSaveGamePrivate::LSaveGamePrivate()
 	:
 	saveKeeper(LSaveKeeper::getInstance()),
-	selectedSave(nullptr)
+	lstWgtSelected(nullptr),
+	lstSaves(new QListWidget),
+	lytMain(new QVBoxLayout),
+	lytButton(new QHBoxLayout),
+	leSaveName(new QLineEdit),
+	btnDelete(new QPushButton("Delete")),
+	btnSave(new QPushButton("Save"))
 {
 	QStringList names = saveKeeper->getNameSaves();
-
-	QVBoxLayout* mainLayout = new QVBoxLayout;
-	this->saves = new QListWidget;
-	this->lineEdit = new QLineEdit;
-	QHBoxLayout* buttonLayout = new QHBoxLayout;
-	this->delButton = new QPushButton("Delete");
-	this->saveButton = new QPushButton("save");
 
 	for (int i = 0; i < names.size(); i++)
 	{
 		QListWidgetItem* item = new QListWidgetItem;
 		item->setText(names[i]);
-		this->saves->addItem(item);
+		lstSaves->addItem(item);
 	}
 
-	connect(this->saves, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotSelectSave(QListWidgetItem*)));
-	connect(this->lineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(slotTextChanged(const QString&)));
-	connect(this->delButton, SIGNAL(clicked()), SLOT(slotDeleteSave()));
-	connect(this->saveButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this->saveButton, SIGNAL(clicked()), SLOT(slotSave()));
+	lytMain->addWidget(lstSaves);
+	lytMain->addWidget(leSaveName);
+	lytMain->addLayout(lytButton);
 
-	mainLayout->addWidget(this->saves);
-	mainLayout->addWidget(this->lineEdit);
-	mainLayout->addLayout(buttonLayout);
+	lytButton->addWidget(btnDelete);
+	lytButton->addWidget(btnSave);
 
-	buttonLayout->addWidget(this->delButton);
-	buttonLayout->addWidget(this->saveButton);
+	btnDelete->setEnabled(false);
+	btnSave->setEnabled(false);
+}
 
-	this->delButton->setEnabled(false);
-	this->saveButton->setEnabled(false);
+LSaveGamePrivate::~LSaveGamePrivate()
+{
+	while (lstSaves->count())
+	{
+		QListWidgetItem* item = lstSaves->item(0);
+		lstSaves->removeItemWidget(item);
+		delete item;
+	}
 
-	this->setWindowTitle("Save Game");
-	this->setLayout(mainLayout);
-	this->setModal(true);
-	this->show();
+	delete leSaveName;
+	delete btnDelete;
+	delete btnSave;
+	delete lytButton;
+	delete lstSaves;
+	delete lytMain;
+}
+
+LSaveGame::LSaveGame()
+	:
+	m(new LSaveGamePrivate)
+{
+	connect(m->lstSaves, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(slotSelectSave(QListWidgetItem*)));
+	connect(m->leSaveName, SIGNAL(textChanged(const QString&)), SLOT(slotTextChanged(const QString&)));
+	connect(m->btnDelete, SIGNAL(clicked()), SLOT(slotDeleteSave()));
+	connect(m->btnSave, SIGNAL(clicked()), SLOT(accept()));
+	connect(m->btnSave, SIGNAL(clicked()), SLOT(slotSave()));
+
+	setWindowTitle("Save Game");
+	setLayout(m->lytMain);
+	setModal(true);
+	show();
 }
 
 LSaveGame::~LSaveGame()
 {
-	delete this->selectedSave;
-	delete this->saves;
+	disconnect(m->lstSaves, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotSelectSave(QListWidgetItem*)));
+	disconnect(m->leSaveName, SIGNAL(textChanged(const QString&)), this, SLOT(slotTextChanged(const QString&)));
+	disconnect(m->btnDelete, SIGNAL(clicked()), this, SLOT(slotDeleteSave()));
+	disconnect(m->btnSave, SIGNAL(clicked()), this, SLOT(accept()));
+	disconnect(m->btnSave, SIGNAL(clicked()), this, SLOT(slotSave()));
 
-	delete this->delButton;
-	delete this->saveButton;
+	delete m;
 }
 
 void LSaveGame::slotSelectSave(QListWidgetItem* item)
 {
-	this->selectedSave = item;
-	this->lineEdit->setText(item->text());
+	m->lstWgtSelected = item;
+	m->leSaveName->setText(item->text());
 }
 
 void LSaveGame::slotTextChanged(const QString& text)
@@ -73,60 +115,60 @@ void LSaveGame::slotTextChanged(const QString& text)
 	int i;
 	bool flag = false;
 
-	for (i = 0; i < this->saves->count() && !flag; ++i)
+	for (i = 0; i < m->lstSaves->count() && !flag; ++i)
 	{
-		flag = text == this->saves->item(i)->text();
+		flag = text == m->lstSaves->item(i)->text();
 	}
 
 	--i;
 
 	if (flag)
 	{
-		this->saves->item(i)->setSelected(true);
-		this->selectedSave = this->saves->item(i);
+		m->lstSaves->item(i)->setSelected(true);
+		m->lstWgtSelected = m->lstSaves->item(i);
 
-		this->delButton->setEnabled(true);
-		this->saveButton->setText("Rewrite");
+		m->btnDelete->setEnabled(true);
+		m->btnSave->setText("Rewrite");
 	}
-	else if(this->selectedSave)
+	else if(m->lstWgtSelected)
 	{
-		this->selectedSave->setSelected(false);
-		this->selectedSave = nullptr;
+		m->lstWgtSelected->setSelected(false);
+		m->lstWgtSelected = nullptr;
 
-		this->delButton->setEnabled(false);
-		this->saveButton->setText("Save");
+		m->btnDelete->setEnabled(false);
+		m->btnSave->setText("Save");
 	}
 
 	if (text == "")
 	{
-		this->saveButton->setEnabled(false);
+		m->btnSave->setEnabled(false);
 	}
 	else
 	{
-		this->saveButton->setEnabled(true);
+		m->btnSave->setEnabled(true);
 	}
 }
 
 void LSaveGame::slotSave()
 {
-	if (this->selectedSave)
+	if (m->lstWgtSelected)
 	{
-		LConfirm* confirm = new LConfirm("Are you sure you want to rewrite the game: " + this->lineEdit->text());
+		LConfirm* confirm = new LConfirm("Are you sure you want to rewrite the game: " + m->leSaveName->text());
 
 		if (confirm->exec() == QDialog::Accepted)
 		{
-			saveKeeper->rewriteSave(this->lineEdit->text());
+			m->saveKeeper->rewriteSave(m->leSaveName->text());
 		}
 
 		delete confirm;
 	}
 	else
 	{
-		LConfirm* confirm = new LConfirm("Are you sure you want to save the game: " + this->lineEdit->text());
+		LConfirm* confirm = new LConfirm("Are you sure you want to save the game: " + m->leSaveName->text());
 
 		if (confirm->exec() == QDialog::Accepted)
 		{
-			saveKeeper->save(this->lineEdit->text());
+			m->saveKeeper->save(m->leSaveName->text());
 		}
 
 		delete confirm;
@@ -135,19 +177,19 @@ void LSaveGame::slotSave()
 
 void LSaveGame::slotDeleteSave()
 {
-	LConfirm* confirm = new LConfirm("Are you sure you want to delete the game: " + this->selectedSave->text());
+	LConfirm* confirm = new LConfirm("Are you sure you want to delete the game: " + m->lstWgtSelected->text());
 
 	if (confirm->exec() == QDialog::Accepted)
 	{
-		saveKeeper->deleteSave(this->selectedSave->text());
+		m->saveKeeper->deleteSave(m->lstWgtSelected->text());
 
-		this->saves->removeItemWidget(this->selectedSave);
+		m->lstSaves->removeItemWidget(m->lstWgtSelected);
 
-		delete this->selectedSave;
-		this->selectedSave = nullptr;
+		delete m->lstWgtSelected;
+		m->lstWgtSelected = nullptr;
 
-		this->delButton->setEnabled(false);
-		this->saveButton->setText("Save");
+		m->btnDelete->setEnabled(false);
+		m->btnSave->setText("Save");
 	}
 
 	delete confirm;

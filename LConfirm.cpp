@@ -5,26 +5,60 @@
 #include <QLabel>
 #include <QPushButton>
 
+class LConfirmPrivate
+{
+public:
+	QVBoxLayout* lytMain;
+	QLabel* lblText;
+	QHBoxLayout* lytButton;
+	QPushButton* btnYes;
+	QPushButton* btnNo;
+
+	LConfirmPrivate(QString text);
+	~LConfirmPrivate();
+};
+
+LConfirmPrivate::LConfirmPrivate(QString text)
+	:
+	lytMain(new QVBoxLayout),
+	lblText(new QLabel(text)),
+	lytButton(new QHBoxLayout),
+	btnYes(new QPushButton("Yes")),
+	btnNo(new QPushButton("No"))
+{
+	lytMain->addWidget(lblText);
+	lytMain->addLayout(lytButton);
+	lytButton->addWidget(btnYes);
+	lytButton->addWidget(btnNo);
+}
+
+LConfirmPrivate::~LConfirmPrivate()
+{
+	delete lblText;
+	delete btnYes;
+	delete btnNo;
+	delete lytButton;
+	delete lytMain;
+}
+
 LConfirm::LConfirm(QString text, QWidget* widget)
 	:
-	QDialog(widget)
+	QDialog(widget),
+	m(new LConfirmPrivate(text))
 {
-	QVBoxLayout* mainLayout = new QVBoxLayout;
-	QLabel* label = new QLabel(text);
-	QHBoxLayout* buttonLayout = new QHBoxLayout;
-	QPushButton* buttonYes = new QPushButton("Yes");
-	QPushButton* buttonNo = new QPushButton("No");
+	connect(m->btnYes, SIGNAL(clicked()), SLOT(accept()));
+	connect(m->btnNo, SIGNAL(clicked()), SLOT(reject()));
 
-	mainLayout->addWidget(label);
-	mainLayout->addLayout(buttonLayout);
-	buttonLayout->addWidget(buttonYes);
-	buttonLayout->addWidget(buttonNo);
+	setModal(true);
+	setWindowTitle("Confirm");
+	setLayout(m->lytMain);
+	show();
+}
 
-	connect(buttonYes, SIGNAL(clicked()), this, SLOT(accept()));
-	connect(buttonNo, SIGNAL(clicked()), this, SLOT(reject()));
+LConfirm::~LConfirm()
+{
+	disconnect(m->btnYes, SIGNAL(clicked()), this, SLOT(accept()));
+	disconnect(m->btnNo, SIGNAL(clicked()), this, SLOT(reject()));
 
-	this->setModal(true);
-	this->setWindowTitle("Confirm");
-	this->setLayout(mainLayout);
-	this->show();
+	delete m;
 }

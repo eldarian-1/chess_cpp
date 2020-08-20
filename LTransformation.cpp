@@ -7,49 +7,95 @@
 #include <QGroupBox>
 #include <QBoxLayout>
 
+class LTransformationPrivate
+{
+public:
+	QVBoxLayout* lytMain;
+
+	QGroupBox* gbFigures;
+	QHBoxLayout* lytFigures;
+
+	QRadioButton* rdQueen;
+	QRadioButton* rdElephant;
+	QRadioButton* rdHorse;
+	QRadioButton* rdRook;
+
+	QPushButton* btnOk;
+
+	LTransformationPrivate();
+	~LTransformationPrivate();
+};
+
+LTransformationPrivate::LTransformationPrivate()
+	:
+	lytMain(new QVBoxLayout),
+
+	gbFigures(new QGroupBox("Select figure")),
+	lytFigures(new QHBoxLayout),
+
+	rdQueen(new QRadioButton("Queen")),
+	rdElephant(new QRadioButton("Elephant")),
+	rdHorse(new QRadioButton("Horse")),
+	rdRook(new QRadioButton("Rook")),
+
+	btnOk(new QPushButton("Ok"))
+{
+	lytMain->addWidget(gbFigures);
+	lytMain->addWidget(btnOk);
+
+	gbFigures->setLayout(lytFigures);
+	lytFigures->addWidget(rdQueen);
+	lytFigures->addWidget(rdElephant);
+	lytFigures->addWidget(rdHorse);
+	lytFigures->addWidget(rdRook);
+
+	rdQueen->setChecked(true);
+}
+
+LTransformationPrivate::~LTransformationPrivate()
+{
+	delete btnOk;
+
+	delete rdQueen;
+	delete rdElephant;
+	delete rdHorse;
+	delete rdRook;
+
+	delete lytFigures;
+	delete gbFigures;
+
+	delete lytMain;
+}
+
 LTransformation::LTransformation(QWidget* widget)
 	:
 	QDialog(widget, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	queenRadio(new QRadioButton("Queen")),
-	elephantRadio(new QRadioButton("Elephant")),
-	horseRadio(new QRadioButton("Horse")),
-	rookRadio(new QRadioButton("Rook"))
+	m(new LTransformationPrivate)
 {
-	QGroupBox* game = new QGroupBox("Select figure");
-	QVBoxLayout* vLayout = new QVBoxLayout;
-	QHBoxLayout* hLayout = new QHBoxLayout;
-	QPushButton* buttonOk = new QPushButton("Ok");
+	connect(m->btnOk, SIGNAL(clicked()), SLOT(accept()));
 
-	vLayout->addWidget(game);
-	vLayout->addWidget(buttonOk);
+	setWindowTitle("Transformation");
+	setLayout(m->lytMain);
+	setModal(true);
+	show();
+}
 
-	game->setLayout(hLayout);
-	hLayout->addWidget(this->queenRadio);
-	hLayout->addWidget(this->elephantRadio);
-	hLayout->addWidget(this->horseRadio);
-	hLayout->addWidget(this->rookRadio);
-
-	connect(buttonOk, SIGNAL(clicked()), SLOT(accept()));
-
-	this->queenRadio->setChecked(true);
-
-	this->setWindowTitle("Transformation");
-	this->setLayout(vLayout);
-	this->setModal(true);
-	this->show();
+LTransformation::~LTransformation()
+{
+	delete m;
 }
 
 int LTransformation::getFigure()
 {
-	if (this->queenRadio->isChecked())
+	if (m->rdQueen->isChecked())
 	{
 		return L_FIGURE_QUEEN;
 	}
-	else if (this->elephantRadio->isChecked())
+	else if (m->rdElephant->isChecked())
 	{
 		return L_FIGURE_ELEPHANT;
 	}
-	else if (this->horseRadio->isChecked())
+	else if (m->rdHorse->isChecked())
 	{
 		return L_FIGURE_HORSE;
 	}

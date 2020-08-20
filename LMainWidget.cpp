@@ -23,19 +23,18 @@
 
 LMainWidget* LMainWidget::instance = nullptr;
 
-LMainWidget* LMainWidget::getInstance(QApplication* app, QWidget* widget)
+LMainWidget* LMainWidget::getInstance(QWidget* widget)
 {
 	if (!instance)
-		instance = new LMainWidget(app, widget);
+		instance = new LMainWidget(widget);
 
 	return instance;
 }
 
-LMainWidget::LMainWidget(QApplication* app, QWidget* widget)
+LMainWidget::LMainWidget(QWidget* widget)
 	:
 	QWidget(widget),
-	app(app),
-	optionsDialog(LOptions::getInstance(app, this)),
+	optionsDialog(LOptions::getInstance(this)),
 	game(nullptr),
 	desk(LDesk::getInstance(this)),
 	newGame(new QPushButton(QIcon(":/LBQueen.png"), "New Game")),
@@ -145,9 +144,7 @@ void LMainWidget::slotNewGame()
 void LMainWidget::slotSaveGame()
 {
 	LSaveGame* dialog = new LSaveGame;
-
 	dialog->exec();
-
 	delete dialog;
 }
 
@@ -189,7 +186,7 @@ void LMainWidget::slotQuit()
 
 	if (confirm->exec() == QDialog::Accepted)
 	{
-		this->app->quit();
+		qApp->quit();
 	}
 
 	delete confirm;
