@@ -80,9 +80,6 @@
     <ClCompile Include="LLoadGame.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
-    <ClCompile Include="LNewGame.cpp">
-      <Filter>Source Files\Dialog</Filter>
-    </ClCompile>
     <ClCompile Include="LOptions.cpp">
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
@@ -119,9 +116,6 @@
     <ClCompile Include="LElephant.cpp">
       <Filter>Source Files\Figure</Filter>
     </ClCompile>
-    <ClCompile Include="LTransformation.cpp">
-      <Filter>Source Files\Dialog</Filter>
-    </ClCompile>
     <ClCompile Include="LAverageBot.cpp">
       <Filter>Source Files\GameType\Bot</Filter>
     </ClCompile>
@@ -149,9 +143,6 @@
     <ClCompile Include="LPlayer.cpp">
       <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
-    <ClCompile Include="LSaveKeeper.cpp">
-      <Filter>Source Files\Mechanics</Filter>
-    </ClCompile>
     <ClCompile Include="LSquare.cpp">
       <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
@@ -162,6 +153,24 @@
       <Filter>Source Files\Widget</Filter>
     </ClCompile>
     <ClCompile Include="LClient.cpp">
+      <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="LNewGame.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LTransform.cpp">
+      <Filter>Source Files\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LSaveKeeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LTcpClient.cpp">
+      <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="LTcpServer.cpp">
+      <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="LWebClient.cpp">
       <Filter>Source Files\Client</Filter>
     </ClCompile>
   </ItemGroup>
@@ -199,9 +208,6 @@
     <ClInclude Include="LRook.h">
       <Filter>Header Files\Figure</Filter>
     </ClInclude>
-    <ClInclude Include="LTransformation.h">
-      <Filter>Header Files\Dialog</Filter>
-    </ClInclude>
     <ClInclude Include="LAverageBot.h">
       <Filter>Header Files\GameType\Bot</Filter>
     </ClInclude>
@@ -226,20 +232,29 @@
     <ClInclude Include="LPlayer.h">
       <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
-    <ClInclude Include="LSaveKeeper.h">
-      <Filter>Header Files\Mechanics</Filter>
-    </ClInclude>
     <ClInclude Include="LSquare.h">
       <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
     <ClInclude Include="LDesk.h">
       <Filter>Header Files\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="LTransform.h">
+      <Filter>Header Files\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LSaveKeeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LTcpClient.h">
+      <Filter>Header Files\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="LTcpServer.h">
+      <Filter>Header Files\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="LWebClient.h">
+      <Filter>Header Files\Client</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="LNewGame.h">
-      <Filter>Header Files\Dialog</Filter>
-    </QtMoc>
     <QtMoc Include="LOptions.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
@@ -260,6 +275,9 @@
     </QtMoc>
     <QtMoc Include="LClient.h">
       <Filter>Header Files\Client</Filter>
+    </QtMoc>
+    <QtMoc Include="LNewGame.h">
+      <Filter>Header Files\Dialog</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,8 @@ private:
 	bool& imWhite = LGame::areWhiteActive;
 
 public:
-	LNetGame(QObject* object = nullptr);
+	LNetGame(int netType, QObject* object = nullptr);
+	~LNetGame();
 
 	void actionAfterPath(LPath* path) override;
 

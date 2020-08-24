@@ -13,23 +13,28 @@
 #include "LOptions.h"
 #include "LClient.h"
 
-LNetGame::LNetGame(QObject* object)
+LNetGame::LNetGame(int netType, QObject* object)
 	:
 	QObject(object),
 	LGame(),
-	client(LClient::getInstance()),
+	client(LClient::newClient(netType)),
 	me(nullptr),
 	rival(nullptr)
 {
 	this->changeGameInstance(L_GAME_PAUSE);
 
-	connect(this->client, SIGNAL(signalConnecting(bool)), this, SLOT(slotConnectiong(bool)));
-	connect(this->client, SIGNAL(signalNewGame(LPlayer*)), this, SLOT(slotNewGame(LPlayer*)));
-	connect(this->client, SIGNAL(signalGetPath(LPath*)), this, SLOT(slotGetPath(LPath*)));
+	connect(this->client, SIGNAL(signalNewGame(LPlayer*)), SLOT(slotNewGame(LPlayer*)));
+	connect(this->client, SIGNAL(signalGetPath(LPath*)), SLOT(slotGetPath(LPath*)));
 
 	QString name = LOptions::getInstance()->getName();
 
 	client->newGame(name);
+}
+
+LNetGame::~LNetGame()
+{
+	disconnect(this->client, SIGNAL(signalNewGame(LPlayer*)), this, SLOT(slotNewGame(LPlayer*)));
+	disconnect(this->client, SIGNAL(signalGetPath(LPath*)), this, SLOT(slotGetPath(LPath*)));
 }
 
 void LNetGame::actionAfterPath(LPath* path)

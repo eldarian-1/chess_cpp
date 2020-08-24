@@ -104,7 +104,12 @@
     <ClCompile Include="LLoadGame.cpp" />
     <ClCompile Include="LMainWidget.cpp" />
     <ClCompile Include="LNetGame.cpp" />
-    <ClCompile Include="LNewGame.cpp" />
+    <ClCompile Include="LNewGame.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="LOptions.cpp" />
     <ClCompile Include="LPath.cpp" />
     <ClCompile Include="LPawn.cpp" />
@@ -115,8 +120,11 @@
     <ClCompile Include="LSaveKeeper.cpp" />
     <ClCompile Include="LSquare.cpp" />
     <ClCompile Include="LStrongBot.cpp" />
-    <ClCompile Include="LTransformation.cpp" />
+    <ClCompile Include="LTcpClient.cpp" />
+    <ClCompile Include="LTcpServer.cpp" />
+    <ClCompile Include="LTransform.cpp" />
     <ClCompile Include="LWeakBot.cpp" />
+    <ClCompile Include="LWebClient.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +134,9 @@
     <ClInclude Include="LBoard.h" />
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LBotTree.h" />
+    <ClInclude Include="LTcpClient.h" />
+    <ClInclude Include="LTcpServer.h" />
+    <ClInclude Include="LWebClient.h" />
     <QtMoc Include="LClient.h" />
     <QtMoc Include="LConfirm.h" />
     <ClInclude Include="LDesk.h" />
@@ -145,7 +156,7 @@
     <ClInclude Include="LSaveKeeper.h" />
     <ClInclude Include="LSquare.h" />
     <ClInclude Include="LStrongBot.h" />
-    <ClInclude Include="LTransformation.h" />
+    <ClInclude Include="LTransform.h" />
     <ClInclude Include="LWeakBot.h" />
     <QtMoc Include="LNewGame.h" />
     <QtMoc Include="LOptions.h" />

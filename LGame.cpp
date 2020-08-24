@@ -7,14 +7,9 @@
 #include "LBotGame.h"
 #include "LNetGame.h"
 
-#include "LBeginBot.h"
-#include "LWeakBot.h"
-#include "LAverageBot.h"
-#include "LStrongBot.h"
-
 #include "LConst.h"
 #include "LMainWidget.h"
-#include "LTransformation.h"
+#include "LTransform.h"
 #include "LDesk.h"
 #include "LPath.h"
 #include "LBoard.h"
@@ -37,7 +32,7 @@ LGame::LGame()
 	gameInstance(L_GAME_RUNNING),
 	areWhiteActive(true),
 	_isCheck(0),
-	board(nullptr),
+	board(new LBoard),
 	activeSquare(nullptr),
 	activeFigure(nullptr),
 	focusedSquare(nullptr),
@@ -71,6 +66,7 @@ void LGame::newGame(LNewGame* dialog)
 {
 	int gameType = dialog->getGameType();
 	int botPower = dialog->getBotPower();
+	int netType = dialog->getNetType();
 
 	QString name1 = dialog->getName1();
 	QString name2 = dialog->getName2();
@@ -88,45 +84,16 @@ void LGame::newGame(LNewGame* dialog)
 	switch (gameType)
 	{
 	case L_TYPE_BI:
-	{
 		instance = new LBiGame(name1, name2, color);
 		break;
-	}
 	case L_TYPE_BOT:
-	{
-		switch (botPower)
-		{
-		case L_BOT_BEGIN:
-		{
-			instance = new LBeginBot(color);
-			break;
-		}
-		case L_BOT_WEAK:
-		{
-			instance = new LWeakBot(color);
-			break;
-		}
-		case L_BOT_AVERAGE:
-		{
-			instance = new LAverageBot(color);
-			break;
-		}
-		case L_BOT_STRONG:
-		{
-			instance = new LStrongBot(color);
-			break;
-		}
-		}
+		instance = LBotGame::newGame(botPower, color);
 		break;
-	}
 	case L_TYPE_NET:
-	{
-		instance = new LNetGame;
+		instance = new LNetGame(netType);
 		break;
-	}
 	}
 
-	instance->board = new LBoard;
 	instance->board->setFigures();
 
 	if (gameType == L_TYPE_BOT && color == L_COLOR_BLACK)
@@ -154,37 +121,14 @@ void LGame::loadGame(int typeOfGame, int typeOfBot)
 
 	switch (typeOfGame)
 	{
-
 	case L_TYPE_BI:
 		instance = new LBiGame;
 		break;
-
 	case L_TYPE_BOT:
-		switch (typeOfBot)
-		{
-
-		case L_BOT_BEGIN:
-			instance = new LBeginBot;
-			break;
-
-		case L_BOT_WEAK:
-			instance = new LWeakBot;
-			break;
-
-		case L_BOT_AVERAGE:
-			instance = new LAverageBot;
-			break;
-
-		case L_BOT_STRONG:
-			instance = new LStrongBot;
-			break;
-
-		}
+		instance = LBotGame::newGame(typeOfBot);
 		break;
-
 	}
 
-	instance->board = new LBoard;
 	instance->playerWhite = new LPlayer(L_COLOR_WHITE);
 	instance->playerBlack = new LPlayer(L_COLOR_BLACK);
 }
@@ -698,7 +642,7 @@ void LGame::completeMove(LPath* path)
 
 int LGame::getFigureTransformation()
 {
-	LTransformation* dialog = new LTransformation;
+	LTransform* dialog = new LTransform;
 
 	int figure;
 

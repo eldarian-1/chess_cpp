@@ -83,19 +83,11 @@ LPath* LPath::getClone() const
 
 QString LPath::getText() const
 {
-	QString fromV;
-	QString fromH;
-	QString toV;
-	QString toH;
-	QString isPossible;
-
-	fromV.setNum(this->from->getVertical());
-	fromH.setNum(this->from->getHorizontal());
-	toV.setNum(this->to->getVertical());
-	toH.setNum(this->to->getHorizontal());
-	isPossible.setNum(this->_isPossible);
-	
-	return "&fromV=" + fromV + "&fromH=" + fromH + "&toV=" + toV + "&toH=" + toH + "&isPossible=" + isPossible;
+	return "&v0=" + QString::number(this->from->getVertical())
+		+ "&h0=" + QString::number(this->from->getHorizontal())
+		+ "&v1=" + QString::number(this->to->getVertical())
+		+ "&h1=" + QString::number(this->to->getHorizontal())
+		+ "&isPossible=" + QString::number(this->_isPossible);
 }
 
 LPlayer* LPath::getActive() const

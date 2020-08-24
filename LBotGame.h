@@ -30,6 +30,9 @@ public:
 	LBotGame(int color);
 	~LBotGame();
 
+	static LBotGame* newGame(int botPower);
+	static LBotGame* newGame(int botPower, int color);
+
 	virtual void actionAfterPath(LPath* path) override;
 
 	void setBlocked(bool block);

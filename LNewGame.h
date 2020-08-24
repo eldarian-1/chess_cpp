@@ -18,8 +18,9 @@ public:
 
 private slots:
 	void slotCheckBi();
-	void slotCheckBot();
+	void slotCheckBiBot();
 	void slotCheckBiNet();
+	void slotCheckBot();
 	void slotCheckBotNet();
 	void slotCheckNet();
 
@@ -27,6 +28,7 @@ public:
 	int getGameType() const;
 	int getColor() const;
 	int getBotPower() const;
+	int getNetType() const;
 	QString getName1() const;
 	QString getName2() const;
 

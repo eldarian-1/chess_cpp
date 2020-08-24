@@ -16,36 +16,37 @@ struct LNewGamePrivate
 
 	QGroupBox* gbTypes;
 	QVBoxLayout* lytTypes;
-
-	QGroupBox* gbBotPower;
-	QVBoxLayout* lytBotPower;
-
-	QHBoxLayout* lytName1;
-	QHBoxLayout* lytName2;
-
-	QGroupBox* gbColor;
-	QHBoxLayout* lytColor;
-
-	QHBoxLayout* lytButton;
-
 	QRadioButton* rdBi;
 	QRadioButton* rdBot;
 	QRadioButton* rdNet;
 
-	QRadioButton* rdBegin;
-	QRadioButton* rdWeak;
-	QRadioButton* rdAverage;
-	QRadioButton* rdStrong;
-
+	QHBoxLayout* lytName1;
+	QHBoxLayout* lytName2;
 	QLabel* lblName1;
 	QLabel* lblName2;
 	QLineEdit* leName1;
 	QLineEdit* leName2;
 
+	QGroupBox* gbBotPower;
+	QVBoxLayout* lytBotPower;
+	QRadioButton* rdBegin;
+	QRadioButton* rdWeak;
+	QRadioButton* rdAverage;
+	QRadioButton* rdStrong;
+
+	QGroupBox* gbNetType;
+	QVBoxLayout* lytNetType;
+	QRadioButton* rdWebClient;
+	QRadioButton* rdTcpClient;
+	QRadioButton* rdTcpServer;
+
+	QGroupBox* gbColor;
+	QHBoxLayout* lytColor;
 	QRadioButton* rdWhite;
 	QRadioButton* rdBlack;
 	QRadioButton* rdAny;
 
+	QHBoxLayout* lytButton;
 	QPushButton* btnOk;
 	QPushButton* btnCancel;
 
@@ -59,41 +60,44 @@ LNewGamePrivate::LNewGamePrivate()
 
 	gbTypes(new QGroupBox("Game's Type")),
 	lytTypes(new QVBoxLayout),
-
-	gbBotPower(new QGroupBox("Bot Power")),
-	lytBotPower(new QVBoxLayout),
-
-	lytName1(new QHBoxLayout),
-	lytName2(new QHBoxLayout),
-
-	gbColor(new QGroupBox("Color of Player 1")),
-	lytColor(new QHBoxLayout),
-
-	lytButton(new QHBoxLayout),
-
 	rdBi(new QRadioButton("Two players")),
 	rdBot(new QRadioButton("Versus Bot")),
 	rdNet(new QRadioButton("Versus Internet-players")),
 
-	rdBegin(new QRadioButton("Begin")),
-	rdWeak(new QRadioButton("Weak")),
-	rdAverage(new QRadioButton("Average")),
-	rdStrong(new QRadioButton("Strong")),
-
+	lytName1(new QHBoxLayout),
+	lytName2(new QHBoxLayout),
 	lblName1(new QLabel("Player 1:")),
 	lblName2(new QLabel("Player 2:")),
 	leName1(new QLineEdit),
 	leName2(new QLineEdit),
 
+	gbBotPower(new QGroupBox("Bot Power")),
+	lytBotPower(new QVBoxLayout),
+	rdBegin(new QRadioButton("Begin")),
+	rdWeak(new QRadioButton("Weak")),
+	rdAverage(new QRadioButton("Average")),
+	rdStrong(new QRadioButton("Strong")),
+
+	gbNetType(new QGroupBox("Net Type")),
+	lytNetType(new QVBoxLayout),
+	rdWebClient(new QRadioButton("Web Client")),
+	rdTcpClient(new QRadioButton("Tcp Client")),
+	rdTcpServer(new QRadioButton("Tcp Server")),
+
+	gbColor(new QGroupBox("Color of Player 1")),
+	lytColor(new QHBoxLayout),
 	rdWhite(new QRadioButton("White")),
 	rdBlack(new QRadioButton("Black")),
 	rdAny(new QRadioButton("Any")),
 
+	lytButton(new QHBoxLayout),
 	btnOk(new QPushButton("Ok")),
 	btnCancel(new QPushButton("Cancel"))
+
 {
 	lytMain->addWidget(gbTypes);
 	lytMain->addWidget(gbBotPower);
+	lytMain->addWidget(gbNetType);
 	lytMain->addLayout(lytName1);
 	lytMain->addLayout(lytName2);
 	lytMain->addWidget(gbColor);
@@ -110,6 +114,11 @@ LNewGamePrivate::LNewGamePrivate()
 	lytBotPower->addWidget(rdAverage);
 	lytBotPower->addWidget(rdStrong);
 
+	gbNetType->setLayout(lytNetType);
+	lytNetType->addWidget(rdWebClient);
+	lytNetType->addWidget(rdTcpClient);
+	lytNetType->addWidget(rdTcpServer);
+
 	lytName1->addWidget(lblName1);
 	lytName1->addWidget(leName1);
 	lytName2->addWidget(lblName2);
@@ -125,6 +134,7 @@ LNewGamePrivate::LNewGamePrivate()
 
 	rdBi->setChecked(true);
 	rdBegin->setChecked(true);
+	rdWebClient->setChecked(true);
 	rdAny->setChecked(true);
 }
 
@@ -174,9 +184,13 @@ LNewGame::LNewGame(QWidget* widget)
 
 {
 	connect(m->rdBi, SIGNAL(clicked()), SLOT(slotCheckBi()));
+	connect(m->rdBi, SIGNAL(clicked()), SLOT(slotCheckBiBot()));
 	connect(m->rdBi, SIGNAL(clicked()), SLOT(slotCheckBiNet()));
+
 	connect(m->rdBot, SIGNAL(clicked()), SLOT(slotCheckBot()));
+	connect(m->rdBot, SIGNAL(clicked()), SLOT(slotCheckBiBot()));
 	connect(m->rdBot, SIGNAL(clicked()), SLOT(slotCheckBotNet()));
+
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckBiNet()));
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckBotNet()));
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckNet()));
@@ -188,6 +202,7 @@ LNewGame::LNewGame(QWidget* widget)
 	resize(300, 270);
 
 	slotCheckBi();
+	slotCheckBiBot();
 	slotCheckBiNet();
 
 	setLayout(m->lytMain);
@@ -198,9 +213,13 @@ LNewGame::LNewGame(QWidget* widget)
 LNewGame::~LNewGame()
 {
 	disconnect(m->rdBi, SIGNAL(clicked()), this, SLOT(slotCheckBi()));
+	disconnect(m->rdBi, SIGNAL(clicked()), this, SLOT(slotCheckBiBot()));
 	disconnect(m->rdBi, SIGNAL(clicked()), this, SLOT(slotCheckBiNet()));
+
 	disconnect(m->rdBot, SIGNAL(clicked()), this, SLOT(slotCheckBot()));
+	disconnect(m->rdBot, SIGNAL(clicked()), this, SLOT(slotCheckBiBot()));
 	disconnect(m->rdBot, SIGNAL(clicked()), this, SLOT(slotCheckBotNet()));
+
 	disconnect(m->rdNet, SIGNAL(clicked()), this, SLOT(slotCheckBiNet()));
 	disconnect(m->rdNet, SIGNAL(clicked()), this, SLOT(slotCheckBotNet()));
 	disconnect(m->rdNet, SIGNAL(clicked()), this, SLOT(slotCheckNet()));
@@ -218,6 +237,11 @@ void LNewGame::slotCheckBi()
 	m->lblName2->setVisible(true);
 	m->leName1->setVisible(true);
 	m->leName2->setVisible(true);
+}
+
+void LNewGame::slotCheckBiBot()
+{
+	m->gbNetType->setVisible(false);
 }
 
 void LNewGame::slotCheckBiNet()
@@ -241,6 +265,7 @@ void LNewGame::slotCheckBotNet()
 
 void LNewGame::slotCheckNet()
 {
+	m->gbNetType->setVisible(true);
 	m->gbColor->setVisible(false);
 }
 
@@ -293,6 +318,24 @@ int LNewGame::getBotPower() const
 	else if (m->rdStrong->isChecked())
 	{
 		return LConst::L_BOT_STRONG;
+	}
+
+	return 0;
+}
+
+int LNewGame::getNetType() const
+{
+	if (m->rdWebClient->isChecked())
+	{
+		return LConst::L_CLIENT_WEB;
+	}
+	else if (m->rdTcpClient->isChecked())
+	{
+		return LConst::L_CLIENT_TCP;
+	}
+	else if (m->rdTcpServer->isChecked())
+	{
+		return LConst::L_SERVER_TCP;
 	}
 
 	return 0;

@@ -1,5 +1,10 @@
 #include "LBotGame.h"
 
+#include "LBeginBot.h"
+#include "LWeakBot.h"
+#include "LAverageBot.h"
+#include "LStrongBot.h"
+
 #include "LMainWidget.h"
 
 #include "LConst.h"
@@ -58,6 +63,36 @@ LBotGame::LBotGame(int color)
 LBotGame::~LBotGame()
 {
 	this->clear();
+}
+
+LBotGame* LBotGame::newGame(int botPower)
+{
+	switch (botPower)
+	{
+	case L_BOT_BEGIN:
+		return new LBeginBot;
+	case L_BOT_WEAK:
+		return new LWeakBot;
+	case L_BOT_AVERAGE:
+		return new LAverageBot;
+	case L_BOT_STRONG:
+		return new LStrongBot;
+	}
+}
+
+LBotGame* LBotGame::newGame(int botPower, int color)
+{
+	switch (botPower)
+	{
+	case L_BOT_BEGIN:
+		return new LBeginBot(color);
+	case L_BOT_WEAK:
+		return new LWeakBot(color);
+	case L_BOT_AVERAGE:
+		return new LAverageBot(color);
+	case L_BOT_STRONG:
+		return new LStrongBot(color);
+	}
 }
 
 void LBotGame::actionAfterPath(LPath* path)

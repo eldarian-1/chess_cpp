@@ -1,4 +1,4 @@
-#include "LTransformation.h"
+#include "LTransform.h"
 
 #include "LConst.h"
 
@@ -7,7 +7,7 @@
 #include <QGroupBox>
 #include <QBoxLayout>
 
-struct LTransformationPrivate
+struct LTransformPrivate
 {
 	QVBoxLayout* lytMain;
 
@@ -21,11 +21,11 @@ struct LTransformationPrivate
 
 	QPushButton* btnOk;
 
-	LTransformationPrivate();
-	~LTransformationPrivate();
+	LTransformPrivate();
+	~LTransformPrivate();
 };
 
-LTransformationPrivate::LTransformationPrivate()
+LTransformPrivate::LTransformPrivate()
 	:
 	lytMain(new QVBoxLayout),
 
@@ -51,7 +51,7 @@ LTransformationPrivate::LTransformationPrivate()
 	rdQueen->setChecked(true);
 }
 
-LTransformationPrivate::~LTransformationPrivate()
+LTransformPrivate::~LTransformPrivate()
 {
 	delete btnOk;
 
@@ -66,10 +66,10 @@ LTransformationPrivate::~LTransformationPrivate()
 	delete lytMain;
 }
 
-LTransformation::LTransformation(QWidget* widget)
+LTransform::LTransform(QWidget* widget)
 	:
 	QDialog(widget, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-	m(new LTransformationPrivate)
+	m(new LTransformPrivate)
 {
 	connect(m->btnOk, SIGNAL(clicked()), SLOT(accept()));
 
@@ -79,12 +79,12 @@ LTransformation::LTransformation(QWidget* widget)
 	show();
 }
 
-LTransformation::~LTransformation()
+LTransform::~LTransform()
 {
 	delete m;
 }
 
-int LTransformation::getFigure()
+int LTransform::getFigure()
 {
 	if (m->rdQueen->isChecked())
 	{
