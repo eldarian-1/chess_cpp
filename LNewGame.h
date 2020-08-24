@@ -2,7 +2,7 @@
 
 #include <QDialog>
 
-class LNewGamePrivate;
+struct LNewGamePrivate;
 
 class LNewGame :
 	public QDialog

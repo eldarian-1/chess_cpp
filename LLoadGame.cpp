@@ -9,9 +9,8 @@
 #include "LSaveKeeper.h"
 #include "LConfirm.h"
 
-class LLoadGamePrivate
+struct LLoadGamePrivate
 {
-public:
 	LSaveKeeper* saveKeeper;
 
 	QListWidgetItem* lstWgtSelected;

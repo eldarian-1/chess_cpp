@@ -2,7 +2,7 @@
 
 #include <QDialog>
 
-class LTransformationPrivate;
+struct LTransformationPrivate;
 
 class LTransformation :
 	public QDialog

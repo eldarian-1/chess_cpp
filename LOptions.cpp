@@ -15,9 +15,8 @@
 
 LOptions* LOptions::instance = nullptr;
 
-class LOptionsPrivate
+struct LOptionsPrivate
 {
-public:
 	QWidget* wgtMain;
 
 	QString playerName;

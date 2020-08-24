@@ -4,7 +4,8 @@
 
 class LGame;
 class QListWidgetItem;
-class LLoadGamePrivate;
+
+struct LLoadGamePrivate;
 
 class LLoadGame :
 	public QDialog

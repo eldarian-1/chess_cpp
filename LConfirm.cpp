@@ -5,9 +5,8 @@
 #include <QLabel>
 #include <QPushButton>
 
-class LConfirmPrivate
+struct LConfirmPrivate
 {
-public:
 	QVBoxLayout* lytMain;
 	QLabel* lblText;
 	QHBoxLayout* lytButton;

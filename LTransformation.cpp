@@ -7,9 +7,8 @@
 #include <QGroupBox>
 #include <QBoxLayout>
 
-class LTransformationPrivate
+struct LTransformationPrivate
 {
-public:
 	QVBoxLayout* lytMain;
 
 	QGroupBox* gbFigures;

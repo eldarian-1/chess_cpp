@@ -2,7 +2,7 @@
 
 #include <QDialog>
 
-class LConfirmPrivate;
+struct LConfirmPrivate;
 
 class LConfirm :
 	public QDialog

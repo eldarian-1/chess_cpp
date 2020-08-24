@@ -4,7 +4,8 @@
 
 class QWidget;
 class QString;
-class LOptionsPrivate;
+
+struct LOptionsPrivate;
 
 class LOptions :
 	public QDialog

@@ -46,11 +46,23 @@
     <Filter Include="Source Files\GameType\Bot">
       <UniqueIdentifier>{ea5fbf44-c67b-442a-80a1-a619a448cd24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game">
+    <Filter Include="Header Files\Widget">
+      <UniqueIdentifier>{86f796f2-4757-4781-9fa5-0efa7594d4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Widget">
+      <UniqueIdentifier>{a52119a6-f094-4261-8e1b-99a58780d7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mechanics">
+      <UniqueIdentifier>{b729a24c-ad9d-4c36-978d-97869041f106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mechanics">
       <UniqueIdentifier>{dffeae55-44ee-4192-abf5-e26fdc446ebe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game">
-      <UniqueIdentifier>{b729a24c-ad9d-4c36-978d-97869041f106}</UniqueIdentifier>
+    <Filter Include="Header Files\Client">
+      <UniqueIdentifier>{bd06cc41-e92b-4d0e-8f7d-071e34b8e5b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Client">
+      <UniqueIdentifier>{76409df7-faec-4fb8-a7d3-830caab614b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LMainWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LGame.cpp">
@@ -132,25 +141,28 @@
       <Filter>Source Files\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="LBoard.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="LClient.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="LDesk.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
     <ClCompile Include="LPath.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
     <ClCompile Include="LPlayer.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
     <ClCompile Include="LSaveKeeper.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
     <ClCompile Include="LSquare.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Mechanics</Filter>
+    </ClCompile>
+    <ClCompile Include="LMainWidget.cpp">
+      <Filter>Source Files\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="LDesk.cpp">
+      <Filter>Source Files\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="LClient.cpp">
+      <Filter>Source Files\Client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,28 +218,25 @@
       <Filter>Header Files\GameType\Bot</Filter>
     </ClInclude>
     <ClInclude Include="LBoard.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="LDesk.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
     <ClInclude Include="LPath.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
     <ClInclude Include="LPlayer.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
     <ClInclude Include="LSaveKeeper.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Mechanics</Filter>
     </ClInclude>
     <ClInclude Include="LSquare.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Mechanics</Filter>
+    </ClInclude>
+    <ClInclude Include="LDesk.h">
+      <Filter>Header Files\Widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="LMainWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="LNewGame.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
@@ -246,8 +255,11 @@
     <QtMoc Include="LConfirm.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
+    <QtMoc Include="LMainWidget.h">
+      <Filter>Header Files\Widget</Filter>
+    </QtMoc>
     <QtMoc Include="LClient.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\Client</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

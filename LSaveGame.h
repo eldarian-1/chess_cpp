@@ -2,11 +2,10 @@
 
 #include <QDialog>
 
-class LSaveGamePrivate;
-
 class LSaveKeeper;
-
 class QListWidgetItem;
+
+struct LSaveGamePrivate;
 
 class LSaveGame :
 	public QDialog

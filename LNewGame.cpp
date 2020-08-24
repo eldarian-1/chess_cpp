@@ -10,9 +10,8 @@
 #include <QLineEdit>
 #include <QRadioButton>
 
-class LNewGamePrivate
+struct LNewGamePrivate
 {
-public:
 	QVBoxLayout* lytMain;
 
 	QGroupBox* gbTypes;
