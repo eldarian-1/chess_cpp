@@ -136,7 +136,7 @@
     <ClInclude Include="LBotTree.h" />
     <ClInclude Include="LTcpClient.h" />
     <ClInclude Include="LTcpServer.h" />
-    <ClInclude Include="LWebClient.h" />
+    <QtMoc Include="LWebClient.h" />
     <QtMoc Include="LClient.h" />
     <QtMoc Include="LConfirm.h" />
     <ClInclude Include="LDesk.h" />

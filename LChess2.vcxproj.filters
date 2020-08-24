@@ -250,9 +250,6 @@
     <ClInclude Include="LTcpServer.h">
       <Filter>Header Files\Client</Filter>
     </ClInclude>
-    <ClInclude Include="LWebClient.h">
-      <Filter>Header Files\Client</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LOptions.h">
@@ -278,6 +275,9 @@
     </QtMoc>
     <QtMoc Include="LNewGame.h">
       <Filter>Header Files\Dialog</Filter>
+    </QtMoc>
+    <QtMoc Include="LWebClient.h">
+      <Filter>Header Files\Client</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
