@@ -2,9 +2,8 @@
 
 #include "LFigure.h"
 
-#include <QDomDocument>
-#include <QDomNode>
-#include <QDomElement>
+#include <QJsonObject>
+#include <QJsonValue>
 
 LPlayer::LPlayer(int c, QString n)
 	:
@@ -25,22 +24,21 @@ LPlayer::LPlayer(const LPlayer& player)
 
 }
 
-LPlayer* LPlayer::playerFromXml(QDomDocument* document)
+LPlayer* LPlayer::playerFromJson(QJsonObject* document)
 {
-	QDomNodeList parent = document->documentElement().toElement().childNodes();
-
 	LPlayer* player;
+	QJsonObject oPlayer = (*document)["player"].toObject();
 
-	if (parent.at(0).toElement().tagName() == "wait")
+	if (oPlayer.isEmpty())
 	{
 		player = nullptr;
 	}
 	else
 	{
-		QString name = parent.at(1).toElement().text();
-		int color = parent.at(2).toElement().text().toInt();
-
-		player = new LPlayer(color, name);
+		player = new LPlayer(
+			oPlayer["color"].toInt(),
+			oPlayer["name"].toString()
+		);
 	}
 
 	return player;

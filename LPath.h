@@ -1,6 +1,6 @@
 #pragma once
 
-class QDomDocument;
+class QJsonObject;
 class QString;
 
 class LPlayer;
@@ -34,11 +34,12 @@ public:
 
 	~LPath();
 
-	static LPath* pathFromXml(QDomDocument* document);
+	static LPath* pathFromJson(QJsonObject* document);
 
 	LPath* getClone() const;
 
-	QString getText() const;
+	QString toUriString() const;
+	QString toJsonString() const;
 
 	LPlayer* getActive() const;
 	LPlayer* getPassive() const;

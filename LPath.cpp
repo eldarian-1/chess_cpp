@@ -4,9 +4,8 @@
 #include "LPlayer.h"
 #include "LSquare.h"
 
-#include <QDomDocument>
-#include <QDomNode>
-#include <QDomElement>
+#include <QJsonObject>
+#include <QJsonValue>
 
 LSquare* LPath::nullSquare = nullptr;
 
@@ -45,32 +44,23 @@ LPath::~LPath()
 	delete this->playerPassive;
 }
 
-LPath* LPath::pathFromXml(QDomDocument* document)
+LPath* LPath::pathFromJson(QJsonObject* document)
 {
-	QDomNodeList parent = document->documentElement().toElement().childNodes();
-
 	LPath* path;
+	QJsonObject oPath = (*document)["path"].toObject();
 
-	if (parent.at(0).toElement().tagName() == "wait")
+	if (oPath.isEmpty())
 	{
 		path = nullptr;
 	}
 	else
 	{
-		int fromV = parent.at(0).toElement().text().toInt();
-		int fromH = parent.at(1).toElement().text().toInt();
-		int toV = parent.at(2).toElement().text().toInt();
-		int toH = parent.at(3).toElement().text().toInt();
-		int isPossible = parent.at(4).toElement().text().toInt();
-
 		LGame* game = LGame::getInstance();
-
 		path = new LPath(
-			game->getSquare(fromV, fromH),
-			game->getSquare(toV, toH)
+			game->getSquare(oPath["v0"].toInt() , oPath["h0"].toInt()),
+			game->getSquare(oPath["v1"].toInt(), oPath["h1"].toInt())
 		);
-
-		path->setPossible(isPossible);
+		path->setPossible(oPath["isPossible"].toInt());
 	}
 
 	return path;
@@ -81,13 +71,23 @@ LPath* LPath::getClone() const
 	return new LPath(*this);
 }
 
-QString LPath::getText() const
+QString LPath::toUriString() const
 {
 	return "&v0=" + QString::number(this->from->getVertical())
 		+ "&h0=" + QString::number(this->from->getHorizontal())
 		+ "&v1=" + QString::number(this->to->getVertical())
 		+ "&h1=" + QString::number(this->to->getHorizontal())
 		+ "&isPossible=" + QString::number(this->_isPossible);
+}
+
+QString LPath::toJsonString() const
+{
+	return "{\"path\":{\"v0\":" + QString::number(this->from->getVertical())
+		+ ",\"h0\":" + QString::number(this->from->getHorizontal())
+		+ ",\"v1\":" + QString::number(this->to->getVertical())
+		+ ",\"h1\":" + QString::number(this->to->getHorizontal())
+		+ ",\"isPossible\":" + QString::number(this->_isPossible)
+		+ "}}";
 }
 
 LPlayer* LPath::getActive() const

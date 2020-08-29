@@ -9,32 +9,22 @@ class LBoard;
 class LSquare;
 class LFigure;
 
+struct LGamePrivate;
+
 class LGame
 {
 private:
 	friend class LSaveKeeper;
-
 	static LGame* instance;
 
-	int gameInstance;
-
 protected:
-	LPlayer* playerWhite;
-	LPlayer* playerBlack;
-
-	LBoard* board;
-	int _isCheck;
-
-	bool areWhiteActive;
-	LSquare* activeSquare;
-	LFigure* activeFigure;
-	LSquare* focusedSquare;
+	LGamePrivate* m;
 
 	LGame();
 	~LGame();
 
 	virtual int getGameInstance() const final;
-	virtual void changeGameInstance(int gameInstance) final;
+	virtual void setGameInstance(int gameInstance) final;
 
 public:
 	static LGame* getInstance();

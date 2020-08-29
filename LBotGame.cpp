@@ -1,4 +1,7 @@
 #include "LBotGame.h"
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
 
 #include "LBeginBot.h"
 #include "LWeakBot.h"
@@ -40,24 +43,24 @@ LBotGame::LBotGame(int color)
 	QString n1 = LOptions::getInstance()->getName();
 	QString n2 = "Computer";
 
-	this->playerWhite = new LPlayer(
+	m->playerWhite = new LPlayer(
 		L_COLOR_WHITE,
 		(color == L_COLOR_WHITE ? n1 : n2)
 	);
 
-	this->playerBlack = new LPlayer(
+	m->playerBlack = new LPlayer(
 		L_COLOR_BLACK,
 		(color == L_COLOR_WHITE ? n2 : n1)
 	);
 
-	this->me = (color == L_COLOR_WHITE) ? (this->playerWhite) : (this->playerBlack);
-	this->bot = (color == L_COLOR_WHITE) ? (this->playerBlack) : (this->playerWhite);
+	this->me = (color == L_COLOR_WHITE) ? (m->playerWhite) : (m->playerBlack);
+	this->bot = (color == L_COLOR_WHITE) ? (m->playerBlack) : (m->playerWhite);
 
 	this->me = this->me->getClone();
 	this->bot = this->bot->getClone();
 
-	this->areWhiteActive = color == L_COLOR_WHITE;
-	this->isBlocked = !this->areWhiteActive;
+	m->areWhiteActive = color == L_COLOR_WHITE;
+	this->isBlocked = !m->areWhiteActive;
 }
 
 LBotGame::~LBotGame()
@@ -124,14 +127,14 @@ void LBotGame::waitBot()
 
 		if (this->isMat(this->bot->getColor()))
 		{
-			this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | this->bot->getColor());
+			setGameInstance(L_GAME_PAUSE | L_PATH_MAT | this->bot->getColor());
 
 			node = this->me->getName() + " win!\n";
 			node += this->me->getName() + " mat " + this->bot->getName();
 		}
 		else if (this->isPat(this->bot->getColor()))
 		{
-			this->changeGameInstance(L_GAME_PAUSE | L_PATH_PAT);
+			setGameInstance(L_GAME_PAUSE | L_PATH_PAT);
 
 			node = "Dead Heat!\nStalemate situation.";
 		}
@@ -147,7 +150,7 @@ QVector<LPath*> LBotGame::uglyMoves(bool itsMe, LBoard* board)
 
 	if (!board)
 	{
-		board = this->board;
+		board = m->board;
 	}
 
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)

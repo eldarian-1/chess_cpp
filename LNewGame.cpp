@@ -46,6 +46,12 @@ struct LNewGamePrivate
 	QRadioButton* rdBlack;
 	QRadioButton* rdAny;
 
+	QHBoxLayout* lytNet;
+	QLabel* lblIp;
+	QLabel* lblPort;
+	QLineEdit* leIp;
+	QLineEdit* lePort;
+
 	QHBoxLayout* lytButton;
 	QPushButton* btnOk;
 	QPushButton* btnCancel;
@@ -90,6 +96,12 @@ LNewGamePrivate::LNewGamePrivate()
 	rdBlack(new QRadioButton("Black")),
 	rdAny(new QRadioButton("Any")),
 
+	lytNet(new QHBoxLayout),
+	lblIp(new QLabel("IP")),
+	lblPort(new QLabel("Port")),
+	leIp(new QLineEdit),
+	lePort(new QLineEdit),
+
 	lytButton(new QHBoxLayout),
 	btnOk(new QPushButton("Ok")),
 	btnCancel(new QPushButton("Cancel"))
@@ -101,6 +113,7 @@ LNewGamePrivate::LNewGamePrivate()
 	lytMain->addLayout(lytName1);
 	lytMain->addLayout(lytName2);
 	lytMain->addWidget(gbColor);
+	lytMain->addLayout(lytNet);
 	lytMain->addLayout(lytButton);
 
 	gbTypes->setLayout(lytTypes);
@@ -128,6 +141,11 @@ LNewGamePrivate::LNewGamePrivate()
 	lytColor->addWidget(rdWhite);
 	lytColor->addWidget(rdBlack);
 	lytColor->addWidget(rdAny);
+
+	lytNet->addWidget(lblIp);
+	lytNet->addWidget(leIp);
+	lytNet->addWidget(lblPort);
+	lytNet->addWidget(lePort);
 
 	lytButton->addWidget(btnOk);
 	lytButton->addWidget(btnCancel);
@@ -174,6 +192,12 @@ LNewGamePrivate::~LNewGamePrivate()
 	delete lytColor;
 	delete gbColor;
 
+	delete lblIp;
+	delete lblPort;
+	delete leIp;
+	delete lePort;
+	delete lytNet;
+
 	delete lytMain;
 }
 
@@ -194,6 +218,10 @@ LNewGame::LNewGame(QWidget* widget)
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckBiNet()));
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckBotNet()));
 	connect(m->rdNet, SIGNAL(clicked()), SLOT(slotCheckNet()));
+
+	connect(m->rdWebClient, SIGNAL(clicked()), SLOT(slotCheckNetWeb()));
+	connect(m->rdTcpClient, SIGNAL(clicked()), SLOT(slotCheckNetClient()));
+	connect(m->rdTcpServer, SIGNAL(clicked()), SLOT(slotCheckNetServer()));
 
 	connect(m->btnOk, SIGNAL(clicked()), SLOT(accept()));
 	connect(m->btnCancel, SIGNAL(clicked()), SLOT(reject()));
@@ -224,6 +252,10 @@ LNewGame::~LNewGame()
 	disconnect(m->rdNet, SIGNAL(clicked()), this, SLOT(slotCheckBotNet()));
 	disconnect(m->rdNet, SIGNAL(clicked()), this, SLOT(slotCheckNet()));
 
+	disconnect(m->rdWebClient, SIGNAL(clicked()), this, SLOT(slotCheckNetWeb()));
+	disconnect(m->rdTcpClient, SIGNAL(clicked()), this, SLOT(slotCheckNetClient()));
+	disconnect(m->rdTcpServer, SIGNAL(clicked()), this, SLOT(slotCheckNetServer()));
+
 	disconnect(m->btnOk, SIGNAL(clicked()), this, SLOT(accept()));
 	disconnect(m->btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
 
@@ -242,6 +274,7 @@ void LNewGame::slotCheckBi()
 void LNewGame::slotCheckBiBot()
 {
 	m->gbNetType->setVisible(false);
+	slotCheckNetWeb();
 }
 
 void LNewGame::slotCheckBiNet()
@@ -267,6 +300,37 @@ void LNewGame::slotCheckNet()
 {
 	m->gbNetType->setVisible(true);
 	m->gbColor->setVisible(false);
+
+	if (m->rdWebClient->isChecked())
+		slotCheckNetWeb();
+	else if (m->rdTcpClient->isChecked())
+		slotCheckNetClient();
+	else
+		slotCheckNetServer();
+}
+
+void LNewGame::slotCheckNetWeb()
+{
+	m->lblIp->setVisible(false);
+	m->lblPort->setVisible(false);
+	m->leIp->setVisible(false);
+	m->lePort->setVisible(false);
+}
+
+void LNewGame::slotCheckNetClient()
+{
+	m->lblIp->setVisible(true);
+	m->lblPort->setVisible(true);
+	m->leIp->setVisible(true);
+	m->lePort->setVisible(true);
+}
+
+void LNewGame::slotCheckNetServer()
+{
+	m->lblIp->setVisible(false);
+	m->lblPort->setVisible(true);
+	m->leIp->setVisible(false);
+	m->lePort->setVisible(true);
 }
 
 int LNewGame::getGameType() const
@@ -349,4 +413,14 @@ QString LNewGame::getName1() const
 QString LNewGame::getName2() const
 {
 	return m->leName2->text();
+}
+
+QString LNewGame::getIp() const
+{
+	return m->leIp->text();
+}
+
+int LNewGame::getPort() const
+{
+	return m->lePort->text().toInt();
 }

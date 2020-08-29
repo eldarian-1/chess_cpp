@@ -1,64 +1,31 @@
 #include "LClient.h"
 
+#include "LConst.h"
+
 #include "LWebClient.h"
 #include "LTcpClient.h"
 #include "LTcpServer.h"
 
-#include "LPlayer.h"
-#include "LConst.h"
-#include "LPath.h"
-
-struct LClientPrivate
-{
-	QString gameId;
-	QString clientId;
-	QString player;
-	QString path;
-
-	LClientPrivate();
-	~LClientPrivate();
-};
-
-#ifndef LCHILD
-
-LClientPrivate::LClientPrivate()
-	:
-	clientId("clientId=" + QString::number(rand())),
-	gameId("")
-{
-
-}
-
-LClientPrivate::~LClientPrivate()
-{
-	
-}
-
 LClient::LClient(QObject* object)
-	:
-	QObject(object),
-	m(new LClientPrivate)
+	: QObject(object)
 {
 	
 }
 
-LClient* LClient::newClient(int type)
+LClient::~LClient()
+{
+
+}
+
+LClient* LClient::newClient(int type, QString ip, int port)
 {
 	switch (type)
 	{
 	case L_CLIENT_WEB:
 		return new LWebClient;
 	case L_CLIENT_TCP:
-		return new LTcpClient;
+		return new LTcpClient(ip, port);
 	case L_SERVER_TCP:
-		return new LTcpServer;
+		return new LTcpServer(port);
 	}
 }
-
-LClient::~LClient()
-{
-	delete m;
-}
-
-#undef LCLIENT
-#endif

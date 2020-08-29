@@ -5,20 +5,16 @@
 class LPlayer;
 class LPath;
 
-struct LClientPrivate;
-
 class LClient : public QObject
 {
 	Q_OBJECT
 
 protected:
-	LClientPrivate* m;
-
 	LClient(QObject* object = nullptr);
 
 public:
-	static LClient* newClient(int type);
 	~LClient();
+	static LClient* newClient(int type, QString ip, int port);
 
 	virtual void newGame(QString name) = 0;
 	virtual void sendPath(LPath* path) = 0;

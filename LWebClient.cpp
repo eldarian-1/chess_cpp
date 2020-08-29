@@ -1,24 +1,27 @@
 #include "LWebClient.h"
-#define LCHILD
-#include "LClient.cpp"
-#undef LCHILD
+
+#include "LPlayer.h"
+#include "LPath.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-#include <QDomDocument>
-#include <QDomNode>
-#include <QDomElement>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 static const QString urlSite = "http://lchess.com/query/";
 static const QString uriNewGame = "newgame.php";
 static const QString uriSendPath = "sendpath.php";
 static const QString uriGetPath = "getpath.php";
 
-struct LWebClientPrivate : public LClientPrivate
+struct LWebClientPrivate
 {
 	QNetworkAccessManager* manager;
+	QString gameId;
+	QString clientId;
+	QString player;
 
 	LWebClientPrivate(LClient* client);
 	~LWebClientPrivate();
@@ -26,8 +29,10 @@ struct LWebClientPrivate : public LClientPrivate
 
 LWebClientPrivate::LWebClientPrivate(LClient* client)
 	:
-	LClientPrivate(),
-	manager(new QNetworkAccessManager(client))
+	manager(new QNetworkAccessManager(client)),
+	gameId(""),
+	clientId("clientId=" + QString::number(rand())),
+	player("")
 {
 
 }
@@ -38,7 +43,9 @@ LWebClientPrivate::~LWebClientPrivate()
 }
 
 LWebClient::LWebClient()
-	: m(new LWebClientPrivate(this))
+	:
+	LClient(),
+	m(new LWebClientPrivate(this))
 {
 	connect(
 		m->manager, SIGNAL(finished(QNetworkReply*)),
@@ -75,52 +82,40 @@ void LWebClient::download(const QUrl& url)
 void LWebClient::done(const QUrl& url, const QByteArray& array)
 {
 	QString string = array;
-	QDomDocument* document = new QDomDocument;
-	document->setContent(string);
+	QJsonDocument document = QJsonDocument::fromJson(array);
+	QJsonObject jsonObject = document.object();
 
-	QString temp = (m->gameId != "") ? (m->gameId + "&") : ("");
+	QString gameId = (m->gameId != "") ? (m->gameId + "&") : ("");
 
-	if (url == urlSite + uriNewGame + "?" + temp + m->clientId + "&" + m->player)
+	if (url == urlSite + uriNewGame + "?" + gameId + m->clientId + "&" + m->player)
 	{
 		if (m->gameId == "")
 		{
-			m->gameId =
-				"gameId="
-				+ document
-				->documentElement()
-				.toElement()
-				.childNodes()
-				.at(0)
-				.toElement()
-				.text();
+			m->gameId = "gameId=" + QString::number(jsonObject["gameId"].toInt());
 		}
 
-		LPlayer* player = LPlayer::playerFromXml(document);
+		LPlayer* player = LPlayer::playerFromJson(&jsonObject);
 		emit signalNewGame(player);
 	}
 	else if (url == urlSite + uriGetPath + "?" + m->gameId + "&" + m->clientId)
 	{
-		LPath* path = LPath::pathFromXml(document);
+		LPath* path = LPath::pathFromJson(&jsonObject);
 		emit signalGetPath(path);
 	}
-
-	delete document;
 }
 
 void LWebClient::newGame(QString name)
 {
 	m->player = "name=" + name;
-
-	QString temp = (m->gameId != "") ? (m->gameId + "&") : ("");
-
-	QString url = urlSite + uriNewGame + "?" + temp + m->clientId + "&" + m->player;
+	QString gameId = (m->gameId != "") ? (m->gameId + "&") : ("");
+	QString url = urlSite + uriNewGame + "?" + gameId + m->clientId + "&" + m->player;
 	download(QUrl(url));
 }
 
 void LWebClient::sendPath(LPath* p)
 {
-	m->path = "path=" + p->getText();
-	QString url = urlSite + uriSendPath + "?" + m->gameId + "&" + m->clientId + "&" + m->path;
+	QString path = "path=" + p->toUriString();
+	QString url = urlSite + uriSendPath + "?" + m->gameId + "&" + m->clientId + "&" + path;
 	download(QUrl(url));
 }
 

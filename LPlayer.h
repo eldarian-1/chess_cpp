@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QTextStream>
 
-class QDomDocument;
+class QJsonObject;
 
 class LFigure;
 
@@ -21,7 +21,7 @@ public:
 	LPlayer(int color, QString name = "");
 	LPlayer(const LPlayer& player);
 
-	static LPlayer* playerFromXml(QDomDocument* document);
+	static LPlayer* playerFromJson(QJsonObject* document);
 
 	LPlayer* getOriginal() const;
 	LPlayer* getClone() const;

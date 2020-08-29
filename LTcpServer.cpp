@@ -1,6 +1,8 @@
 #include "LTcpServer.h"
 
-LTcpServer::LTcpServer()
+LTcpServer::LTcpServer(int port)
+	:
+	LClient()
 {
 
 }

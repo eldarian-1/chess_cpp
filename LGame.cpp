@@ -25,9 +25,30 @@
 #include "LRook.h"
 #include "LPawn.h"
 
+struct LGamePrivate
+{
+	int gameInstance;
+
+	LPlayer* playerWhite;
+	LPlayer* playerBlack;
+
+	LBoard* board;
+	int _isCheck;
+
+	bool areWhiteActive;
+	LSquare* activeSquare;
+	LFigure* activeFigure;
+	LSquare* focusedSquare;
+
+	LGamePrivate();
+	~LGamePrivate();
+};
+
+#ifndef LCHILD
+
 LGame* LGame::instance = nullptr;
 
-LGame::LGame()
+LGamePrivate::LGamePrivate()
 	:
 	gameInstance(L_GAME_RUNNING),
 	areWhiteActive(true),
@@ -39,12 +60,25 @@ LGame::LGame()
 	playerWhite(nullptr),
 	playerBlack(nullptr)
 {
+
+}
+
+LGamePrivate::~LGamePrivate()
+{
+	delete playerWhite;
+	delete playerBlack;
+	delete board;
+}
+
+LGame::LGame()
+	: m(new LGamePrivate)
+{
 	
 }
 
 LGame::~LGame()
 {
-	this->clear();
+	clear();
 }
 
 LGame* LGame::getInstance()
@@ -54,12 +88,12 @@ LGame* LGame::getInstance()
 
 int LGame::getGameInstance() const
 {
-	return this->gameInstance;
+	return m->gameInstance;
 }
 
-void LGame::changeGameInstance(int gameInstance)
+void LGame::setGameInstance(int gameInstance)
 {
-	this->gameInstance = gameInstance;
+	m->gameInstance = gameInstance;
 }
 
 void LGame::newGame(LNewGame* dialog)
@@ -72,6 +106,9 @@ void LGame::newGame(LNewGame* dialog)
 	QString name2 = dialog->getName2();
 
 	int color = dialog->getColor();
+
+	QString ip = dialog->getIp();
+	int port = dialog->getPort();
 
 	color = (color == L_COLOR_ANY) ? (rand() % 2 + L_COLOR_WHITE) : color;
 
@@ -90,11 +127,11 @@ void LGame::newGame(LNewGame* dialog)
 		instance = LBotGame::newGame(botPower, color);
 		break;
 	case L_TYPE_NET:
-		instance = new LNetGame(netType);
+		instance = new LNetGame(netType, ip, port);
 		break;
 	}
 
-	instance->board->setFigures();
+	instance->m->board->setFigures();
 
 	if (gameType == L_TYPE_BOT && color == L_COLOR_BLACK)
 	{
@@ -108,7 +145,7 @@ void LGame::setGame(LGame* game)
 
 	LMainWidget::getInstance()
 		->setPathList(
-			instance->playerWhite->getName() + " vs " + instance->playerBlack->getName()
+			instance->m->playerWhite->getName() + " vs " + instance->m->playerBlack->getName()
 		);
 }
 
@@ -129,8 +166,8 @@ void LGame::loadGame(int typeOfGame, int typeOfBot)
 		break;
 	}
 
-	instance->playerWhite = new LPlayer(L_COLOR_WHITE);
-	instance->playerBlack = new LPlayer(L_COLOR_BLACK);
+	instance->m->playerWhite = new LPlayer(L_COLOR_WHITE);
+	instance->m->playerBlack = new LPlayer(L_COLOR_BLACK);
 }
 
 LFigure* LGame::getFigure(int v, int h)
@@ -138,31 +175,31 @@ LFigure* LGame::getFigure(int v, int h)
 	if (v < 0 || v >= L_CHESS_BOARD_SIZE || h < 0 || h >= L_CHESS_BOARD_SIZE)
 		return nullptr;
 
-	return this->board->getFigure(v, h);
+	return m->board->getFigure(v, h);
 }
 
 LSquare*& LGame::getSquare(int v, int h)
 {
-	return this->board->getSquare(v, h);
+	return m->board->getSquare(v, h);
 }
 
 void LGame::draw()
 {
 	LDesk* desk = LDesk::getInstance();
 
-	if (this->playerWhite && this->playerBlack)
+	if (m->playerWhite && m->playerBlack)
 	{
-		desk->drawTablePlayer(this->playerWhite, this->areWhiteActive);
-		desk->drawTablePlayer(this->playerBlack, this->areWhiteActive);
+		desk->drawTablePlayer(m->playerWhite, m->areWhiteActive);
+		desk->drawTablePlayer(m->playerBlack, m->areWhiteActive);
 	}
 
-	desk->drawMarkup(areWhiteActive);
+	desk->drawMarkup(m->areWhiteActive);
 
 	for (int i = 0; i < L_CHESS_BOARD_SIZE; i++)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			this->board->getSquare(i, j)->draw(areWhiteActive);
+			m->board->getSquare(i, j)->draw(m->areWhiteActive);
 		}
 	}
 
@@ -170,9 +207,9 @@ void LGame::draw()
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE; j++)
 		{
-			if (this->board->getFigure(i, j))
+			if (m->board->getFigure(i, j))
 			{
-				this->board->getFigure(i, j)->draw(this->board->getSquare(i, j), areWhiteActive);
+				m->board->getFigure(i, j)->draw(m->board->getSquare(i, j), m->areWhiteActive);
 			}
 		}
 	}
@@ -185,9 +222,9 @@ int LGame::isCheck(int color)
 
 	for (v = 0, h = 0, flag = false; !flag && v != 8; (h == 7) ? (h = 0, ++v) : (++h))
 	{
-		flag = this->board->getFigure(v, h) &&
-			(this->board->getFigure(v, h)->getType() == L_FIGURE_KING) &&
-			(this->board->getFigure(v, h)->getColor() == color);
+		flag = m->board->getFigure(v, h) &&
+			(m->board->getFigure(v, h)->getType() == L_FIGURE_KING) &&
+			(m->board->getFigure(v, h)->getColor() == color);
 	}
 
 	(h == 0) ? ((v > 0) ? (h = 7, --v) : (--h)) : (--h);
@@ -201,12 +238,12 @@ int LGame::isCheck(int color)
 	{
 		for (int x = 0; x < L_CHESS_BOARD_SIZE; x++)
 		{
-			LPath* path = new LPath(this->board->getSquare(y, x), this->board->getSquare(v, h));
+			LPath* path = new LPath(m->board->getSquare(y, x), m->board->getSquare(v, h));
 
 			if (!(y == v && x == h) &&
-				this->board->getFigure(y, x) &&
-				this->board->getFigure(y, x)->getColor() != color &&
-				this->board->getFigure(y, x)->isPossiblePath(path) & L_PATH_TRUE)
+				m->board->getFigure(y, x) &&
+				m->board->getFigure(y, x)->getColor() != color &&
+				m->board->getFigure(y, x)->isPossiblePath(path) & L_PATH_TRUE)
 			{
 
 				return color | L_PATH_CHECK;
@@ -225,26 +262,26 @@ int LGame::isCheck(int color, int v, int h, int vK, int hK)
 
 	if (vK != -1)
 	{
-		temp = this->board->getFigure(v, h);
-		this->board->getFigure(v, h) = this->board->getFigure(vK, hK);
-		this->board->getFigure(vK, hK) = nullptr;
+		temp = m->board->getFigure(v, h);
+		m->board->getFigure(v, h) = m->board->getFigure(vK, hK);
+		m->board->getFigure(vK, hK) = nullptr;
 	}
 	else
 	{
-		temp = this->board->getFigure(v, h);
-		this->board->getFigure(v, h) = nullptr;
+		temp = m->board->getFigure(v, h);
+		m->board->getFigure(v, h) = nullptr;
 	}
 
-	int response = this->isCheck(color);
+	int response = isCheck(color);
 
 	if (vK != -1)
 	{
-		this->board->getFigure(vK, hK) = this->board->getFigure(v, h);
-		this->board->getFigure(v, h) = temp;
+		m->board->getFigure(vK, hK) = m->board->getFigure(v, h);
+		m->board->getFigure(v, h) = temp;
 	}
 	else
 	{
-		this->board->getFigure(v, h) = temp;
+		m->board->getFigure(v, h) = temp;
 	}
 
 	return response;
@@ -252,7 +289,7 @@ int LGame::isCheck(int color, int v, int h, int vK, int hK)
 
 int LGame::getIsCheck() const
 {
-	return this->_isCheck;
+	return m->_isCheck;
 }
 
 int LGame::isMat(int color)
@@ -263,17 +300,17 @@ int LGame::isMat(int color)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE && !flag; ++j)
 		{
-			if (this->board->getFigure(i, j) && this->board->getFigure(i, j)->getColor() == color)
+			if (m->board->getFigure(i, j) && m->board->getFigure(i, j)->getColor() == color)
 			{
 				for (int k = 0; k < L_CHESS_BOARD_SIZE && !flag; ++k)
 				{
 					for (int l = 0; l < L_CHESS_BOARD_SIZE && !flag; ++l)
 					{
-						if (!this->board->getFigure(k, l) || this->board->getFigure(k, l)->getColor() != color)
+						if (!m->board->getFigure(k, l) || m->board->getFigure(k, l)->getColor() != color)
 						{
-							LPath* path = new LPath(this->board->getSquare(i, j), this->board->getSquare(k, l));
+							LPath* path = new LPath(m->board->getSquare(i, j), m->board->getSquare(k, l));
 
-							flag = !(i == k && j == l) && (this->board->getFigure(i, j)->isPossiblePath(path) & L_PATH_TRUE);
+							flag = !(i == k && j == l) && (m->board->getFigure(i, j)->isPossiblePath(path) & L_PATH_TRUE);
 
 							delete path;
 						}
@@ -294,13 +331,13 @@ bool LGame::isPat(int color)
 
 	bool (*func)(LGame * game, int sV, int sH, int fV, int fH) = [](LGame* game, int sV, int sH, int fV, int fH)
 	{
-		LPath* path = new LPath(game->board->getSquare(sV, sH), game->board->getSquare(fV, fH));
+		LPath* path = new LPath(game->m->board->getSquare(sV, sH), game->m->board->getSquare(fV, fH));
 
 		bool result = ((fV >= 0) &&
 			(fV < L_CHESS_BOARD_SIZE) &&
 			(fH >= 0) &&
 			(fH < L_CHESS_BOARD_SIZE) &&
-			(game->board->getFigure(sV, sH)->isPossiblePath(path) & L_PATH_TRUE));
+			(game->m->board->getFigure(sV, sH)->isPossiblePath(path) & L_PATH_TRUE));
 
 		delete path;
 
@@ -311,9 +348,9 @@ bool LGame::isPat(int color)
 	{
 		for (int j = 0; j < L_CHESS_BOARD_SIZE && !flag; j++)
 		{
-			if (this->board->getFigure(i, j) && this->board->getFigure(i, j)->getColor() == color)
+			if (m->board->getFigure(i, j) && m->board->getFigure(i, j)->getColor() == color)
 			{
-				switch (this->board->getFigure(i, j)->getType())
+				switch (m->board->getFigure(i, j)->getType())
 				{
 				case L_FIGURE_KING:
 				case L_FIGURE_QUEEN:
@@ -326,7 +363,7 @@ bool LGame::isPat(int color)
 
 					flag = result[0] || result[1] || result[2] || result[3];
 
-					if (this->board->getFigure(i, j)->getType() == L_FIGURE_ELEPHANT)
+					if (m->board->getFigure(i, j)->getType() == L_FIGURE_ELEPHANT)
 					{
 						break;
 					}
@@ -338,7 +375,7 @@ bool LGame::isPat(int color)
 					result[6] = func(this, i, j, i + 1, j);
 					result[7] = func(this, i, j, i - 1, j);
 
-					if (this->board->getFigure(i, j)->getType() == L_FIGURE_ROOK)
+					if (m->board->getFigure(i, j)->getType() == L_FIGURE_ROOK)
 					{
 						flag = result[4] || result[5] || result[6] || result[7];
 						break;
@@ -387,53 +424,53 @@ bool LGame::isPat(int color)
 
 void LGame::mousePress(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_PAUSE))
+	if (!(getGameInstance() & L_GAME_PAUSE))
 	{
-		if (!this->areWhiteActive)
+		if (!m->areWhiteActive)
 		{
 			v = L_CHESS_BOARD_SIZE - 1 - v;
 			h = L_CHESS_BOARD_SIZE - 1 - h;
 		}
 
-		this->activeSquare = this->board->getSquare(v, h);
-		this->activeFigure = this->board->getFigure(v, h);
+		m->activeSquare = m->board->getSquare(v, h);
+		m->activeFigure = m->board->getFigure(v, h);
 
-		this->activeSquare->setState(L_SQUARE_SELECTED);
+		m->activeSquare->setState(L_SQUARE_SELECTED);
 	}
 }
 
 void LGame::mouseRelease(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_PAUSE))
+	if (!(getGameInstance() & L_GAME_PAUSE))
 	{
 		if (!(
-			(this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() != L_COLOR_WHITE)
+			(m->areWhiteActive && m->activeFigure && m->activeFigure->getColor() != L_COLOR_WHITE)
 			||
-			(!this->areWhiteActive && this->activeFigure && this->activeFigure->getColor() == L_COLOR_WHITE)
+			(!m->areWhiteActive && m->activeFigure && m->activeFigure->getColor() == L_COLOR_WHITE)
 			))
 		{
 
-			if (!this->areWhiteActive)
+			if (!m->areWhiteActive)
 			{
 				v = L_CHESS_BOARD_SIZE - 1 - v;
 				h = L_CHESS_BOARD_SIZE - 1 - h;
 			}
 
-			if (this->activeFigure)
+			if (m->activeFigure)
 			{
-				LPlayer* act = this->areWhiteActive ? this->playerWhite : this->playerBlack;
-				LPlayer* pass = this->areWhiteActive ? this->playerBlack : this->playerWhite;
-				LSquare*& from = this->board->getSquare(this->activeSquare->getVertical(), this->activeSquare->getHorizontal());
-				LSquare*& to = this->board->getSquare(v, h);
+				LPlayer* act = m->areWhiteActive ? m->playerWhite : m->playerBlack;
+				LPlayer* pass = m->areWhiteActive ? m->playerBlack : m->playerWhite;
+				LSquare*& from = m->board->getSquare(m->activeSquare->getVertical(), m->activeSquare->getHorizontal());
+				LSquare*& to = m->board->getSquare(v, h);
 				LPath* path = new LPath(act->getClone(), pass->getClone(), from, to);
 
-				int isPossible = this->activeFigure->isPossiblePath(path);
+				int isPossible = m->activeFigure->isPossiblePath(path);
 
 				if (isPossible & L_PATH_TRUE)
 				{
 					path->setPossible(isPossible);
-					this->completeMove(path);
-					this->actionAfterPath(path);
+					completeMove(path);
+					actionAfterPath(path);
 				}
 
 				delete path;
@@ -441,30 +478,30 @@ void LGame::mouseRelease(int v, int h)
 
 		}
 
-		this->activeSquare->setState(L_SQUARE_NATIVE);
+		m->activeSquare->setState(L_SQUARE_NATIVE);
 
-		this->activeSquare = nullptr;
-		this->activeFigure = nullptr;
+		m->activeSquare = nullptr;
+		m->activeFigure = nullptr;
 	}
 }
 
 void LGame::mouseMotionMove(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_PAUSE))
+	if (!(getGameInstance() & L_GAME_PAUSE))
 	{
-		/*this->focusedSquare->setState(L_SQUARE_NATIVE);
-		this->focusedSquare = this->squares[v][h];
-		this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+		/*m->focusedSquare->setState(L_SQUARE_NATIVE);
+		m->focusedSquare = m->squares[v][h];
+		m->focusedSquare->setState(L_SQUARE_FOCUSED);*/
 	}
 }
 
 void LGame::mouseMove(int v, int h)
 {
-	if (!(this->getGameInstance() & L_GAME_PAUSE))
+	if (!(getGameInstance() & L_GAME_PAUSE))
 	{
-		/**this->focusedSquare->setState(L_SQUARE_NATIVE);
-		this->focusedSquare = this->squares[v][h];
-		this->focusedSquare->setState(L_SQUARE_FOCUSED);*/
+		/**m->focusedSquare->setState(L_SQUARE_NATIVE);
+		m->focusedSquare = m->squares[v][h];
+		m->focusedSquare->setState(L_SQUARE_FOCUSED);*/
 	}
 }
 
@@ -490,18 +527,18 @@ void LGame::completeMove(LPath* path)
 
 	if (isPossible & L_PATH_TRUE)
 	{
-		QString actFigure = this->board->getFigure(oldVer, oldHor)->getName();
+		QString actFigure = m->board->getFigure(oldVer, oldHor)->getName();
 		QString passFigure = "";
 
-		if (this->board->getFigure(newVer, newHor))
+		if (m->board->getFigure(newVer, newHor))
 		{
-			QString passFigure = " (" + this->board->getFigure(newVer, newHor)->getName() + ")";
+			QString passFigure = " (" + m->board->getFigure(newVer, newHor)->getName() + ")";
 
-			actPlayer->getOriginal()->addFigure(this->board->getFigure(newVer, newHor));
+			actPlayer->getOriginal()->addFigure(m->board->getFigure(newVer, newHor));
 		}
 
-		this->board->getFigure(newVer, newHor) = this->board->getFigure(oldVer, oldHor);
-		this->board->getFigure(oldVer, oldHor) = nullptr;
+		m->board->getFigure(newVer, newHor) = m->board->getFigure(oldVer, oldHor);
+		m->board->getFigure(oldVer, oldHor) = nullptr;
 
 		QString node = actName + ": " + actFigure + " " +
 			('A' + oldHor) + ('8' - oldVer) + " - " +
@@ -516,35 +553,35 @@ void LGame::completeMove(LPath* path)
 
 		if (newHor - oldHor == 2)
 		{
-			LRook* rook = (LRook*)this->board->getFigure(newVer, newHor + 1);
+			LRook* rook = (LRook*)m->board->getFigure(newVer, newHor + 1);
 
 			if (!rook)
 			{
-				rook = (LRook*)this->board->getFigure(newVer, newHor + 2);
-				this->board->getFigure(newVer, newHor + 2) = nullptr;
+				rook = (LRook*)m->board->getFigure(newVer, newHor + 2);
+				m->board->getFigure(newVer, newHor + 2) = nullptr;
 			}
 			else
 			{
-				this->board->getFigure(newVer, newHor + 1) = nullptr;
+				m->board->getFigure(newVer, newHor + 1) = nullptr;
 			}
 
-			this->board->getFigure(newVer, newHor - 1) = rook;
+			m->board->getFigure(newVer, newHor - 1) = rook;
 		}
 		else
 		{
-			LRook* rook = (LRook*)this->board->getFigure(newVer, newHor - 1);
+			LRook* rook = (LRook*)m->board->getFigure(newVer, newHor - 1);
 
 			if (!rook)
 			{
-				rook = (LRook*)this->board->getFigure(newVer, newHor - 2);
-				this->board->getFigure(newVer, newHor - 2) = nullptr;
+				rook = (LRook*)m->board->getFigure(newVer, newHor - 2);
+				m->board->getFigure(newVer, newHor - 2) = nullptr;
 			}
 			else
 			{
-				this->board->getFigure(newVer, newHor - 1) = nullptr;
+				m->board->getFigure(newVer, newHor - 1) = nullptr;
 			}
 
-			this->board->getFigure(newVer, newHor + 1) = rook;
+			m->board->getFigure(newVer, newHor + 1) = rook;
 		}
 
 		mainWidget->pathListAppend(actName + ": Castling");
@@ -554,28 +591,28 @@ void LGame::completeMove(LPath* path)
 	{
 		QString newFigure;
 
-		LFigure* temp = this->board->getFigure(newVer, newHor);
+		LFigure* temp = m->board->getFigure(newVer, newHor);
 
-		int figure = this->getFigureTransformation();
+		int figure = getFigureTransformation();
 		int color = actPlayer->getColor();
 
 		switch (figure)
 		{
 		case L_FIGURE_QUEEN:
 			newFigure = "Queen";
-			this->board->getFigure(newVer, newHor) = new LQueen(color);
+			m->board->getFigure(newVer, newHor) = new LQueen(color);
 			break;
 		case L_FIGURE_ELEPHANT:
 			newFigure = "Elephant";
-			this->board->getFigure(newVer, newHor) = new LElephant(color);
+			m->board->getFigure(newVer, newHor) = new LElephant(color);
 			break;
 		case L_FIGURE_HORSE:
 			newFigure = "Horse";
-			this->board->getFigure(newVer, newHor) = new LHorse(color);
+			m->board->getFigure(newVer, newHor) = new LHorse(color);
 			break;
 		case L_FIGURE_ROOK:
 			newFigure = "Rook";
-			this->board->getFigure(newVer, newHor) = new LRook(color);
+			m->board->getFigure(newVer, newHor) = new LRook(color);
 			break;
 		}
 
@@ -587,22 +624,22 @@ void LGame::completeMove(LPath* path)
 
 	if (isPossible & L_PATH_TRUE)
 	{
-		if (this->_isCheck = this->isCheck(L_COLOR_WHITE) | this->isCheck(L_COLOR_BLACK))
+		if (m->_isCheck = isCheck(L_COLOR_WHITE) | isCheck(L_COLOR_BLACK))
 		{
 			QString node;
 
-			if (this->_isCheck & L_COLOR_WHITE)
+			if (m->_isCheck & L_COLOR_WHITE)
 			{
-				node = this->playerBlack->getName() + " check " + this->playerWhite->getName();
+				node = m->playerBlack->getName() + " check " + m->playerWhite->getName();
 				mainWidget->pathListAppend(node);
 
-				if (this->isMat(L_COLOR_WHITE) & L_PATH_MAT)
+				if (isMat(L_COLOR_WHITE) & L_PATH_MAT)
 				{
-					node = this->playerBlack->getName() + " win!\n";
-					node += this->playerBlack->getName() + " mat " + this->playerWhite->getName();
+					node = m->playerBlack->getName() + " win!\n";
+					node += m->playerBlack->getName() + " mat " + m->playerWhite->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_WHITE);
+					setGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_WHITE);
 				}
 				else
 				{
@@ -610,18 +647,18 @@ void LGame::completeMove(LPath* path)
 				}
 			}
 
-			if (this->_isCheck & L_COLOR_BLACK)
+			if (m->_isCheck & L_COLOR_BLACK)
 			{
-				node = this->playerWhite->getName() + " check " + this->playerBlack->getName();
+				node = m->playerWhite->getName() + " check " + m->playerBlack->getName();
 				mainWidget->pathListAppend(node);
 
-				if (this->isMat(L_COLOR_BLACK) & L_PATH_MAT)
+				if (isMat(L_COLOR_BLACK) & L_PATH_MAT)
 				{
-					node = this->playerWhite->getName() + " win!\n";
-					node += this->playerWhite->getName() + " mat " + this->playerBlack->getName();
+					node = m->playerWhite->getName() + " win!\n";
+					node += m->playerWhite->getName() + " mat " + m->playerBlack->getName();
 					mainWidget->pathListAppend(node);
 					mainWidget->messageAlert(node);
-					this->changeGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_BLACK);
+					setGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_BLACK);
 				}
 				else
 				{
@@ -630,12 +667,12 @@ void LGame::completeMove(LPath* path)
 			}
 		}
 
-		else if (this->isPat(path->getPassive()->getColor()))
+		else if (isPat(path->getPassive()->getColor()))
 		{
 			QString node = "Dead Heat!\nStalemate situation.";
 			mainWidget->pathListAppend(node);
 			mainWidget->messageAlert(node);
-			this->changeGameInstance(L_GAME_PAUSE | L_PATH_PAT);
+			setGameInstance(L_GAME_PAUSE | L_PATH_PAT);
 		}
 	}
 }
@@ -668,10 +705,8 @@ int LGame::getTypeOfGame()
 
 void LGame::clear()
 {
-	delete this->playerWhite;
-	delete this->playerBlack;
-	delete this->board;
-	delete this->activeSquare;
-	delete this->activeFigure;
-	delete this->focusedSquare;
+	delete m;
+	m = nullptr;
 }
+
+#endif

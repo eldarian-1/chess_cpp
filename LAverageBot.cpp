@@ -8,6 +8,10 @@
 #include "LSquare.h"
 #include "LFigure.h"
 
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
+
 LBotTree* LAverageBot::botTree = new LBotTree;
 
 void LAverageBot::clearTree()
@@ -63,7 +67,7 @@ void LAverageBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 	if (!botTree)
 	{
 		botTree = LAverageBot::botTree;
-		board = this->board;
+		board = m->board;
 	}
 	else
 	{

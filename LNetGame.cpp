@@ -1,4 +1,7 @@
 #include "LNetGame.h"
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
 
 #include <QThread>
 
@@ -13,52 +16,73 @@
 #include "LOptions.h"
 #include "LClient.h"
 
-LNetGame::LNetGame(int netType, QObject* object)
+struct LNetGamePrivate : public LGamePrivate
+{
+	LClient* client;
+	LPlayer* me;
+	LPlayer* rival;
+	bool& imWhite;
+
+	LNetGamePrivate(int netType, QString ip, int port, bool& imWhite);
+	~LNetGamePrivate();
+};
+
+LNetGamePrivate::LNetGamePrivate(int netType, QString ip, int port, bool& imWhite)
+	:
+	client(LClient::newClient(netType, ip, port)),
+	me(nullptr),
+	rival(nullptr),
+	imWhite(imWhite)
+{
+
+}
+
+LNetGamePrivate::~LNetGamePrivate()
+{
+	delete client;
+}
+
+LNetGame::LNetGame(int netType, QString ip, int port, QObject* object)
 	:
 	QObject(object),
 	LGame(),
-	client(LClient::newClient(netType)),
-	me(nullptr),
-	rival(nullptr)
+	m(new LNetGamePrivate(netType, ip, port, LGame::m->areWhiteActive))
 {
-	this->changeGameInstance(L_GAME_PAUSE);
+	setGameInstance(L_GAME_PAUSE);
 
-	connect(this->client, SIGNAL(signalNewGame(LPlayer*)), SLOT(slotNewGame(LPlayer*)));
-	connect(this->client, SIGNAL(signalGetPath(LPath*)), SLOT(slotGetPath(LPath*)));
+	connect(m->client, SIGNAL(signalNewGame(LPlayer*)), SLOT(slotNewGame(LPlayer*)));
+	connect(m->client, SIGNAL(signalGetPath(LPath*)), SLOT(slotGetPath(LPath*)));
 
 	QString name = LOptions::getInstance()->getName();
 
-	client->newGame(name);
+	m->client->newGame(name);
 }
 
 LNetGame::~LNetGame()
 {
-	disconnect(this->client, SIGNAL(signalNewGame(LPlayer*)), this, SLOT(slotNewGame(LPlayer*)));
-	disconnect(this->client, SIGNAL(signalGetPath(LPath*)), this, SLOT(slotGetPath(LPath*)));
+	disconnect(m->client, SIGNAL(signalNewGame(LPlayer*)), this, SLOT(slotNewGame(LPlayer*)));
+	disconnect(m->client, SIGNAL(signalGetPath(LPath*)), this, SLOT(slotGetPath(LPath*)));
+
+	delete m;
 }
 
 void LNetGame::actionAfterPath(LPath* path)
 {
-	if (path && (path->getActive()->getOriginal() == this->me))
+	if (path && (path->getActive()->getOriginal() == m->me))
 	{
-		this->changeGameInstance(L_GAME_PAUSE);
-		this->client->sendPath(path);
-		this->client->getPath();
+		setGameInstance(L_GAME_PAUSE);
+		m->client->sendPath(path);
+		m->client->getPath();
 	}
 	else if(!path)
 	{
-		this->client->getPath();
+		m->client->getPath();
 	}
 }
 
 int LNetGame::getTypeOfGame()
 {
 	return L_TYPE_NET;
-}
-
-void LNetGame::slotConnecting(bool isConnect)
-{
-
 }
 
 void LNetGame::slotNewGame(LPlayer* player)
@@ -69,33 +93,33 @@ void LNetGame::slotNewGame(LPlayer* player)
 	{
 		int myColor = (player->getColor() == L_COLOR_WHITE) ? L_COLOR_BLACK : L_COLOR_WHITE;
 
-		this->me = new LPlayer(myColor, myName);
-		this->rival = player;
+		m->me = new LPlayer(myColor, myName);
+		m->rival = player;
 
-		this->imWhite = myColor == L_COLOR_WHITE;
+		m->imWhite = myColor == L_COLOR_WHITE;
 
-		this->playerWhite = (this->imWhite) ? this->me : this->rival;
-		this->playerBlack = (this->imWhite) ? this->rival : this->me;
+		m->playerWhite = (m->imWhite) ? m->me : m->rival;
+		m->playerBlack = (m->imWhite) ? m->rival : m->me;
 
-		if (this->imWhite)
+		if (m->imWhite)
 		{
-			this->changeGameInstance(L_GAME_RUNNING);
+			setGameInstance(L_GAME_RUNNING);
 		}
 
 		LMainWidget* mainWidget = LMainWidget::getInstance();
-		mainWidget->pathListAppend(me->getName() + " vs " + player->getName());
+		mainWidget->pathListAppend(m->me->getName() + " vs " + player->getName());
 
 		LDesk::getInstance()->repaint();
 
-		if (!this->imWhite)
+		if (!m->imWhite)
 		{
-			this->actionAfterPath(nullptr);
+			actionAfterPath(nullptr);
 		}
 	}
 	else
 	{
-		this->thread()->usleep(500);
-		client->newGame(myName);
+		thread()->usleep(500);
+		m->client->newGame(myName);
 	}
 }
 
@@ -103,18 +127,17 @@ void LNetGame::slotGetPath(LPath* path)
 {
 	if (path)
 	{
-		path->setActive(this->rival);
-		path->setPassive(this->me);
+		path->setActive(m->rival);
+		path->setPassive(m->me);
 
-		this->changeGameInstance(L_GAME_RUNNING);
-
-		this->completeMove(path);
+		setGameInstance(L_GAME_RUNNING);
+		completeMove(path);
 
 		LDesk::getInstance()->repaint();
 	}
 	else
 	{
-		this->thread()->usleep(500);
-		this->client->getPath();
+		thread()->usleep(500);
+		m->client->getPath();
 	}
 }

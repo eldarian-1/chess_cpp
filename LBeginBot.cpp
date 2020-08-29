@@ -7,6 +7,10 @@
 #include "LSquare.h"
 #include "LFigure.h"
 
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
+
 LPath* LBeginBot::calculateBestMove()
 {
 	QVector<LPath*> paths = this->uglyMoves();
@@ -35,9 +39,9 @@ LPath* LBeginBot::calculateBestMove()
 
 			int tempValue = 0;
 
-			if (this->board->getFigure(toVer, toHor))
+			if (m->board->getFigure(toVer, toHor))
 			{
-				tempValue = this->board->getFigure(toVer, toHor)->getValue();
+				tempValue = m->board->getFigure(toVer, toHor)->getValue();
 			}
 
 			if (value < tempValue)

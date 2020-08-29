@@ -1,4 +1,7 @@
 #include "LBiGame.h"
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
 
 #include "LConst.h"
 #include "LPlayer.h"
@@ -15,20 +18,20 @@ LBiGame::LBiGame(QString n1, QString n2, int c)
 	:
 	LGame()
 {
-	this->playerWhite = new LPlayer(
+	m->playerWhite = new LPlayer(
 		L_COLOR_WHITE,
 		((c == L_COLOR_WHITE) ? n1 : n2)
 	);
 
-	this->playerBlack = new LPlayer(
+	m->playerBlack = new LPlayer(
 		L_COLOR_BLACK,
-		(this->playerWhite->getName() == n1) ? n2 : n1
+		(m->playerWhite->getName() == n1) ? n2 : n1
 	);
 }
 
 void LBiGame::actionAfterPath(LPath* path)
 {
-	this->areWhiteActive = !this->areWhiteActive;
+	m->areWhiteActive = !m->areWhiteActive;
 }
 
 int LBiGame::getTypeOfGame()

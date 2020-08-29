@@ -8,6 +8,10 @@
 #include "LSquare.h"
 #include "LFigure.h"
 
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
+
 LBotTree* LStrongBot::botTree = new LBotTree;
 
 void LStrongBot::clearTree()
@@ -63,7 +67,7 @@ void LStrongBot::minimax(LBotTree* botTree, int depth, bool itsMe)
 	if (!botTree)
 	{
 		botTree = LStrongBot::botTree;
-		board = this->board;
+		board = m->board;
 	}
 	else
 	{

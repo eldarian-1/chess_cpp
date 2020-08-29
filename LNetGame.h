@@ -7,6 +7,8 @@
 class LFigure;
 class LClient;
 
+struct LNetGamePrivate;
+
 class LNetGame :
 	public QObject,
 	public LGame
@@ -14,15 +16,10 @@ class LNetGame :
 	Q_OBJECT
 
 private:
-	LClient* client;
-
-	LPlayer* me;
-	LPlayer* rival;
-
-	bool& imWhite = LGame::areWhiteActive;
+	LNetGamePrivate* m;
 
 public:
-	LNetGame(int netType, QObject* object = nullptr);
+	LNetGame(int netType, QString ip, int port, QObject* object = nullptr);
 	~LNetGame();
 
 	void actionAfterPath(LPath* path) override;
@@ -30,7 +27,6 @@ public:
 	virtual int getTypeOfGame() override;
 
 private slots:
-	void slotConnecting(bool isConnect);
 	void slotNewGame(LPlayer* player);
 	void slotGetPath(LPath* path);
 

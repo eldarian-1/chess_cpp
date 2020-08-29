@@ -23,6 +23,9 @@ private slots:
 	void slotCheckBot();
 	void slotCheckBotNet();
 	void slotCheckNet();
+	void slotCheckNetWeb();
+	void slotCheckNetClient();
+	void slotCheckNetServer();
 
 public:
 	int getGameType() const;
@@ -31,5 +34,7 @@ public:
 	int getNetType() const;
 	QString getName1() const;
 	QString getName2() const;
+	QString getIp() const;
+	int getPort() const;
 
 };

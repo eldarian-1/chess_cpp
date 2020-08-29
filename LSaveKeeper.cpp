@@ -9,6 +9,10 @@
 #include <QDir>
 #include <QTextStream>
 
+#define LCHILD
+#include "LGame.cpp"
+#undef LCHILD
+
 LSaveKeeper* LSaveKeeper::instance = nullptr;
 
 LSaveKeeper* LSaveKeeper::getInstance()
@@ -42,19 +46,19 @@ void LSaveKeeper::save(QString name)
 			stream << bgame->getTypeOfBot() << '\n';
 		}
 
-		stream << game->gameInstance << '\n';
-		stream << *game->playerWhite;
-		stream << *game->playerBlack;
-		stream << *game->board;
-		stream << game->_isCheck << '\n';
-		stream << (game->areWhiteActive ? 1 : 0) << '\n';
+		stream << game->m->gameInstance << '\n';
+		stream << *game->m->playerWhite;
+		stream << *game->m->playerBlack;
+		stream << *game->m->board;
+		stream << game->m->_isCheck << '\n';
+		stream << (game->m->areWhiteActive ? 1 : 0) << '\n';
 
 		if (typeOfGame == L_TYPE_BOT)
 		{
 			LBotGame* bgame = (LBotGame*)game;
 
-			stream << ((bgame->me == game->playerWhite) ? 1 : 0) << '\n';
-			stream << ((bgame->bot == game->playerBlack) ? 1 : 0) << '\n';
+			stream << ((bgame->me == game->m->playerWhite) ? 1 : 0) << '\n';
+			stream << ((bgame->bot == game->m->playerBlack) ? 1 : 0) << '\n';
 			stream << (bgame->isBlocked ? 1 : 0) << '\n';
 		}
 
@@ -94,24 +98,24 @@ LGame* LSaveKeeper::loadSave(QString name)
 			LGame::loadGame(typeOfGame, typeOfBot);
 		}
 
-		stream >> game->gameInstance;
-		stream >> *game->playerWhite;
-		stream >> *game->playerBlack;
-		stream >> *game->board;
-		stream >> game->_isCheck;
+		stream >> game->m->gameInstance;
+		stream >> *game->m->playerWhite;
+		stream >> *game->m->playerBlack;
+		stream >> *game->m->board;
+		stream >> game->m->_isCheck;
 		stream >> flag;
 
-		game->areWhiteActive = flag != 0;
+		game->m->areWhiteActive = flag != 0;
 
 		if (typeOfGame == L_TYPE_BOT)
 		{
 			LBotGame* bgame = (LBotGame*)game;
 
 			stream >> flag;
-			bgame->me = flag ? game->playerWhite : game->playerBlack;
+			bgame->me = flag ? game->m->playerWhite : game->m->playerBlack;
 
 			stream >> flag;
-			bgame->bot = flag ? game->playerBlack : game->playerWhite;
+			bgame->bot = flag ? game->m->playerBlack : game->m->playerWhite;
 
 			stream >> flag;
 			bgame->isBlocked = flag;

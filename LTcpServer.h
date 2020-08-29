@@ -9,7 +9,7 @@ private:
 	friend class LClient;
 
 protected:
-	LTcpServer();
+	LTcpServer(int port);
 
 public:
 	~LTcpServer();
