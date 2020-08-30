@@ -23,5 +23,6 @@ public:
 signals:
 	void signalNewGame(LPlayer* player);
 	void signalGetPath(LPath* path);
+	void signalStatusChange(int status);
 
 };

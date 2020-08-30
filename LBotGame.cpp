@@ -80,6 +80,8 @@ LBotGame* LBotGame::newGame(int botPower)
 		return new LAverageBot;
 	case L_BOT_STRONG:
 		return new LStrongBot;
+	default:
+		return nullptr;
 	}
 }
 
@@ -95,6 +97,8 @@ LBotGame* LBotGame::newGame(int botPower, int color)
 		return new LAverageBot(color);
 	case L_BOT_STRONG:
 		return new LStrongBot(color);
+	default:
+		return nullptr;
 	}
 }
 

@@ -29,5 +29,6 @@ public:
 private slots:
 	void slotNewGame(LPlayer* player);
 	void slotGetPath(LPath* path);
+	void slotStatusChange(int status);
 
 };

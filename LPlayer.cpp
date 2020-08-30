@@ -1,6 +1,7 @@
 #include "LPlayer.h"
 
 #include "LFigure.h"
+#include "LConst.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -42,6 +43,17 @@ LPlayer* LPlayer::playerFromJson(QJsonObject* document)
 	}
 
 	return player;
+}
+
+QString LPlayer::toJsonClientString(QString name)
+{
+	return "{\"player\":{\"name\":\"" + name + "\"}}";
+}
+
+QString LPlayer::toJsonServerString(QString name)
+{
+	return "{\"player\":{\"name\":\"" + name + "\", \"color\":"
+		+ QString::number(rand() % 2 + L_COLOR_WHITE) + "}}";
 }
 
 LPlayer* LPlayer::getOriginal() const

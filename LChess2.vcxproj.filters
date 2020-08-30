@@ -244,9 +244,6 @@
     <ClInclude Include="LSaveKeeper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LTcpServer.h">
-      <Filter>Header Files\Client</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LOptions.h">
@@ -277,6 +274,9 @@
       <Filter>Header Files\Client</Filter>
     </QtMoc>
     <QtMoc Include="LTcpClient.h">
+      <Filter>Header Files\Client</Filter>
+    </QtMoc>
+    <QtMoc Include="LTcpServer.h">
       <Filter>Header Files\Client</Filter>
     </QtMoc>
   </ItemGroup>

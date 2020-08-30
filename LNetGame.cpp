@@ -52,6 +52,7 @@ LNetGame::LNetGame(int netType, QString ip, int port, QObject* object)
 
 	connect(m->client, SIGNAL(signalNewGame(LPlayer*)), SLOT(slotNewGame(LPlayer*)));
 	connect(m->client, SIGNAL(signalGetPath(LPath*)), SLOT(slotGetPath(LPath*)));
+	connect(m->client, SIGNAL(signalStatusChange(int)), SLOT(slotStatusChange(int)));
 
 	QString name = LOptions::getInstance()->getName();
 
@@ -140,4 +141,9 @@ void LNetGame::slotGetPath(LPath* path)
 		thread()->usleep(500);
 		m->client->getPath();
 	}
+}
+
+void  LNetGame::slotStatusChange(int status)
+{
+	m->gameInstance = status;
 }

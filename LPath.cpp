@@ -57,7 +57,7 @@ LPath* LPath::pathFromJson(QJsonObject* document)
 	{
 		LGame* game = LGame::getInstance();
 		path = new LPath(
-			game->getSquare(oPath["v0"].toInt() , oPath["h0"].toInt()),
+			game->getSquare(oPath["v0"].toInt(), oPath["h0"].toInt()),
 			game->getSquare(oPath["v1"].toInt(), oPath["h1"].toInt())
 		);
 		path->setPossible(oPath["isPossible"].toInt());

@@ -27,5 +27,7 @@ LClient* LClient::newClient(int type, QString ip, int port)
 		return new LTcpClient(ip, port);
 	case L_SERVER_TCP:
 		return new LTcpServer(port);
+	default:
+		return nullptr;
 	}
 }

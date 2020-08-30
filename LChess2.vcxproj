@@ -135,7 +135,7 @@
     <ClInclude Include="LBotGame.h" />
     <ClInclude Include="LBotTree.h" />
     <QtMoc Include="LTcpClient.h" />
-    <ClInclude Include="LTcpServer.h" />
+    <QtMoc Include="LTcpServer.h" />
     <QtMoc Include="LWebClient.h" />
     <QtMoc Include="LClient.h" />
     <QtMoc Include="LConfirm.h" />

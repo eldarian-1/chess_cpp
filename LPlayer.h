@@ -22,6 +22,8 @@ public:
 	LPlayer(const LPlayer& player);
 
 	static LPlayer* playerFromJson(QJsonObject* document);
+	static QString toJsonClientString(QString name);
+	static QString toJsonServerString(QString name);
 
 	LPlayer* getOriginal() const;
 	LPlayer* getClone() const;
