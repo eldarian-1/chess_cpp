@@ -1,12 +1,12 @@
 #include <QApplication>
 
-#include "LMainWidget.h"
+#include "LMain.h"
 
 int main(int argc, char *argv[])
 {
     srand(time(0));
     QApplication app(argc, argv);
-    LMainWidget& mainWidget = *LMainWidget::getInstance();
-    mainWidget.show();
+    LMain& wgtMain = *LMain::getInstance();
+    wgtMain.show();
     return app.exec();
 }

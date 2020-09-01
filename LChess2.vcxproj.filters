@@ -146,9 +146,6 @@
     <ClCompile Include="LSquare.cpp">
       <Filter>Source Files\Mechanics</Filter>
     </ClCompile>
-    <ClCompile Include="LMainWidget.cpp">
-      <Filter>Source Files\Widget</Filter>
-    </ClCompile>
     <ClCompile Include="LDesk.cpp">
       <Filter>Source Files\Widget</Filter>
     </ClCompile>
@@ -172,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="LWebClient.cpp">
       <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="LMain.cpp">
+      <Filter>Source Files\Widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,9 +261,6 @@
     <QtMoc Include="LConfirm.h">
       <Filter>Header Files\Dialog</Filter>
     </QtMoc>
-    <QtMoc Include="LMainWidget.h">
-      <Filter>Header Files\Widget</Filter>
-    </QtMoc>
     <QtMoc Include="LClient.h">
       <Filter>Header Files\Client</Filter>
     </QtMoc>
@@ -278,6 +275,9 @@
     </QtMoc>
     <QtMoc Include="LTcpServer.h">
       <Filter>Header Files\Client</Filter>
+    </QtMoc>
+    <QtMoc Include="LMain.h">
+      <Filter>Header Files\Widget</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

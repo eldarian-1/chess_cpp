@@ -20,9 +20,11 @@ protected:
 public:
 	~LWebClient();
 
-	virtual void newGame(QString name) override;
 	virtual void sendPath(LPath* path) override;
-	virtual void getPath() override;
+
+public slots:
+	virtual void slotNewGame(QString name) override;
+	virtual void slotGetPath() override;
 
 private:
 	void download(const QUrl& url);

@@ -1,7 +1,6 @@
 #include "LDesk.h"
 
 #include "LConst.h"
-#include "LMainWidget.h"
 #include "LGame.h"
 #include "LPlayer.h"
 #include "LSquare.h"

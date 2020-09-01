@@ -8,29 +8,23 @@ class LDesk;
 class QPushButton;
 class QTextEdit;
 
-class LMainWidget :
+struct LMainPrivate;
+
+class LMain :
 	public QWidget
 {
 	Q_OBJECT
 
 private:
-	static LMainWidget* instance;
+	static LMain* instance;
 
-	LOptions* optionsDialog;
-	LGame* game;
-	LDesk* desk;
-
-	QPushButton* newGame;
-	QPushButton* saveGame;
-	QPushButton* loadGame;
-	QPushButton* options;
-	QPushButton* quit;
-	QTextEdit* pathList;
+	LMainPrivate* m;
 
 public:
-	static LMainWidget* getInstance(QWidget* widget = nullptr);
+	static LMain* getInstance(QWidget* widget = nullptr);
 
-	LMainWidget(QWidget* widget);
+	LMain(QWidget* widget);
+	~LMain();
 
 protected:
 	virtual void paintEvent(QPaintEvent* event);
@@ -45,8 +39,8 @@ private slots:
 public:
 	LGame* getGame() const;
 
-	void setPathList(QString string);
-	void pathListAppend(QString string);
+	void setGameDesc(QString string);
+	void appendGameDesc(QString string);
 	void messageAlert(QString string);
 
 };

@@ -18,6 +18,7 @@ struct LTcpServerPrivate
 	quint16 size;
 	QTcpServer* server;
 	QTcpSocket* client;
+	QString player;
 
 	LTcpServerPrivate(LTcpServer* server, int port);
 	~LTcpServerPrivate();
@@ -44,17 +45,18 @@ LTcpServer::LTcpServer(int port)
 	LClient(),
 	m(new LTcpServerPrivate(this, port))
 {
+	connect(this, SIGNAL(signalFindNewGame(QString)), SLOT(slotNewGame(QString)));
+	connect(this, SIGNAL(signalGetNextPath()), SLOT(slotGetPath()));
+
 	m->server->listen(QHostAddress::Any, port);
 }
 
 LTcpServer::~LTcpServer()
 {
-	delete m;
-}
+	disconnect(this, SIGNAL(signalFindNewGame(QString)), this, SLOT(slotNewGame(QString)));
+	disconnect(this, SIGNAL(signalGetNextPath()), this, SLOT(slotGetPath()));
 
-void LTcpServer::newGame(QString name)
-{
-	sendToClient(LPlayer::toJsonServerString(name));
+	delete m;
 }
 
 void LTcpServer::sendPath(LPath* path)
@@ -62,23 +64,36 @@ void LTcpServer::sendPath(LPath* path)
 	sendToClient(path->toJsonString());
 }
 
-void LTcpServer::getPath()
+void LTcpServer::slotNewGame(QString name)
+{
+	m->player = name;
+	sendToClient(LPlayer::toJsonServerString(name));
+}
+
+void LTcpServer::slotGetPath()
 {
 
 }
 
 void LTcpServer::sendToClient(const QString& string)
 {
-	QByteArray arrBlock;
+	if (m->client)
+	{
+		QByteArray arrBlock;
 
-	QDataStream out(&arrBlock, QIODevice::WriteOnly);
-	out.setVersion(QDataStream::Qt_5_14);
-	out << quint16(0) << string;
+		QDataStream out(&arrBlock, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_5_14);
+		out << quint16(0) << string;
 
-	out.device()->seek(0);
-	out << quint16(arrBlock.size() - sizeof(quint16));
+		out.device()->seek(0);
+		out << quint16(arrBlock.size() - sizeof(quint16));
 
-	m->client->write(arrBlock);
+		m->client->write(arrBlock);
+	}
+	else
+	{
+		emit signalFindNewGame(m->player);
+	}
 }
 
 void LTcpServer::slotNewConnection()

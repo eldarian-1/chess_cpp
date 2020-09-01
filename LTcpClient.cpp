@@ -13,7 +13,8 @@
 
 struct LTcpClientPrivate
 {
-	bool isConnected;
+	bool hostIsConnected;
+	bool playerIsConnected;
 	quint16 size;
 	QTcpSocket* socket;
 
@@ -25,7 +26,8 @@ LTcpClientPrivate::LTcpClientPrivate(LTcpClient* client, QString ip, int port)
 	:
 	socket(new QTcpSocket(client)),
 	size(0),
-	isConnected(false)
+	hostIsConnected(false),
+	playerIsConnected(false)
 {
 	socket->connectToHost(ip, port);
 }
@@ -54,17 +56,18 @@ LTcpClient::~LTcpClient()
 	delete m;
 }
 
-void LTcpClient::newGame(QString name)
-{
-	sendToServer(LPlayer::toJsonClientString(name));
-}
-
 void LTcpClient::sendPath(LPath* path)
 {
 	sendToServer(path->toJsonString());
 }
 
-void LTcpClient::getPath()
+void LTcpClient::slotNewGame(QString name)
+{
+	if(m->hostIsConnected)
+		sendToServer(LPlayer::toJsonClientString(name));
+}
+
+void LTcpClient::slotGetPath()
 {
 
 }
@@ -108,7 +111,7 @@ void LTcpClient::slotReadyRead()
 		m->size = 0;
 
 		QJsonObject object = QJsonDocument::fromJson(response).object();
-		if (m->isConnected)
+		if (m->playerIsConnected)
 		{
 			LPath* path = LPath::pathFromJson(&object);
 			emit signalGetPath(path);
@@ -116,7 +119,7 @@ void LTcpClient::slotReadyRead()
 		else
 		{
 			LPlayer* player = LPlayer::playerFromJson(&object);
-			m->isConnected = true;
+			m->playerIsConnected = true;
 			emit signalNewGame(player);
 		}
 	}
@@ -129,5 +132,5 @@ void LTcpClient::slotError(QAbstractSocket::SocketError error)
 
 void LTcpClient::slotConnected()
 {
-	
+	m->hostIsConnected = true;
 }

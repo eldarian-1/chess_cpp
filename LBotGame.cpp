@@ -8,7 +8,7 @@
 #include "LAverageBot.h"
 #include "LStrongBot.h"
 
-#include "LMainWidget.h"
+#include "LMain.h"
 
 #include "LConst.h"
 #include "LBoard.h"
@@ -126,7 +126,7 @@ void LBotGame::waitBot()
 	else
 	{
 
-		LMainWidget* mainWidget = LMainWidget::getInstance();
+		LMain* wgtMain = LMain::getInstance();
 		QString node = "";
 
 		if (this->isMat(this->bot->getColor()))
@@ -143,8 +143,8 @@ void LBotGame::waitBot()
 			node = "Dead Heat!\nStalemate situation.";
 		}
 
-		mainWidget->pathListAppend(node);
-		mainWidget->messageAlert(node);
+		wgtMain->appendGameDesc(node);
+		wgtMain->messageAlert(node);
 	}
 }
 

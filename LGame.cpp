@@ -8,7 +8,7 @@
 #include "LNetGame.h"
 
 #include "LConst.h"
-#include "LMainWidget.h"
+#include "LMain.h"
 #include "LTransform.h"
 #include "LDesk.h"
 #include "LPath.h"
@@ -143,8 +143,8 @@ void LGame::setGame(LGame* game)
 {
 	instance = game;
 
-	LMainWidget::getInstance()
-		->setPathList(
+	LMain::getInstance()
+		->setGameDesc(
 			instance->m->playerWhite->getName() + " vs " + instance->m->playerBlack->getName()
 		);
 }
@@ -523,7 +523,7 @@ void LGame::completeMove(LPath* path)
 
 	int isPossible = path->isPossible();
 
-	LMainWidget* mainWidget = LMainWidget::getInstance();
+	LMain* wgtMain = LMain::getInstance();
 
 	if (isPossible & L_PATH_TRUE)
 	{
@@ -544,7 +544,7 @@ void LGame::completeMove(LPath* path)
 			('A' + oldHor) + ('8' - oldVer) + " - " +
 			('A' + newHor) + ('8' - newVer) + passFigure;
 
-		mainWidget->pathListAppend(node);
+		wgtMain->appendGameDesc(node);
 	}
 
 	if (isPossible & L_PATH_CASTLING)
@@ -584,7 +584,7 @@ void LGame::completeMove(LPath* path)
 			m->board->getFigure(newVer, newHor + 1) = rook;
 		}
 
-		mainWidget->pathListAppend(actName + ": Castling");
+		wgtMain->appendGameDesc(actName + ": Castling");
 	}
 
 	if (isPossible & L_PATH_TRANSFORMATION)
@@ -617,7 +617,7 @@ void LGame::completeMove(LPath* path)
 		}
 
 		QString node = actName + ": Pawn to " + newFigure;
-		mainWidget->pathListAppend(node);
+		wgtMain->appendGameDesc(node);
 
 		delete temp;
 	}
@@ -631,38 +631,38 @@ void LGame::completeMove(LPath* path)
 			if (m->_isCheck & L_COLOR_WHITE)
 			{
 				node = m->playerBlack->getName() + " check " + m->playerWhite->getName();
-				mainWidget->pathListAppend(node);
+				wgtMain->appendGameDesc(node);
 
 				if (isMat(L_COLOR_WHITE) & L_PATH_MAT)
 				{
 					node = m->playerBlack->getName() + " win!\n";
 					node += m->playerBlack->getName() + " mat " + m->playerWhite->getName();
-					mainWidget->pathListAppend(node);
-					mainWidget->messageAlert(node);
+					wgtMain->appendGameDesc(node);
+					wgtMain->messageAlert(node);
 					setGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_WHITE);
 				}
 				else
 				{
-					mainWidget->messageAlert(node);
+					wgtMain->messageAlert(node);
 				}
 			}
 
 			if (m->_isCheck & L_COLOR_BLACK)
 			{
 				node = m->playerWhite->getName() + " check " + m->playerBlack->getName();
-				mainWidget->pathListAppend(node);
+				wgtMain->appendGameDesc(node);
 
 				if (isMat(L_COLOR_BLACK) & L_PATH_MAT)
 				{
 					node = m->playerWhite->getName() + " win!\n";
 					node += m->playerWhite->getName() + " mat " + m->playerBlack->getName();
-					mainWidget->pathListAppend(node);
-					mainWidget->messageAlert(node);
+					wgtMain->appendGameDesc(node);
+					wgtMain->messageAlert(node);
 					setGameInstance(L_GAME_PAUSE | L_PATH_MAT | L_COLOR_BLACK);
 				}
 				else
 				{
-					mainWidget->messageAlert(node);
+					wgtMain->messageAlert(node);
 				}
 			}
 		}
@@ -670,8 +670,8 @@ void LGame::completeMove(LPath* path)
 		else if (isPat(path->getPassive()->getColor()))
 		{
 			QString node = "Dead Heat!\nStalemate situation.";
-			mainWidget->pathListAppend(node);
-			mainWidget->messageAlert(node);
+			wgtMain->appendGameDesc(node);
+			wgtMain->messageAlert(node);
 			setGameInstance(L_GAME_PAUSE | L_PATH_PAT);
 		}
 	}

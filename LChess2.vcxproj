@@ -102,7 +102,7 @@
     <ClCompile Include="LHorse.cpp" />
     <ClCompile Include="LKing.cpp" />
     <ClCompile Include="LLoadGame.cpp" />
-    <ClCompile Include="LMainWidget.cpp" />
+    <ClCompile Include="LMain.cpp" />
     <ClCompile Include="LNetGame.cpp" />
     <ClCompile Include="LNewGame.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource>
@@ -161,7 +161,7 @@
     <QtMoc Include="LNewGame.h" />
     <QtMoc Include="LOptions.h" />
     <QtMoc Include="LSaveGame.h" />
-    <QtMoc Include="LMainWidget.h" />
+    <QtMoc Include="LMain.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="LBElephant.png" />

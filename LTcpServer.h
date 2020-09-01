@@ -18,9 +18,11 @@ protected:
 public:
 	~LTcpServer();
 
-	virtual void newGame(QString name) override;
 	virtual void sendPath(LPath* path) override;
-	virtual void getPath() override;
+
+public slots:
+	virtual void slotNewGame(QString name) override;
+	virtual void slotGetPath() override;
 
 private:
 	void sendToClient(const QString& string);
