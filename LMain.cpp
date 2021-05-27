@@ -72,10 +72,10 @@ LMainPrivate::~LMainPrivate()
 	delete lytMain;
 }
 
-LMain* LMain::getInstance(QWidget* widget)
+LMain* LMain::getInstance()
 {
 	if (!instance)
-		instance = new LMain(widget);
+        instance = new LMain();
 
 	return instance;
 }

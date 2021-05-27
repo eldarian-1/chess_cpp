@@ -16,14 +16,14 @@ class LMain :
 	Q_OBJECT
 
 private:
-	static LMain* instance;
+    static LMain *instance;
 
-	LMainPrivate* m;
+    LMainPrivate* m;
 
 public:
-	static LMain* getInstance(QWidget* widget = nullptr);
+    static LMain *getInstance();
 
-	LMain(QWidget* widget);
+    LMain(QWidget* widget = nullptr);
 	~LMain();
 
 protected:
