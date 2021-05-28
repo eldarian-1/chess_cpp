@@ -104,3 +104,10 @@ DISTFILES += \
     LWQueen.png \
     LWRook.png \
     PreView.png
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-logic-Desktop_Qt_5_15_2_GCC_64bit-Debug/release/ -llogic
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-logic-Desktop_Qt_5_15_2_GCC_64bit-Debug/debug/ -llogic
+else:unix: LIBS += -L$$PWD/../build-logic-Desktop_Qt_5_15_2_GCC_64bit-Debug/ -llogic
+
+INCLUDEPATH += $$PWD/../logic
+DEPENDPATH += $$PWD/../logic
